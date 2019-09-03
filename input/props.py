@@ -39,6 +39,7 @@ class Props:
         out_str += '\nliq_visc ' + str(s.liq_visc)
         return out_str
 
+
 if __name__ == '__main__':
     props = Props(config_file=sys.argv[1])
     print(props.get_props_array())
