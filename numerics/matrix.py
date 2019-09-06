@@ -10,6 +10,9 @@ sys.path.append(os.path.join(current_path, '../'))
 
 from input import Props, Network_Data
 
+from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import spsolve
+
 
 class Matrix:
     def __init__(s, config_file):
@@ -22,6 +25,7 @@ class Matrix:
         s.network_stat = Network_Data(config_file)
         s.network_stat.process_throats()
         s.network_stat.process_pores()
+        s.network_stat.boundary_pores()
 
         s.throat_radius = s.network_stat.throats['throat_diameter'] / 2
         s.conn_ind = np.array(s.network_stat.conn_ind)
@@ -31,11 +35,13 @@ class Matrix:
 
         s.pore_number = len(s.pore_coords)
         s.pore_list = np.arange(len(s.pore_coords))
-        s.conn_indices = np.array(s.network_stat.conn_indices)
+        s.conn_indices = np.array(s.network_stat.pores['conn_indices'])
 
         s.throat_length = float
         s.matrix_coeff = type(s.throat_radius)
         s.matrix_row = []
+
+        s.boundaries = s.network_stat.front_boundaries
 
     def center_distance(s):
         def xyz_distance(coord1, coord2):
@@ -57,15 +63,22 @@ class Matrix:
         s.matrix_coeff = math.pi * matrix.throat_radius ** 4 / \
                          (8 * matrix.liq_visc * throat_length)
 
-    #    def matrix_col(s):
-
     def get_matrix_row(s):
 
         for i in range(s.pore_number):
+            x = []
             for j in range(s.conn_number[i] + 1):
-                s.matrix_row.append(i)
+                x.append(i)
+            s.matrix_row.append(x)
 
-        s.matrix_row = np.array(s.matrix_row).flatten()
+        for i in range(len(s.boundaries)):
+            for j in range(len(s.matrix_row)):
+                if s.boundaries[i] == j:
+                    s.matrix_row[j] = []
+                    s.matrix_row[j].append(s.boundaries[i])
+
+        s.matrix_row = [y for x in s.matrix_row for y in x]
+        s.matrix_row = np.array(s.matrix_row)
 
     def get_matrix_col(s):
         s.conn_indices = list(s.conn_indices)
@@ -82,32 +95,82 @@ class Matrix:
         s.matrix_col = [a + b for a, b in zip(matrix.pore_list,
                                               matrix.conn_indices)]
 
+        for i in range(len(s.boundaries)):
+            for j in range(len(s.matrix_col)):
+                if s.boundaries[i] == j:
+                    s.matrix_col[j] = []
+                    s.matrix_col[j].append(s.boundaries[i])
+
+        print(s.matrix_col)
+
         s.matrix_col = [y for x in s.matrix_col for y in x]
 
         s.matrix_col = np.array(s.matrix_col)
 
     def get_matrix_val(s):
-        conn_ind = sorted(matrix.conn_ind, key=lambda a_entry: a_entry[1])
-        conn_ind = np.array(conn_ind).tolist()
+        conn_ind = np.array(s.conn_ind).tolist()
+        print(conn_ind)
 
         temp = []
-        temp1 = []
+        s.temp1 = []
 
         for i in range(s.pore_number):
             for j in range(len(s.conn_indices[i])):
-                temp.append(s.pore_list[i] + [s.conn_indices[i][j]])
-            temp1.append(temp)
+                x = list(s.pore_list[i] + [s.conn_indices[i][j]])
+                x.sort()
+                temp.append(x)
+            s.temp1.append(temp)
             temp = []
 
-        print(temp1)
+        matrix_coeff = np.array(s.matrix_coeff)
+        matrix_coeff = matrix_coeff.reshape(24, 1)
+        matrix_coeff = matrix_coeff.tolist()
 
-        temp1 = []
+        s.conn_coeff = [[a, b] for a, b in
+                        zip(conn_ind, matrix_coeff)]
 
+        s.matrix_val = []
+        temp = []
 
+        for i in range(len(s.temp1)):
+            for j in range(len(s.temp1[i])):
+                for p in range(len(conn_ind)):
+                    if s.temp1[i][j] == s.conn_coeff[p][0]:
+                        temp.append(-1 * s.conn_coeff[p][1][0])
+            s.matrix_val.append(list(temp))
+            temp = []
 
-        # for i in range(9):
-        #     for j in range(len(matrix.conn_indices[i])):
-        #         x.append(matrix.pore_list[i] + [matrix.conn_indices[i][j]])
+        s.matrix_central = []
+        for i in range(len(s.matrix_val)):
+            s.matrix_central.append(-1 * sum(s.matrix_val[i]))
+
+        for i in range(s.pore_number):
+            s.matrix_val[i].insert(0, s.matrix_central[i])
+
+        # s.matrix_val = [a + b for a, b in zip(s.matrix_central, s.matrix_val)]
+
+        # x = [a + b for a, b in zip(s.pore_list,
+        #                            s.conn_indices)]
+        # for i in range(matrix.pore_number):
+        #     x[i].sort()
+        #
+        # s.pore_index = []
+        # for i in range(s.pore_number):
+        #     for j in range(len(x[i])):
+        #         if s.pore_list[i][0] == x[i][j]:
+        #             s.pore_index.append(j)
+        #
+        # for i in range(s.pore_number):
+        #     s.matrix_val[i].insert(s.pore_index[i], s.matrix_central[i])
+
+        for i in range(len(s.boundaries)):
+            for j in range(len(s.matrix_val)):
+                if s.boundaries[i] == j:
+                    s.matrix_val[j] = []
+                    s.matrix_val[j].append(1)
+
+        s.matrix_val = [y for x in s.matrix_val for y in x]
+        s.matrix_val = np.array(matrix.matrix_val)
 
 
 if __name__ == '__main__':
@@ -117,6 +180,14 @@ if __name__ == '__main__':
     matrix.get_matrix_coeff()
     matrix.get_matrix_col()
     matrix.get_matrix_row()
+    matrix.get_matrix_val()
+
+    A = csr_matrix((matrix.matrix_val, (matrix.matrix_row, matrix.matrix_col)),
+                   shape=(matrix.pore_number, matrix.pore_number)).toarray()
+    B = np.array(
+        [202650, 202650, 202650, 202650, 0, 0, 0, 0, 0, 0, 0, 0, 101325, 101325, 101325,
+         101325])
+    x = spsolve(A, B)
 
     # matrix_coeff = math.pi * matrix.throat_radius ** 4 / \
     #                (8 * matrix.liq_visc * throat_length)

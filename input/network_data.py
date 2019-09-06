@@ -38,18 +38,21 @@ class Network_Data:
         s.conn_ind = None
         s.pores = None
         s.pore_coords = None
+        s.conn_indices = None
+
 
     def process_throats(s):
         s.throats = pd.read_csv(s.pore_throats, index_col=0)
-        s.conn_ind = [[a, b] for a, b in zip(network_data.throats['pore_j'],
-                                             network_data.throats['pore_i'])]
+        s.conn_ind = [[a, b] for a, b in zip(s.throats['pore_i'],
+                                             s.throats['pore_j'])]
 
     def process_pores(s):
         s.pores = pd.read_csv(s.pores_data, index_col=0)
         s.pore_coords = [[a, b, c] for a, b, c in
-                         zip(network_data.pores['x_coord'],
-                             network_data.pores['y_coord'],
-                             network_data.pores['z_coord'])]
+                         zip(s.pores['x_coord'],
+                             s.pores['y_coord'],
+                             s.pores['z_coord'])]
+
 
     def plot(s, conn_ind, pore_coords):
         pn1 = op.network.GenericNetwork(conn_ind, pore_coords)
@@ -58,13 +61,25 @@ class Network_Data:
                                                    color='r', s=100)
         plt.show()
 
-        # s.conn_indices = list(s.pores.conn_indices)
-        #
-        # for i in range(len(s.conn_indices)):
-        #     s.conn_indices[i] = s.conn_indices[i].split(',')
-        # for i in range(len(s.conn_indices)):
-        #     for j in range(len(s.conn_indices[i])):
-        #         s.conn_indices[i][j] = int(s.conn_indices[i][j])
+    def boundary_pores(s):
+
+        s.front_boundaries = []
+
+        x_min = min(s.pores['x_coord'])
+        x_max = max(s.pores['x_coord'])
+
+        s.inlet_pores = []
+        s.outlet_pores = []
+
+        for i in range(len(s.pores['x_coord'])):
+            if s.pores['x_coord'][i] == x_min:
+                s.inlet_pores.append(i)
+
+        for i in range(len(s.pores['x_coord'])):
+            if s.pores['x_coord'][i] == x_max:
+                s.outlet_pores.append(i)
+
+        s.front_boundaries = s.inlet_pores + s.outlet_pores
 
     def __str__(s):
         out_str = super().__str__()
