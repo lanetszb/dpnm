@@ -22,6 +22,7 @@ class Props:
         s.liq_dens = float(get('Properties_liquid', 'liq_dens'))
         s.liq_visc = float(get('Properties_liquid', 'liq_visc'))
 
+
     def get_props_array(s):
         props_list = list()
         props_list.append(s.a_gas_dens)

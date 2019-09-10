@@ -26,25 +26,46 @@ class Network_Data:
         s.config = configparser.ConfigParser()
         s.config.read(config_file)
 
+        # Read the path to text files with pores and throats
+
         s.pore_throats = str(s.config.get('PNData', 'pore_throats'))
         s.pores_data = str(s.config.get('PNData', 'pores_data'))
 
-        def __str__(s):
-            out_str = 'pore_throats ' + str(s.pore_throats) + '\n' + \
-                      'pores_data ' + str(s.pores_data)
-            return out_str
+        # Declare some futute variables
 
+        # Throat data
         s.throats = None
-        s.conn_ind = None
-        s.pores = None
-        s.pore_coords = None
-        s.conn_indices = None
 
+        s.conn_ind = None
+        s.throat_rasdius = None
+        s.throat_length = None
+
+        # Pore data
+        s.pores = None
+
+        s.pore_coords = None
+        s.pore_number = None
+        s.pore_list = None
+        s.pore_conns = None
+        s.pore_radius = None
+
+        s.inlet_pores = None
+        s.outlet_pores = None
+        s.boundary_pores = None
+
+        s.all_conns = None
+
+    # Process throat data, create a list of connected pores
 
     def process_throats(s):
         s.throats = pd.read_csv(s.pore_throats, index_col=0)
         s.conn_ind = [[a, b] for a, b in zip(s.throats['pore_i'],
                                              s.throats['pore_j'])]
+
+        s.throat_radius = s.throats['throat_diameter'] / 2
+        s.throat_length = s.throats['throat_length']
+
+    # Process pore data, create a list of pore coordinates
 
     def process_pores(s):
         s.pores = pd.read_csv(s.pores_data, index_col=0)
@@ -52,45 +73,92 @@ class Network_Data:
                          zip(s.pores['x_coord'],
                              s.pores['y_coord'],
                              s.pores['z_coord'])]
+        s.pore_number = len(s.pore_coords)
+        s.pore_list = np.arange(len(s.pore_coords))
+        s.pore_conns = s.pores['conn_indices']
+        s.pore_radius = s.pores['pore_diameter'] / 2
 
+    # Plote pore network using available openPNM tools
 
     def plot(s, conn_ind, pore_coords):
-        pn1 = op.network.GenericNetwork(conn_ind, pore_coords)
-        plt_connects = op.topotools.plot_connections(pn1)
-        plt_coords = op.topotools.plot_coordinates(pn1, fig=plt_connects,
+        pore_network = op.network.GenericNetwork(conn_ind, pore_coords)
+        plt_connects = op.topotools.plot_connections(pore_network)
+        plt_coords = op.topotools.plot_coordinates(pore_network,
+                                                   fig=plt_connects,
                                                    color='r', s=100)
         plt.show()
 
-    def boundary_pores(s):
+    # Identify boundary pores in any direction
 
-        s.front_boundaries = []
+    def get_boundary_pores(s, pore_list):
 
-        x_min = min(s.pores['x_coord'])
-        x_max = max(s.pores['x_coord'])
+        s.boundary_pores = []
+
+        x_min = min(pore_list)
+        x_max = max(pore_list)
 
         s.inlet_pores = []
         s.outlet_pores = []
 
-        for i in range(len(s.pores['x_coord'])):
-            if s.pores['x_coord'][i] == x_min:
+        for i in range(len(pore_list)):
+            if pore_list[i] == x_min:
                 s.inlet_pores.append(i)
 
-        for i in range(len(s.pores['x_coord'])):
-            if s.pores['x_coord'][i] == x_max:
+        for i in range(len(pore_list)):
+            if pore_list[i] == x_max:
                 s.outlet_pores.append(i)
 
-        s.front_boundaries = s.inlet_pores + s.outlet_pores
+        s.boundary_pores = s.inlet_pores + s.outlet_pores
+
+    def process_pore_conns(s):
+
+        for i in range(len(s.pore_conns)):
+            s.pore_conns[i] = s.pore_conns[i].split(',')
+        for i in range(len(s.pore_conns)):
+            for j in range(len(s.pore_conns[i])):
+                s.pore_conns[i][j] = int(s.pore_conns[i][j])
+
+    def get_all_conns(s):
+        s.pore_list = s.pore_list.reshape(s.pore_number, 1)
+        s.pore_list = s.pore_list.tolist()
+
+        row_conns = []
+        s.all_conns = []
+
+        for i in range(s.pore_number):
+            for j in range(len(s.pore_conns[i])):
+                single_conn = list(s.pore_list[i] + [s.pore_conns[i][j]])
+                single_conn.sort()
+                row_conns.append(single_conn)
+            s.all_conns.append(row_conns)
+            row_conns = []
+
+    # Print processed data in string format and print it to console
 
     def __str__(s):
-        out_str = super().__str__()
+        out_str = 'pore_throats ' + str(s.pore_throats) + '\n' + \
+                  'pores_data ' + str(s.pores_data) + '\n'
+
         if s.throats is not None:
-            out_str += '\nthroats ' + '\n' + str(s.throats)
+            out_str += '\nthroats ' + '\n' + str(s.throats) + '\n'
         if s.conn_ind is not None:
-            out_str += '\nconn_ind ' + '\n' + str(s.conn_ind)
+            out_str += '\nconn_ind ' + '\n' + str(s.conn_ind) + '\n'
+        if s.throat_radius is not None:
+            out_str += '\nthroat_radius ' + '\n' + str(s.throat_radius) + '\n'
+        if s.throat_length is not None:
+            out_str += '\nthroat_length ' + '\n' + str(s.throat_length) + '\n'
+
         if s.pores is not None:
-            out_str += '\npores ' + '\n' + str(s.pores)
+            out_str += '\npores ' + '\n' + str(s.pores) + '\n'
         if s.pore_coords is not None:
-            out_str += '\npore_coords ' + '\n' + str(s.pore_coords)
+            out_str += '\npore_coords ' + '\n' + str(s.pore_coords) + '\n'
+        if s.pore_conns is not None:
+            out_str += '\npore_conns ' + '\n' + str(s.pore_conns) + '\n'
+        if s.pore_radius is not None:
+            out_str += '\npore_radius ' + '\n' + str(s.pore_radius)
+        if s.all_conns is not None:
+            out_str += '\nall_conns ' + '\n' + str(s.all_conns)
+
         return out_str
 
 
@@ -99,8 +167,12 @@ if __name__ == '__main__':
     network_data.process_throats()
     network_data.process_pores()
 
+    network_data.process_pore_conns()
+    network_data.get_all_conns()
+
     conns = network_data.conn_ind
     coords = network_data.pore_coords
-    network_data.plot(conns, coords)
 
     print(network_data)
+
+    network_data.plot(conns, coords)
