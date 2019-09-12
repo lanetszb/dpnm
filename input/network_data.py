@@ -59,6 +59,7 @@ class Network_Data:
 
     def process_throats(s):
         s.throats = pd.read_csv(s.pore_throats, index_col=0)
+        s.throats = s.throats.sort_values(by=['pore_i'])
         s.conn_ind = [[a, b] for a, b in zip(s.throats['pore_i'],
                                              s.throats['pore_j'])]
 

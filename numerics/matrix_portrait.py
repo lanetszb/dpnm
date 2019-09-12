@@ -4,6 +4,7 @@ import configparser
 import numpy as np
 import math
 import pandas as pd
+import copy
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
@@ -103,6 +104,7 @@ class Matrix_Portrait:
 
         s.matrix_val = []
         coeff_in_row = []
+        s.all_cond = []
 
         for i in range(len(s.all_conns)):
             for j in range(len(s.all_conns[i])):
@@ -111,6 +113,8 @@ class Matrix_Portrait:
                         coeff_in_row.append(-1 * conn_coeff[k][1][0])
             s.matrix_val.append(list(coeff_in_row))
             coeff_in_row = []
+
+        s.all_cond = copy.deepcopy(s.matrix_val)
 
         s.matrix_central = []
         for i in range(len(s.matrix_val)):
@@ -135,6 +139,25 @@ class Matrix_Portrait:
         for idx, value in enumerate(s.network_data.outlet_pores):
             s.vector_B[value] = P_out
 
+    def get_flow_rate(s, pressure_list):
+
+        inlet_conns = []
+        for i in range(len(s.conn_ind)):
+            for j in range(len(s.network_data.inlet_pores)):
+                if s.network_data.inlet_pores[j] == s.conn_ind[i][0]:
+                    inlet_conns.append(matrix_portrait.conn_ind[i])
+
+        dp = []
+
+        for idx, value in enumerate(inlet_conns):
+            dp.append(pressure[value[0]] - pressure[value[1]])
+
+        flow_rates = s.matrix_coeff[0:len(inlet_conns)] * dp
+        flow_rates = np.array(flow_rates)
+
+        return np.sum(flow_rates)
+
+
 if __name__ == '__main__':
     matrix_portrait = Matrix_Portrait(config_file=sys.argv[1])
 
@@ -147,11 +170,23 @@ if __name__ == '__main__':
     P_out = 101325
 
     matrix_portrait.get_vector_B(202650, 101325)
-    #
-    A = csr_matrix((matrix_portrait.matrix_val, (matrix_portrait.matrix_row, matrix_portrait.matrix_col)),
-                   shape=(matrix_portrait.pore_number, matrix_portrait.pore_number)).toarray()
+
+    A = csr_matrix((matrix_portrait.matrix_val,
+                    (matrix_portrait.matrix_row,
+                     matrix_portrait.matrix_col)),
+                   shape=(matrix_portrait.pore_number,
+                          matrix_portrait.pore_number)).toarray()
 
     x = spsolve(A, matrix_portrait.vector_B)
 
-    # matrix_coeff = math.pi * matrix.throat_radius ** 4 / \
-    #                (8 * matrix.liq_visc * throat_length)
+    pressure = list(x)
+
+    total_flow = matrix_portrait.get_flow_rate(pressure)
+
+    x_min = min(matrix_portrait.network_data.pores['x_coord'])
+    x_max = max(matrix_portrait.network_data.pores['x_coord'])
+    x_length = x_max - x_min
+    area = x_length ** 2
+
+    k = total_flow * matrix_portrait.liq_visc * x_length / (
+                area * (P_in - P_out))
