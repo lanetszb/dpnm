@@ -3,11 +3,12 @@ import os
 import pandas as pd
 import configparser
 
+import numpy as np
+from input import plot_network_conns, plot_network_stats
+
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
-import numpy as np
-from input import plot_network_conns, plot_network_stats
 
 class Network_Data:
     def __init__(s, config_file):
@@ -19,13 +20,13 @@ class Network_Data:
         s.pore_throats = str(s.config.get('PNData', 'pore_throats'))
         s.pores_data = str(s.config.get('PNData', 'pores_data'))
 
-        # Declare some futute variables
+        # Declare some future variables
 
         # Throat data
         s.throats = None
 
         s.conn_ind = None
-        s.throat_rasdius = None
+        s.throat_radius = None
         s.throat_length = None
 
         # Pore data
@@ -67,24 +68,24 @@ class Network_Data:
         s.pore_conns = s.pores['conn_indices']
         s.pore_radius = s.pores['pore_diameter'] / 2
 
-    # Identify boundary pores in any direction
+    # Identify boundary pores in any direction (input list of x, y or z coords)
 
-    def get_boundary_pores(s, pore_list):
+    def get_boundary_pores(s, coord_list):
 
         s.boundary_pores = []
 
-        x_min = min(pore_list)
-        x_max = max(pore_list)
+        x_min = min(coord_list)
+        x_max = max(coord_list)
 
         s.inlet_pores = []
         s.outlet_pores = []
 
-        for i in range(len(pore_list)):
-            if pore_list[i] == x_min:
+        for i in range(len(coord_list)):
+            if coord_list[i] == x_min:
                 s.inlet_pores.append(i)
 
-        for i in range(len(pore_list)):
-            if pore_list[i] == x_max:
+        for i in range(len(coord_list)):
+            if coord_list[i] == x_max:
                 s.outlet_pores.append(i)
 
         s.boundary_pores = s.inlet_pores + s.outlet_pores
@@ -151,8 +152,7 @@ if __name__ == '__main__':
 
     print(network_data)
 
-    plot_network_conns(network_data.conn_ind, network_data.pore_coords,
-                       network_data.pore_list)
-
-    plot_network_stats(network_data.throat_radius)
-
+    # plot_network_conns(network_data.conn_ind, network_data.pore_coords,
+    #                    network_data.pore_list)
+    #
+    # plot_network_stats(network_data.throat_radius)
