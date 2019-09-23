@@ -3,23 +3,11 @@ import os
 import pandas as pd
 import configparser
 
-import numpy as np
-import math
-from mpl_toolkits.mplot3d import Axes3D
-
-import matplotlib.pyplot as plt
-
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
-sys.path.append(
-    os.path.join(current_path, '../../../../../../projects/pmeal/OpenPNM/'))
-sys.path.append(
-    os.path.join(current_path, '../../../../../../projects/pmeal/porespy/'))
-
-import scipy as sp
-import openpnm as op
-
+import numpy as np
+from input import plot_network_conns, plot_network_stats
 
 class Network_Data:
     def __init__(s, config_file):
@@ -78,16 +66,6 @@ class Network_Data:
         s.pore_list = np.arange(len(s.pore_coords))
         s.pore_conns = s.pores['conn_indices']
         s.pore_radius = s.pores['pore_diameter'] / 2
-
-    # Plote pore network using available openPNM tools
-
-    def plot(s, conn_ind, pore_coords):
-        pore_network = op.network.GenericNetwork(conn_ind, pore_coords)
-        plt_connects = op.topotools.plot_connections(pore_network)
-        plt_coords = op.topotools.plot_coordinates(pore_network,
-                                                   fig=plt_connects,
-                                                   color='r', s=100)
-        plt.show()
 
     # Identify boundary pores in any direction
 
@@ -171,9 +149,10 @@ if __name__ == '__main__':
     network_data.process_pore_conns()
     network_data.get_all_conns()
 
-    conns = network_data.conn_ind
-    coords = network_data.pore_coords
-
     print(network_data)
 
-    network_data.plot(conns, coords)
+    plot_network_conns(network_data.conn_ind, network_data.pore_coords,
+                       network_data.pore_list)
+
+    plot_network_stats(network_data.throat_radius)
+
