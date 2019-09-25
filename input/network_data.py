@@ -144,6 +144,7 @@ class Network_Data:
 
 if __name__ == '__main__':
     network_data = Network_Data(config_file=sys.argv[1])
+
     network_data.process_throats()
     network_data.process_pores()
 
@@ -152,7 +153,11 @@ if __name__ == '__main__':
 
     print(network_data)
 
-    # plot_network_conns(network_data.conn_ind, network_data.pore_coords,
-    #                    network_data.pore_list)
-    #
-    # plot_network_stats(network_data.throat_radius)
+    conn_ind = network_data.conn_ind
+    pore_coords = network_data.pore_coords
+    pore_list = network_data.pore_list
+
+    plot_network_conns(conn_ind, pore_coords, pore_list)
+
+    prop_plt = network_data.throat_length
+    plot_network_stats(prop_plt)
