@@ -1,16 +1,16 @@
 import sys
 import os
-import configparser
 import numpy as np
-import math
+
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
+from scipy.sparse.linalg import spsolve
+from time import perf_counter
+
 from numerics import Matrix_Portrait
 from input import Props, Network_Data
-
-from scipy.sparse.linalg import spsolve
 
 
 class Matrix_Solution:
@@ -54,6 +54,9 @@ class Matrix_Solution:
 
 
 if __name__ == '__main__':
+
+    t_start = perf_counter()
+
     props = Props(config_file=sys.argv[1])
 
     network_data = Network_Data(config_file=sys.argv[1])
@@ -89,3 +92,8 @@ if __name__ == '__main__':
 
     k = total_flow * matrix_portrait.props.liq_visc * x_length / (
             area * (pressure_in - pressure_out))
+
+    t_stop = perf_counter()
+
+    print("Elapsed time in seconds:",
+          t_stop-t_start)
