@@ -94,6 +94,4 @@ if __name__ == '__main__':
             area * (pressure_in - pressure_out))
 
     t_stop = perf_counter()
-
-    print("Elapsed time in seconds:",
-          t_stop-t_start)
+    print("Elapsed time in seconds:", t_stop-t_start)
