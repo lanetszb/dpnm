@@ -13,15 +13,25 @@ class Props:
         s.__config.read(config_file)
         get = s.__config.get
 
-        # Getting gas properties
+        # Getting gas properties PNM
         s.a_gas_dens = float(get('Properties_gas', 'a_gas_dens'))
         s.b_gas_dens = float(get('Properties_gas', 'b_gas_dens'))
         s.gas_visc = float(get('Properties_gas', 'gas_visc'))
 
-        # Getting liquid properties
+        # Getting liquid properties PNM
         s.liq_dens = float(get('Properties_liquid', 'liq_dens'))
         s.liq_visc = float(get('Properties_liquid', 'liq_visc'))
 
+        # Getting diffusion properties
+
+        s.time = float(get('Properties_diffusion', 'time'))
+        s.time_step = float(get('Properties_diffusion', 'time_step'))
+        s.length = float(get('Properties_diffusion', 'length'))
+        s.radius = float(get('Properties_diffusion', 'radius'))
+        s.grid_block_n = float(get('Properties_diffusion', 'grid_block_n'))
+        s.concentration = float(get('Properties_diffusion', 'concentration'))
+        s.diffusivity = float(get('Properties_diffusion', 'diffusivity'))
+        s.it_accuracy = float(get('Properties_diffusion', 'iterative_accuracy'))
 
     def get_props_array(s):
         props_list = list()
@@ -30,6 +40,18 @@ class Props:
         props_list.append(s.gas_visc)
         props_list.append(s.liq_dens)
         props_list.append(s.liq_visc)
+        return np.array(props_list, dtype=float)
+
+    def get_diff_props_array(s):
+        props_list = list()
+        props_list.append(s.time)
+        props_list.append(s.time_step)
+        props_list.append(s.length)
+        props_list.append(s.radius)
+        props_list.append(s.grid_block_n)
+        props_list.append(s.concentration)
+        props_list.append(s.diffusivity)
+        props_list.append(s.it_accuracy)
         return np.array(props_list, dtype=float)
 
     def __str__(s):
@@ -45,6 +67,3 @@ if __name__ == '__main__':
     props = Props(config_file=sys.argv[1])
     print(props.get_props_array())
     print(props)
-
-
-

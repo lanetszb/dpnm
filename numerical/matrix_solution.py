@@ -9,7 +9,7 @@ sys.path.append(os.path.join(current_path, '../'))
 from scipy.sparse.linalg import spsolve
 from time import perf_counter
 
-from numerics import Matrix_Portrait
+from numerical import Matrix_Portrait
 from input import Props, Network_Data
 
 
