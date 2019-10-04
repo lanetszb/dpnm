@@ -10,6 +10,7 @@ sys.path.append(os.path.join(current_path, '../'))
 from numerical import PropsCpp
 from numerical import LocalCpp
 from numerical import ConvectiveCpp
+from numerical import EquationCpp
 
 from input import Props
 
@@ -22,4 +23,12 @@ print(props_cpp)
 local_cpp = LocalCpp(props_array)
 
 convective_cpp = ConvectiveCpp(props_array)
+
+equation_cpp = EquationCpp(props_array)
+
+equation_cpp.cfdProcedure(30000, 3000)
+
+conc = equation_cpp.getConc()
+plt.plot(conc)
+plt.show()
 

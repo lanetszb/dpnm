@@ -9,3 +9,4 @@ from numerical.matrix_portrait import Matrix_Portrait
 from numerical.cfd import PropsCpp
 from numerical.cfd import LocalCpp
 from numerical.cfd import ConvectiveCpp
+from numerical.cfd import EquationCpp

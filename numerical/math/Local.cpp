@@ -8,6 +8,14 @@ Local::Local(const std::vector<double> &propsVector) :
         dRadius(0),
         alpha(std::vector<double>(props.gridBlockN, 0)) {}
 
+int Local::left(const int &index) {
+    return index;
+}
+
+int Local::right(const int &index) {
+    return index + 1;
+}
+
 
 std::vector<double> Local::calc_concListIni(const int &gridBlockN,
                                             const double &concentration) {

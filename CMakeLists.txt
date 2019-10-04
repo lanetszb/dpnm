@@ -20,6 +20,7 @@ include_directories(
 
 python_add_module(cfd
         numerical/wrapper.cpp
+        numerical/equation/Equation.cpp
         numerical/math/Props.cpp
         numerical/math/Local.cpp
         numerical/math/Convective.cpp)

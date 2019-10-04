@@ -5,6 +5,7 @@
 #include <Props.h>
 #include <Local.h>
 #include <Convective.h>
+#include <Equation.h>
 
 #include <PythonConversions.h>
 
@@ -70,8 +71,8 @@ BOOST_PYTHON_MODULE (cfd) {
 
 
     p::class_<Convective>("ConvectiveCpp",
-                     p::init<std::vector<double>>(
-                             p::args("props_array")))
+                          p::init<std::vector<double>>(
+                                  p::args("props_array")))
 
 
             .def("calc_diffusivityList",
@@ -89,6 +90,20 @@ BOOST_PYTHON_MODULE (cfd) {
 
             .def("get_beta",
                  &Convective::getBeta);
+
+    p::class_<Equation>("EquationCpp",
+                          p::init<std::vector<double>>(
+                                  p::args("props_array")))
+
+            .def("cfdProcedure",
+                 &Equation::cfdProcedure,
+                 p::args("conc_in",
+                         "conc_out"))
+
+            .def("getConc",
+                 &Equation::getConc);
+
+
 }
 
 

@@ -11,6 +11,10 @@ public:
 
     virtual ~Local() = default;
 
+    static int left(const int &index);
+
+    static int right(const int &index);
+
     std::vector<double> calc_concListIni(const int &gridBlockN,
                                          const double &concentration);
 
@@ -22,7 +26,6 @@ public:
                         const double &effRadius, const int &gridBlockN);
 
 
-
     Props props;
 
     double dRadius;
@@ -30,7 +33,6 @@ public:
     std::vector<double> alpha;
 
     const std::vector<double> getAlpha() const;
-
 
 
 };

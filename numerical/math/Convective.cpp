@@ -6,6 +6,14 @@ Convective::Convective(const std::vector<double> &propsVector) :
         props(propsVector),
         beta(std::vector<double>(props.gridBlockN + 1, 0)) {}
 
+int Convective::left(const int &index) {
+    return index - 1;
+}
+
+int Convective::right(const int &index) {
+    return index;
+}
+
 double Convective::omegaCylindric(const double &radius, const double &length) {
     return 2 * M_PI * length * radius;
 }

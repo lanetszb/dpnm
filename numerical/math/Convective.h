@@ -12,6 +12,9 @@ public:
 
     virtual ~Convective() = default;
 
+    static int left(const int &index);
+
+    static int right(const int &index);
 
     void calculateBeta(const double &radius,
                        const double &effRadius,
