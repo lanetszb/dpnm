@@ -49,7 +49,9 @@ void Equation::calculateMatrix() {
         ++it;
         it.valueRef() = -betaRight;
     }
-    MatrixIterator(matrix, dim - 1).valueRef() = local.alpha[dim - 1];
+    MatrixIterator(matrix, dim - 1).valueRef() =
+            -convective.beta[dim - 1] + local.alpha[dim - 1] +
+            convective.beta[dim - 1] + convective.beta[dim];
 }
 
 void Equation::calculateFreeVector(const double &conc_in,
@@ -57,7 +59,8 @@ void Equation::calculateFreeVector(const double &conc_in,
     freeVector[0] = local.alpha[0] * conc_in;
     for (int i = 1; i < dim - 1; i++)
         freeVector[i] = local.alpha[i] * conc[iPrev][i];
-    freeVector[dim - 1] = local.alpha[dim - 1] * conc_out;
+    freeVector[dim - 1] = -convective.beta[dim - 1] + local.alpha[dim - 1] +
+                          convective.beta[dim - 1] + convective.beta[dim];
 }
 
 void Equation::calculateGuessVector() {
