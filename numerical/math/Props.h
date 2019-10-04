@@ -59,7 +59,7 @@ public:
     double radius;
     double effRadius;
     int gridBlockN;
-    double concentration;
+    double concIni;
     double diffusivity;
     double iterativeAccuracy;
 

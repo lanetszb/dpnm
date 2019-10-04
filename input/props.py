@@ -29,7 +29,7 @@ class Props:
         s.length = float(get('Properties_diffusion', 'length'))
         s.radius = float(get('Properties_diffusion', 'radius'))
         s.grid_block_n = float(get('Properties_diffusion', 'grid_block_n'))
-        s.concentration = float(get('Properties_diffusion', 'concentration'))
+        s.conc_ini = float(get('Properties_diffusion', 'conc_ini'))
         s.diffusivity = float(get('Properties_diffusion', 'diffusivity'))
         s.it_accuracy = float(get('Properties_diffusion', 'iterative_accuracy'))
 
@@ -49,7 +49,7 @@ class Props:
         props_list.append(s.length)
         props_list.append(s.radius)
         props_list.append(s.grid_block_n)
-        props_list.append(s.concentration)
+        props_list.append(s.conc_ini)
         props_list.append(s.diffusivity)
         props_list.append(s.it_accuracy)
         return np.array(props_list, dtype=float)

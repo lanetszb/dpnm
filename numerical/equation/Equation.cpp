@@ -5,6 +5,7 @@ Equation::Equation(const std::vector<double> &propsVector) :
         local(propsVector),
         convective(propsVector),
         dim(props.gridBlockN),
+        conc(std::vector<std::vector<double>>()),
         time(props.time),
         iCurr(0),
         iPrev(1),
@@ -13,9 +14,9 @@ Equation::Equation(const std::vector<double> &propsVector) :
         guessVector(dim),
         variable(dim) {
 
+    conc.emplace_back(std::vector<double>(dim, props.concIni));
+    conc.emplace_back(std::vector<double>(dim, props.concIni));
 
-    conc.emplace_back(std::vector<double>(dim, 0));
-    conc.emplace_back(std::vector<double>(dim, 0));
 
     std::vector<Triplet> triplets;
     triplets.reserve(3 * dim - 4);
@@ -25,7 +26,8 @@ Equation::Equation(const std::vector<double> &propsVector) :
         triplets.emplace_back(i, i);
         triplets.emplace_back(i, i + 1);
     }
-    triplets.emplace_back(dim - 1, dim - 1, 1);
+    triplets.emplace_back(dim - 1, dim - 2);
+    triplets.emplace_back(dim - 1, dim - 1);
     matrix.setFromTriplets(triplets.begin(), triplets.end());
 
     for (int i = 0; i < dim; i++) {
@@ -37,7 +39,9 @@ Equation::Equation(const std::vector<double> &propsVector) :
 }
 
 void Equation::calculateMatrix() {
+
     MatrixIterator(matrix, 0).valueRef() = local.alpha[0];
+
     for (int i = 1; i < dim - 1; ++i) {
         MatrixIterator it(matrix, i);
         double &betaLeft = convective.beta[Local::left(i)];
@@ -49,18 +53,19 @@ void Equation::calculateMatrix() {
         ++it;
         it.valueRef() = -betaRight;
     }
-    MatrixIterator(matrix, dim - 1).valueRef() =
-            -convective.beta[dim - 1] + local.alpha[dim - 1] +
-            convective.beta[dim - 1] + convective.beta[dim];
+
+    MatrixIterator it(matrix, dim - 1);
+    double &betaLeft = convective.beta[Local::left(dim - 1)];
+    double &alpha = local.alpha[dim - 1];
+    it.valueRef() = -betaLeft;
+    ++it;
+    it.valueRef() = alpha + betaLeft;
 }
 
-void Equation::calculateFreeVector(const double &conc_in,
-                                   const double &conc_out) {
+void Equation::calculateFreeVector(const double &conc_in) {
     freeVector[0] = local.alpha[0] * conc_in;
-    for (int i = 1; i < dim - 1; i++)
+    for (int i = 1; i < dim; i++)
         freeVector[i] = local.alpha[i] * conc[iPrev][i];
-    freeVector[dim - 1] = -convective.beta[dim - 1] + local.alpha[dim - 1] +
-                          convective.beta[dim - 1] + convective.beta[dim];
 }
 
 void Equation::calculateGuessVector() {
@@ -81,16 +86,7 @@ void Equation::calculateConc() {
 
 }
 
-void Equation::processConc() {
-
-    for (int i = 1; i < 2; i++)
-        for (int j = 0; j < dim; j++)
-
-            conc_vec.emplace_back(conc[i][j]);
-}
-
-void Equation::cfdProcedure(const double &concIn,
-                            const double &concOut) {
+void Equation::cfdProcedure(const double &concIn) {
 
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
 
@@ -106,16 +102,14 @@ void Equation::cfdProcedure(const double &concIn,
                                  props.gridBlockN);
         calculateGuessVector();
         calculateMatrix();
-        calculateFreeVector(concIn, concOut);
+        calculateFreeVector(concIn);
         calculateConc();
     }
 
-    processConc();
 }
 
 
 const std::vector<double> Equation::getConc() const {
-
-    return conc_vec;
+    return conc[iCurr];
 }
 

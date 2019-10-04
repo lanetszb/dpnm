@@ -26,21 +26,17 @@ public:
 
     void calculateMatrix();
 
-    void calculateFreeVector(const double &concIn,
-                                     const double &concOut);
+    void calculateFreeVector(const double &conc_in);
 
     void calculateGuessVector();
 
     void calculateConc();
 
-    void cfdProcedure(const double &concIn,
-                      const double &concOut);
+    void cfdProcedure(const double &concIn);
 
+    int &dim;
 
     std::vector<std::vector<double>> conc;
-    std::vector<double> conc_vec;
-
-    void processConc();
 
     const std::vector<double> getConc() const;
 
@@ -50,7 +46,7 @@ public:
 
     Convective convective;
 
-    int &dim;
+
     double &time;
 
     int iCurr;

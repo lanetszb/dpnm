@@ -11,7 +11,7 @@ Props::Props(const std::vector<double> &_propsVector) :
         radius(_propsVector[3]),
         effRadius(_propsVector[3] * 5),
         gridBlockN(_propsVector[4]),
-        concentration(_propsVector[5]),
+        concIni(_propsVector[5]),
         diffusivity(_propsVector[6]),
         iterativeAccuracy(_propsVector[7]),
         propsVector(_propsVector) {}
@@ -24,7 +24,7 @@ std::ostream &operator<<(std::ostream &stream, const Props &props) {
     stream << "radius " << props.radius << std::endl;
     stream << "effRadius " << props.effRadius << std::endl;
     stream << "gridBlockN " << props.gridBlockN << std::endl;
-    stream << "concentration " << props.length << std::endl;
+    stream << "concIni " << props.length << std::endl;
     stream << "diffusivity " << props.diffusivity << std::endl;
     stream << "iterativeAccuracy " << props.iterativeAccuracy << std::endl;
 
@@ -60,11 +60,11 @@ void Props::setGridBlockN(int gridBlockN) {
 }
 
 double Props::getConcentration() const {
-    return concentration;
+    return concIni;
 }
 
 void Props::setConcentration(double concentration) {
-    Props::concentration = concentration;
+    Props::concIni = concentration;
 }
 
 double Props::getDiffusivity() const {

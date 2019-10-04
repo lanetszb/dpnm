@@ -32,7 +32,7 @@ BOOST_PYTHON_MODULE (cfd) {
             .add_property("grid_block_n",
                           &Props::getGridBlockN,
                           &Props::setGridBlockN)
-            .add_property("concentration",
+            .add_property("concIni",
                           &Props::getConcentration,
                           &Props::setConcentration)
             .add_property("diffusivity",
@@ -56,7 +56,7 @@ BOOST_PYTHON_MODULE (cfd) {
             .def("calc_concListIni",
                  &Local::calc_concListIni,
                  p::args("grid_block_n",
-                         "concentration"))
+                         "concIni"))
 
 
             .def("calculateAlpha",
@@ -78,7 +78,7 @@ BOOST_PYTHON_MODULE (cfd) {
             .def("calc_diffusivityList",
                  &Convective::calc_diffusivityList,
                  p::args("grid_block_n",
-                         "concentration"))
+                         "concIni"))
 
             .def("calculateBeta",
                  &Convective::calculateBeta,
@@ -92,13 +92,12 @@ BOOST_PYTHON_MODULE (cfd) {
                  &Convective::getBeta);
 
     p::class_<Equation>("EquationCpp",
-                          p::init<std::vector<double>>(
-                                  p::args("props_array")))
+                        p::init<std::vector<double>>(
+                                p::args("props_array")))
 
             .def("cfdProcedure",
                  &Equation::cfdProcedure,
-                 p::args("conc_in",
-                         "conc_out"))
+                 p::args("conc_in"))
 
             .def("getConc",
                  &Equation::getConc);

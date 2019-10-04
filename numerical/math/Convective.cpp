@@ -35,7 +35,7 @@ void Convective::calculateBeta(const double &radius,
                                const int &gridBlockN) {
 
     dRadius = calcDelRadius(radius, effRadius, gridBlockN);
-    auto diffusivityList = calc_diffusivityList(gridBlockN, diffusivity);
+    auto diffusivityList = calc_diffusivityList(gridBlockN + 1, diffusivity);
 
     for (int i = 0; i < beta.size(); i++) {
 
