@@ -22,7 +22,7 @@ print(props_cpp)
 
 local_cpp = LocalCpp(props_array)
 
-# convective_cpp = ConvectiveCpp(props_array)
+convective_cpp = ConvectiveCpp(props_array)
 #
 # equation_cpp = EquationCpp(props_array)
 #

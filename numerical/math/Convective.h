@@ -19,8 +19,7 @@ public:
     void calculateBeta(const double &radius,
                        const double &effRadius,
                        const double &length,
-                       const double &diffusivity,
-                       const int &gridBlockN);
+                       const double &diffusivity);
 
     double omegaCylindric(const double &radius, const double &length);
 
@@ -29,7 +28,6 @@ public:
     std::vector<double> calc_diffusivityList(const int &gridBlockN,
                                              const double &diffusivity);
 
-
     Props props;
 
     std::vector<double> beta;
@@ -37,6 +35,5 @@ public:
     const std::vector<double> getBeta() const;
 
 };
-
 
 #endif

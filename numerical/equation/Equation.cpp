@@ -97,8 +97,7 @@ void Equation::cfdProcedure(const double &concIn) {
         convective.calculateBeta(props.radius,
                                  props.effRadius,
                                  props.length,
-                                 props.diffusivity,
-                                 props.gridBlockN);
+                                 props.diffusivity);
         calculateGuessVector();
         calculateMatrix();
         calculateFreeVector(concIn);

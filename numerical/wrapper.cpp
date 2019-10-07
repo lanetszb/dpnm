@@ -83,8 +83,7 @@ BOOST_PYTHON_MODULE (cfd) {
                  p::args("radius",
                          "effRadius",
                          "length",
-                         "diffusivity",
-                         "gridBlockN"))
+                         "diffusivity"))
 
             .def("get_beta",
                  &Convective::getBeta);

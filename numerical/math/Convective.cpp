@@ -25,22 +25,21 @@ double Convective::omegaSpheric(const double &radius) {
 std::vector<double> Convective::calc_diffusivityList(const int &gridBlockN,
                                                      const double &diffusivity) {
 
-    return std::vector<double>(gridBlockN + 1, diffusivity);
+    return std::vector<double>(gridBlockN, diffusivity);
 }
 
 void Convective::calculateBeta(const double &radius,
                                const double &effRadius,
                                const double &length,
-                               const double &diffusivity,
-                               const int &gridBlockN) {
+                               const double &diffusivity) {
 
-    dRadius = calcDelRadius(radius, effRadius, gridBlockN);
-    auto diffusivityList = calc_diffusivityList(gridBlockN + 1, diffusivity);
+    dRadius = calcDelRadius(radius, effRadius, beta.size() - 1);
+    auto diffusivityList = calc_diffusivityList(beta.size(), diffusivity);
 
     for (int i = 0; i < beta.size(); i++) {
 
-        auto radius = effRadius - i * dRadius;
-        auto omega = omegaCylindric(radius, length);
+        auto radius_curr = radius + i * dRadius;
+        auto omega = omegaCylindric(radius_curr, length);
 
         beta[i] = diffusivityList[i] * omega / dRadius;
     }
