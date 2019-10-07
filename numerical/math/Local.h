@@ -15,16 +15,11 @@ public:
 
     static int right(const int &index);
 
-    std::vector<double> calc_concListIni(const int &gridBlockN,
-                                         const double &concentration);
-
     double calcDelRadius(const double &radius, const double &effRadius,
                          const int &gridBlockN);
 
-
     void calculateAlpha(const double &dt, const double &radius,
-                        const double &effRadius, const int &gridBlockN);
-
+                        const double &effRadius);
 
     Props props;
 
@@ -33,7 +28,6 @@ public:
     std::vector<double> alpha;
 
     const std::vector<double> getAlpha() const;
-
 
 };
 

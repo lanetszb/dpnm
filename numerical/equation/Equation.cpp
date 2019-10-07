@@ -93,8 +93,7 @@ void Equation::cfdProcedure(const double &concIn) {
         std::swap(iCurr, iPrev);
         local.calculateAlpha(props.timeStep,
                              props.radius,
-                             props.effRadius,
-                             props.gridBlockN);
+                             props.effRadius);
         convective.calculateBeta(props.radius,
                                  props.effRadius,
                                  props.length,

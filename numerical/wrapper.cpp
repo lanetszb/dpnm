@@ -58,19 +58,11 @@ BOOST_PYTHON_MODULE (cfd) {
                      p::init<std::vector<double>>(
                              p::args("props_array")))
 
-
-            .def("calc_concListIni",
-                 &Local::calc_concListIni,
-                 p::args("grid_block_n",
-                         "concIni"))
-
-
             .def("calculateAlpha",
                  &Local::calculateAlpha,
                  p::args("dt",
                          "radius",
-                         "effRadius",
-                         "gridBlockN"))
+                         "effRadius"))
 
             .def("get_alpha",
                  &Local::getAlpha);
