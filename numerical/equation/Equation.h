@@ -37,29 +37,21 @@ public:
     int &dim;
 
     std::vector<std::vector<double>> conc;
-
     const std::vector<double> getConc() const;
 
     Props props;
-
     Local local;
-
     Convective convective;
 
-
     double &time;
-
     int iCurr;
     int iPrev;
 
     Matrix matrix;
 
     Vector freeVector;
-
     Vector guessVector;
-
     Vector variable;
-
 
 };
 

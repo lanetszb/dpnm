@@ -106,7 +106,6 @@ void Equation::cfdProcedure(const double &concIn) {
 
 }
 
-
 const std::vector<double> Equation::getConc() const {
     return conc[iCurr];
 }

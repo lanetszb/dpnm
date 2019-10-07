@@ -23,15 +23,15 @@ print(props_cpp)
 local_cpp = LocalCpp(props_array)
 
 convective_cpp = ConvectiveCpp(props_array)
-#
-# equation_cpp = EquationCpp(props_array)
-#
-# equation_cpp.cfdProcedure(30000)
-#
-# conc = equation_cpp.getConc()
-# print(conc)
-# plt.plot(conc)
-#
-# plt.ylim(2000, 32000)
-# plt.show()
+
+equation_cpp = EquationCpp(props_array)
+
+equation_cpp.cfdProcedure(1000)
+
+conc = equation_cpp.getConc()
+print(conc)
+plt.plot(conc)
+
+plt.ylim(0, 25000)
+plt.show()
 
