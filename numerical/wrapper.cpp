@@ -20,6 +20,12 @@ BOOST_PYTHON_MODULE (cfd) {
                              p::args("props_array")))
             .def("__str__", __str__<Props>)
 
+            .add_property("time",
+                          &Props::getTime,
+                          &Props::setTime)
+            .add_property("time_step",
+                          &Props::getTimeStep,
+                          &Props::setTimeStep)
             .add_property("length",
                           &Props::getLength,
                           &Props::setLength)
