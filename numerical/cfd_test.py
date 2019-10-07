@@ -26,12 +26,12 @@ convective_cpp = ConvectiveCpp(props_array)
 
 equation_cpp = EquationCpp(props_array)
 
-equation_cpp.cfdProcedure(3000)
+equation_cpp.cfdProcedure(30000)
 
 conc = equation_cpp.getConc()
 print(conc)
 plt.plot(conc)
 
-plt.ylim(3000, 21000)
+plt.ylim(2000, 32000)
 plt.show()
 

@@ -127,3 +127,4 @@ if __name__ == '__main__':
     matrix_portrait.get_matrix_val()
 
     matrix_portrait.get_matrix_portrait()
+    print(matrix_portrait.A)

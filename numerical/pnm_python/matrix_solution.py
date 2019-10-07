@@ -9,8 +9,8 @@ sys.path.append(os.path.join(current_path, '../'))
 from scipy.sparse.linalg import spsolve
 from time import perf_counter
 
-from numerical import Matrix_Portrait
 from input import Props, Network_Data
+from numerical.pnm_python import Matrix_Portrait
 
 
 class Matrix_Solution:
@@ -92,6 +92,8 @@ if __name__ == '__main__':
 
     k = total_flow * matrix_portrait.props.liq_visc * x_length / (
             area * (pressure_in - pressure_out))
+
+    print(k)
 
     t_stop = perf_counter()
     print("Elapsed time in seconds:", t_stop-t_start)
