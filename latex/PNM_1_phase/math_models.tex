@@ -1,0 +1,144 @@
+\documentclass[a4paper,12pt]{extreport}
+
+\usepackage{extsizes}
+\usepackage{cmap} % для кодировки шрифтов в pdf
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage[usenames, dvipsnames]{color}
+\definecolor{fontColor}{RGB}{169, 183, 198}
+\definecolor{pageColor}{RGB}{43, 43, 43}
+
+\usepackage{mathtools}
+
+\makeatletter
+\let\mytagform@=\tagform@
+\def\tagform@#1{\maketag@@@{\color{fontColor}(#1)}}
+\makeatother
+
+\renewcommand\theequation{{\color{fontColor}\arabic{equation}}}
+
+
+
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{mathtext}
+\usepackage{cite}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage[pdftex,unicode,colorlinks = true,linkcolor = white]{hyperref}
+\usepackage{indentfirst}
+\usepackage{placeins}
+\bibliographystyle{unsrt}
+\usepackage{makecell}
+\usepackage{ulem}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{multicol}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\fancyheadoffset{0mm}
+\fancyfootoffset{0mm}
+\setlength{\headheight}{17pt}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{
+\fancyhf{}
+\rhead{\thepage}}
+
+\usepackage{geometry}
+\geometry{left=1.5cm}
+\geometry{right=1.5cm}
+\geometry{top=2.4cm}
+\geometry{bottom=2.4cm}
+
+\author{Aleksandr Zhuravlyov}
+\title{Numerical model of steady state and transient flow}
+\date{\today}
+
+
+\usepackage {titlesec}
+\titleformat{\chapter}{\thispagestyle{myheadings}\centering\hyphenpenalty=10000\normalfont\huge\bfseries}{
+\thechapter. }{0pt}{\Huge}
+\makeatother
+
+
+\usepackage{nomencl}
+\makenomenclature    % Закомментируйте, если перечень не нужен
+%"/usr/texbin/makeindex" %.nlo -s nomencl.ist -o %.nls
+\renewcommand{\nomname}{Перечень условных обозначений}
+\renewcommand{\nompreamble}{\markboth{}{}}
+\newcommand*{\nom}[2]{#1~- #2\nomenclature{#1}{#2}}
+
+\setlength{\columnseprule}{0.4pt}
+\setlength{\columnsep}{50pt}
+\def\columnseprulecolor{\color{fontColor}}
+
+
+\begin{document}
+
+    \pagecolor{pageColor}
+    \color{fontColor}
+    %\maketitle
+    %\newpage
+    %\tableofcontents{\thispagestyle{empty}}
+    %\newpage
+
+        \begin{center}
+        {\large \textbf{FVM Diffusion transient flow}}
+        \end{center}
+        %
+          \begin{eqnarray}
+            \label{eq:conductivity_integral}
+            \int \limits_{V} \frac{\partial c}{\partial t} d V - \oint \limits_{\Omega} D \vec{\nabla}c \; d\vec{\Omega} = 0,
+        \end{eqnarray}
+        \vspace{-0.5cm}
+         \begin{eqnarray}
+            \label{eq:conductivity_bound}
+            c\left(t\right) \Big|_{r} = c_r\left(t\right), \;
+            \vec{\nabla} c \Big|_{R} = 0,
+        \end{eqnarray}
+        %
+               \begin{eqnarray}
+            \label{eq:conductivity_num}
+            \alpha \Delta^{t}_{c} + \beta_{-}\Delta^{n+1}_{c-} - \beta_{+}\Delta^{n+1}_{c+}= 0,
+        \end{eqnarray}
+        %
+         \begin{eqnarray}
+            \label{eq:conductivity_bound_num}
+            c_1^n = c_r^n, \;
+           \Delta_{c \; N_+}^n = 0,
+        \end{eqnarray}
+        %
+         \begin{eqnarray}
+            \label{eq:alpha_beta}
+            \alpha = \frac{\Delta V}{\Delta t}, \;
+			\beta = \frac{\overline{D} \Delta \Omega}{\Delta L},
+        \end{eqnarray}
+        %
+        \begin{eqnarray}
+  			\Delta \Omega =\begin{cases}
+    		h^2: & \text{cartesian},\\
+    		2 \pi h r: & \text{cylindrical},\\
+    		4 \pi r^2: & \text{spherical},
+  			\end{cases}
+		\end{eqnarray}
+
+        \begin{eqnarray}
+            \label{eq:delta_num}
+            \Delta_{c}^n = c_{+}^n - c_{-}^n, \;
+            \Delta^{t}_{c} = c^{n+1} - c^{n},
+        \end{eqnarray}
+        %
+        \begin{eqnarray}
+            \label{eq:Consumption_conductivity_integral}
+            q_{M}^{n+1} = - \beta_-\Delta^{n+1}_{c-} \Big|_ {2}.                        
+        \end{eqnarray}
+
+\end{document}
