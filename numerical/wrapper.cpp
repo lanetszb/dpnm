@@ -7,6 +7,9 @@
 #include <Convective.h>
 #include <Equation.h>
 
+#include <PropsPNM.h>
+#include <NetworkData.h>
+
 #include <PythonConversions.h>
 
 namespace p = boost::python;
@@ -99,8 +102,74 @@ BOOST_PYTHON_MODULE (cfd) {
             .def("getConc",
                  &Equation::getConc);
 
+    // Wrapper for PNM
+
+    p::class_<PropsPNM>("PropsPNMCpp",
+                        p::init<std::vector<double>>(
+                                p::args("props_array")))
+            .def("__str__", __str__<PropsPNM>)
+
+            .add_property("a_gas_dens",
+                          &PropsPNM::getAGasDens,
+                          &PropsPNM::setAGasDens)
+            .add_property("b_gas_dens",
+                          &PropsPNM::getBGasDens,
+                          &PropsPNM::setBGasDens)
+            .add_property("gas_visc",
+                          &PropsPNM::getGasVisc,
+                          &PropsPNM::setGasVisc)
+            .add_property("liq_dens",
+                          &PropsPNM::getLiqDens,
+                          &PropsPNM::setLiqDens)
+            .add_property("liq_visc",
+                          &PropsPNM::getLiqVisc,
+                          &PropsPNM::setLiqVisc)
+            .add_property("props_vector",
+                          &PropsPNM::getPropsVector)
+
+            .def("print_props_vector",
+                 &PropsPNM::printPropsVector);
+
+
+    p::class_<NetworkData>("NetworkDataCpp",
+                           p::init<std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<int>>(
+                                   p::args(
+                                           "throat_radius",
+                                           "throat_length",
+                                           "conn_ind_in",
+                                           "conn_ind_out",
+                                           "pore_coord_x",
+                                           "pore_coord_y",
+                                           "pore_coord_z",
+                                           "pore_radius",
+                                           "pore_list")))
+            .def("__str__", __str__<NetworkData>)
+
+            .add_property("throat_radius",
+                          &NetworkData::getThroatRadius)
+            .add_property("throat_length",
+                          &NetworkData::getThroatLength)
+            .add_property("pore_list",
+                          &NetworkData::getPoreList)
+
+            .def("print_throat_radius",
+                 &NetworkData::printThroatRadius)
+            .def("print_throat_radius",
+                 &NetworkData::printThroatLength)
+            .def("print_throat_radius",
+                 &NetworkData::printPoreList);
+
 
 }
+
 
 
 

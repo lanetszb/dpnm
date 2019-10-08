@@ -1,9 +1,8 @@
-#include <PropsPNM.h>
-
+#include <Props.h>
 #include <vector>
 
 
-PropsPNM::PropsPNM(const std::vector<double> &_propsVector) :
+Props::Props(const std::vector<double> &_propsVector) :
 
         time(_propsVector[0]),
         timeStep(_propsVector[1]),
@@ -17,7 +16,7 @@ PropsPNM::PropsPNM(const std::vector<double> &_propsVector) :
         propsVector(_propsVector) {}
 
 
-std::ostream &operator<<(std::ostream &stream, const PropsPNM &props) {
+std::ostream &operator<<(std::ostream &stream, const Props &props) {
     stream << "time " << props.time << std::endl;
     stream << "timeStep " << props.timeStep << std::endl;
     stream << "length " << props.length << std::endl;
@@ -31,83 +30,83 @@ std::ostream &operator<<(std::ostream &stream, const PropsPNM &props) {
     return stream;
 }
 
-std::vector<double> PropsPNM::getPropsVector() const {
+std::vector<double> Props::getPropsVector() const {
     return propsVector;
 }
 
-double PropsPNM::getLength() const {
+double Props::getLength() const {
     return length;
 }
 
-void PropsPNM::setLength(double length) {
-    PropsPNM::length = length;
+void Props::setLength(double length) {
+    Props::length = length;
 }
 
-double PropsPNM::getRadius() const {
+double Props::getRadius() const {
     return radius;
 }
 
-void PropsPNM::setRadius(double radius) {
-    PropsPNM::radius = radius;
+void Props::setRadius(double radius) {
+    Props::radius = radius;
 }
 
-int PropsPNM::getGridBlockN() const {
+int Props::getGridBlockN() const {
     return gridBlockN;
 }
 
-void PropsPNM::setGridBlockN(int gridBlockN) {
+void Props::setGridBlockN(int gridBlockN) {
     gridBlockN = gridBlockN;
 }
 
-double PropsPNM::getConcentration() const {
+double Props::getConcentration() const {
     return concIni;
 }
 
-void PropsPNM::setConcentration(double concentration) {
-    PropsPNM::concIni = concentration;
+void Props::setConcentration(double concentration) {
+    Props::concIni = concentration;
 }
 
-double PropsPNM::getDiffusivity() const {
+double Props::getDiffusivity() const {
     return diffusivity;
 }
 
-void PropsPNM::setDiffusivity(double diffusivity) {
-    PropsPNM::diffusivity = diffusivity;
+void Props::setDiffusivity(double diffusivity) {
+    Props::diffusivity = diffusivity;
 }
 
-double PropsPNM::getIterativeAccuracy() const {
+double Props::getIterativeAccuracy() const {
     return iterativeAccuracy;
 }
 
-void PropsPNM::setIterativeAccuracy(double iterativeAccuracy) {
-    PropsPNM::iterativeAccuracy = iterativeAccuracy;
+void Props::setIterativeAccuracy(double iterativeAccuracy) {
+    Props::iterativeAccuracy = iterativeAccuracy;
 }
 
-void PropsPNM::printPropsVector() {
+void Props::printPropsVector() {
     for (auto &element : propsVector)
         std::cout << element << std::endl;
 }
 
-double PropsPNM::getEffRadius() const {
+double Props::getEffRadius() const {
     return effRadius;
 }
 
-void PropsPNM::setEffRadius(double effRadius) {
-    PropsPNM::effRadius = effRadius;
+void Props::setEffRadius(double effRadius) {
+    Props::effRadius = effRadius;
 }
 
-double PropsPNM::getTime() const {
+double Props::getTime() const {
     return time;
 }
 
-void PropsPNM::setTime(double time) {
-    PropsPNM::time = time;
+void Props::setTime(double time) {
+    Props::time = time;
 }
 
-double PropsPNM::getTimeStep() const {
+double Props::getTimeStep() const {
     return timeStep;
 }
 
-void PropsPNM::setTimeStep(double timeStep) {
-    PropsPNM::timeStep = timeStep;
+void Props::setTimeStep(double timeStep) {
+    Props::timeStep = timeStep;
 }

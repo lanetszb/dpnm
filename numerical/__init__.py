@@ -8,4 +8,6 @@ from numerical.cfd import PropsCpp
 from numerical.cfd import LocalCpp
 from numerical.cfd import ConvectiveCpp
 from numerical.cfd import EquationCpp
+from numerical.cfd import PropsPNMCpp
+from numerical.cfd import NetworkDataCpp
 

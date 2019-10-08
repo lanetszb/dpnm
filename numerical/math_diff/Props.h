@@ -12,7 +12,6 @@ public:
 
     virtual ~Props() {}
 
-
     friend std::ostream &operator<<(std::ostream &stream, const Props &props);
 
     double getTime() const;

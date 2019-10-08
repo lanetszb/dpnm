@@ -13,17 +13,20 @@ find_package(Eigen3 REQUIRED)
 
 
 include_directories(
-        numerical/equation
-        numerical/math
+        numerical/math_pnm
+        numerical/equation_diff
+        numerical/math_diff
         numerical/utilities)
 
 
 python_add_module(cfd
         numerical/wrapper.cpp
-        numerical/equation/Equation.cpp
-        numerical/math/Props.cpp
-        numerical/math/Local.cpp
-        numerical/math/Convective.cpp)
+        numerical/math_pnm/PropsPNM.cpp
+        numerical/math_pnm/NetworkData.cpp
+        numerical/equation_diff/Equation.cpp
+        numerical/math_diff/Props.cpp
+        numerical/math_diff/Local.cpp
+        numerical/math_diff/Convective.cpp)
 
 
 target_include_directories(cfd PUBLIC
