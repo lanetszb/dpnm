@@ -49,15 +49,16 @@ print(props_pnm_cpp)
 network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
 network_data_cpp.process_throats()
 network_data_cpp.process_pores()
+network_data_cpp.process_pore_conns()
 
 tr = network_data_cpp.pore_radius
 tl = network_data_cpp.pore_coords_z
 
-pore_list = network_data_cpp.pore_list
+pore_list = network_data_cpp.conn_number
 
 conn_in = network_data_cpp.conn_ind_in
 conn_out = network_data_cpp.conn_ind_out
 
 #
 nd_cpp = NetworkDataCpp(tr, tl, conn_in, conn_out, tl, conn_in, conn_out, tr,
-                        pore_list)
+                        pore_list, pore_list, pore_list)

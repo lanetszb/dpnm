@@ -17,7 +17,9 @@ public :
                          const std::vector<double> &_pore_coord_y,
                          const std::vector<double> &_pore_coord_z,
                          const std::vector<double> &_pore_radius,
-                         const std::vector<int> &_pore_list);
+                         const std::vector<int> &_pore_list,
+                         const std::vector<int> &_pore_conns,
+                         const std::vector<int> &_conn_number);
 
     virtual ~NetworkData() {}
 
@@ -25,12 +27,16 @@ public :
             std::ostream &stream, const NetworkData &networkData);
 
     void printThroatRadius();
+
     void printThroatLength();
+
     void printPoreList();
 
 
     std::vector<double> getThroatRadius() const;
+
     std::vector<double> getThroatLength() const;
+
     std::vector<int> getPoreList() const;
 
 
@@ -47,7 +53,10 @@ private:
     std::vector<double> poreCoordZ;
 
     std::vector<double> poreRadius;
+
     std::vector<int> poreList;
+    std::vector<int> poreConns;
+    std::vector<int> connNumber;
 
 public:
 

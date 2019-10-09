@@ -64,10 +64,21 @@ class Network_Data_Cpp:
         s.pore_list = np.arange(s.pore_number).tolist()
         s.pore_radius = list(s.pores['pore_diameter'] / 2)
 
-        s.pore_conns = s.pores['conn_indices']
+        s.conn_number = s.pores['conn_number']
+        s.conn_number = list(s.conn_number)
 
+    def process_pore_conns(s):
 
-    # Process pore data, create a list of pore coordinates
+        pore_conns_raw = s.pores['conn_indices']
+        s.pore_conns = []
+
+        for i in range(len(pore_conns_raw)):
+            pore_conns_raw[i] = pore_conns_raw[i].split(',')
+
+        for i in range(len(pore_conns_raw)):
+            for j in range(s.conn_number[i]):
+               s.pore_conns.append(int(pore_conns_raw[i][j]))
+
 
 if __name__ == '__main__':
     network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])

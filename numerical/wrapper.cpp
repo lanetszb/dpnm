@@ -140,6 +140,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
+                                   std::vector<int>,
+                                   std::vector<int>,
                                    std::vector<int>>(
                                    p::args(
                                            "throat_radius",
@@ -150,7 +152,9 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "pore_coord_y",
                                            "pore_coord_z",
                                            "pore_radius",
-                                           "pore_list")))
+                                           "pore_list",
+                                           "pore_conns",
+                                           "conn_number")))
             .def("__str__", __str__<NetworkData>)
 
             .add_property("throat_radius",
@@ -166,7 +170,6 @@ BOOST_PYTHON_MODULE (cfd) {
                  &NetworkData::printThroatLength)
             .def("print_throat_radius",
                  &NetworkData::printPoreList);
-
 
 }
 
