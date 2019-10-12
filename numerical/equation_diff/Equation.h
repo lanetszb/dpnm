@@ -34,10 +34,13 @@ public:
 
     void cfdProcedure(const double &concIn);
 
+    void calcFlowRate();
+
     int &dim;
 
     std::vector<std::vector<double>> conc;
     const std::vector<double> getConc() const;
+    const double getFlowRate() const;
 
     Props props;
     Local local;
@@ -46,6 +49,8 @@ public:
     double &time;
     int iCurr;
     int iPrev;
+
+    double flowRate;
 
     Matrix matrix;
 

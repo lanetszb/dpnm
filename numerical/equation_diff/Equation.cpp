@@ -36,6 +36,8 @@ Equation::Equation(const std::vector<double> &propsVector) :
         variable[i] = 0;
     }
 
+    std::cout << matrix << std::endl;
+
 }
 
 void Equation::calculateMatrix() {
@@ -86,6 +88,10 @@ void Equation::calculateConc() {
 
 }
 
+void Equation::calcFlowRate() {
+    flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) * convective.beta[1];
+}
+
 void Equation::cfdProcedure(const double &concIn) {
 
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
@@ -102,11 +108,16 @@ void Equation::cfdProcedure(const double &concIn) {
         calculateMatrix();
         calculateFreeVector(concIn);
         calculateConc();
+        calcFlowRate();
     }
-
 }
 
 const std::vector<double> Equation::getConc() const {
     return conc[iCurr];
 }
+
+const double Equation::getFlowRate() const {
+    return flowRate;
+}
+
 

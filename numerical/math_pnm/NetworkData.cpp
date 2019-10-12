@@ -1,5 +1,4 @@
 #include <NetworkData.h>
-#include <vector>
 
 NetworkData::NetworkData(const std::vector<double> &_throat_radius,
                          const std::vector<double> &_throat_length,
@@ -11,7 +10,8 @@ NetworkData::NetworkData(const std::vector<double> &_throat_radius,
                          const std::vector<double> &_pore_radius,
                          const std::vector<int> &_pore_list,
                          const std::vector<int> &_pore_conns,
-                         const std::vector<int> &_conn_number) :
+                         const std::vector<int> &_conn_number,
+                         const std::vector<int> &_pore_per_row) :
 
         throatRadius(_throat_radius),
         throatLength(_throat_length),
@@ -23,7 +23,8 @@ NetworkData::NetworkData(const std::vector<double> &_throat_radius,
         poreRadius(_pore_radius),
         poreList(_pore_list),
         poreConns(_pore_conns),
-        connNumber(_conn_number) {}
+        connNumber(_conn_number),
+        porPerRow(_pore_per_row) {}
 
 std::ostream &operator<<(std::ostream &stream, const NetworkData &networkData) {
 
@@ -56,6 +57,18 @@ std::vector<int> NetworkData::getPoreList() const {
 void NetworkData::printPoreList() {
     for (auto &element : poreList)
         std::cout << element << std::endl;
+}
+
+void NetworkData::findBoundaryPores(std::vector<double> &poreCoord) {
+
+    auto min = std::min_element(std::begin(poreCoord), std::end(poreCoord));
+    auto max = std::max_element(std::begin(poreCoord), std::end(poreCoord));
+
+    for (int i = 0; i < poreCoord.size(); i++) {
+        if (poreCoord[i] == *min or poreCoord[i] == *max)
+        boundaryPores.emplace_back(i);
+    }
+
 }
 
 

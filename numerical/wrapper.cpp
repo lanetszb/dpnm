@@ -7,6 +7,7 @@
 #include <Convective.h>
 #include <Equation.h>
 
+#include <EquationPNM.h>
 #include <PropsPNM.h>
 #include <NetworkData.h>
 
@@ -100,7 +101,10 @@ BOOST_PYTHON_MODULE (cfd) {
                  p::args("conc_in"))
 
             .def("getConc",
-                 &Equation::getConc);
+                 &Equation::getConc)
+
+            .def("getFlowRate",
+                 &Equation::getFlowRate);
 
     // Wrapper for PNM
 
@@ -142,6 +146,7 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<double>,
                                    std::vector<int>,
                                    std::vector<int>,
+                                   std::vector<int>,
                                    std::vector<int>>(
                                    p::args(
                                            "throat_radius",
@@ -154,7 +159,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "pore_radius",
                                            "pore_list",
                                            "pore_conns",
-                                           "conn_number")))
+                                           "conn_number",
+                                           "pore_per_row")))
             .def("__str__", __str__<NetworkData>)
 
             .add_property("throat_radius",
@@ -171,6 +177,35 @@ BOOST_PYTHON_MODULE (cfd) {
             .def("print_throat_radius",
                  &NetworkData::printPoreList);
 
+    p::class_<EquationPNM>("EquationPNM",
+                           p::init<std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<double>,
+                                   std::vector<int>,
+                                   std::vector<int>,
+                                   std::vector<int>,
+                                   std::vector<int>>(
+                                   p::args(
+                                           "props_array",
+                                           "throat_radius",
+                                           "throat_length",
+                                           "conn_ind_in",
+                                           "conn_ind_out",
+                                           "pore_coord_x",
+                                           "pore_coord_y",
+                                           "pore_coord_z",
+                                           "pore_radius",
+                                           "pore_list",
+                                           "pore_conns",
+                                           "conn_number",
+                                           "pore_per_row")));
+//            .def("__str__", __str__<EquationPNM>);
 }
 
 

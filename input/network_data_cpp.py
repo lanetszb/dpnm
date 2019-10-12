@@ -40,6 +40,7 @@ class Network_Data_Cpp:
         s.inlet_pores = None
         s.outlet_pores = None
         s.boundary_pores = None
+        s.pore_per_row = None
 
         s.all_conns = None
 
@@ -69,16 +70,37 @@ class Network_Data_Cpp:
 
     def process_pore_conns(s):
 
-        pore_conns_raw = s.pores['conn_indices']
+        pore_conns_row = s.pores['conn_indices']
         s.pore_conns = []
 
-        for i in range(len(pore_conns_raw)):
-            pore_conns_raw[i] = pore_conns_raw[i].split(',')
+        for i in range(len(pore_conns_row)):
+            pore_conns_row[i] = pore_conns_row[i].split(',')
 
-        for i in range(len(pore_conns_raw)):
+        for i in range(len(pore_conns_row)):
             for j in range(s.conn_number[i]):
-               s.pore_conns.append(int(pore_conns_raw[i][j]))
+                s.pore_conns.append(int(pore_conns_row[i][j]))
+
+    def process_pore_per_row(s):
+
+        s.pore_per_row = s.pores['conn_indices']
+
+        for i in range(len(s.pore_list)):
+            for j in range(s.conn_number[i]):
+                s.pore_per_row[i][j] = int(s.pore_per_row[i][j])
+
+        s.pore_per_row = [[a] + b for a, b in zip(s.pore_list,
+                                                     s.pore_per_row)]
+        s.pore_per_row = np.array(
+            [elem for single_list in s.pore_per_row for elem in
+             single_list])
+
+        s.pore_per_row = [int(i) for i in s.pore_per_row]
 
 
 if __name__ == '__main__':
     network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
+
+    network_data_cpp.process_throats()
+    network_data_cpp.process_pores()
+    network_data_cpp.process_pore_conns()
+    network_data_cpp.process_pore_per_row()
