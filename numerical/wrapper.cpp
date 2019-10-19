@@ -136,7 +136,8 @@ BOOST_PYTHON_MODULE (cfd) {
 
 
     p::class_<NetworkData>("NetworkDataCpp",
-                           p::init<std::vector<double>,
+                           p::init<std::vector<int>,
+                                   std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
@@ -148,7 +149,7 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<int>,
                                    std::vector<int>,
                                    std::vector<int>>(
-                                   p::args(
+                                   p::args("throat_list",
                                            "throat_radius",
                                            "throat_length",
                                            "conn_ind_in",
@@ -179,6 +180,7 @@ BOOST_PYTHON_MODULE (cfd) {
 
     p::class_<EquationPNM>("EquationPNM",
                            p::init<std::vector<double>,
+                                   std::vector<int>,
                                    std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
@@ -193,6 +195,7 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<int>>(
                                    p::args(
                                            "props_array",
+                                           "throat_list",
                                            "throat_radius",
                                            "throat_length",
                                            "conn_ind_in",

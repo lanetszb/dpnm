@@ -12,37 +12,71 @@ typedef Eigen::SparseMatrix<double, Eigen::RowMajor> Matrix;
 typedef Matrix::InnerIterator MatrixIterator;
 typedef Eigen::VectorXd Vector;
 typedef Eigen::BiCGSTAB<Eigen::SparseMatrix<double>> BiCGSTAB;
+typedef Eigen::SparseLU<Eigen::SparseMatrix<double>> SparseLU;
 
 class EquationPNM {
 
 public:
 
-    explicit EquationPNM(const std::vector<double> &_propsVector,
-                         const std::vector<double> &_throat_radius,
-                         const std::vector<double> &_throat_length,
-                         const std::vector<double> &_conn_ind_in,
-                         const std::vector<double> &_conn_ind_out,
-                         const std::vector<double> &_pore_coord_x,
-                         const std::vector<double> &_pore_coord_y,
-                         const std::vector<double> &_pore_coord_z,
-                         const std::vector<double> &_pore_radius,
-                         const std::vector<int> &_pore_list,
-                         const std::vector<int> &_pore_conns,
-                         const std::vector<int> &_conn_number,
-                         const std::vector<int> &_pore_per_row);
+    explicit EquationPNM(
+            const std::vector<double> &_propsVector,
+            const std::vector<int> &_throat_list,
+            const std::vector<double> &_throat_radius,
+            const std::vector<double> &_throat_length,
+            const std::vector<double> &_conn_ind_in,
+            const std::vector<double> &_conn_ind_out,
+            const std::vector<double> &_pore_coord_x,
+            const std::vector<double> &_pore_coord_y,
+            const std::vector<double> &_pore_coord_z,
+            const std::vector<double> &_pore_radius,
+            const std::vector<int> &_pore_list,
+            const std::vector<int> &_pore_conns,
+            const std::vector<int> &_conn_number,
+            const std::vector<int> &_pore_per_row);
 
     virtual ~EquationPNM() = default;
+
+    void calculateMatrix();
+    void calcThroatConns();
+    void calcPorConns();
+    void calcMatCoeff();
+    void calculateFreeVector(const double &pIn,
+                             const double &pOut);
+
+    void calculateGuessPress(const double &pIn,
+                             const double &pOut);
+
+    void calculateGuessVector();
+
+    void calculatePress();
+
+    double calculatePressRelDiff();
+
+
+
+    std::vector<std::vector<double>> press;
 
     PropsPNM propsPnm;
     NetworkData networkData;
 
-    int dim;
+    int &dim;
+    double pIn;
+    double pOut;
+    int iCurr;
+    int iPrev;
 
     Matrix matrix;
 
     Vector freeVector;
     Vector guessVector;
     Vector variable;
+
+    std::vector<std::pair<int, int>> throatConns;
+    std::vector<std::vector<int>> porConns;
+    std::vector<double> connCoeff;
+    std::vector<double> centralCoeff;
+
+    std::vector<double> pressures;
 
 };
 

@@ -84,6 +84,10 @@ if __name__ == '__main__':
 
     pressure = spsolve(matrix_portrait.A, matrix_solution.vector_B)
     total_flow = matrix_solution.get_flow_rate(pressure)
+
+    print(matrix_portrait.A)
+    print("\n")
+    print(matrix_solution.vector_B)
     #
     x_min = min(matrix_portrait.network_data.pores['x_coord'])
     x_max = max(matrix_portrait.network_data.pores['x_coord'])
@@ -93,6 +97,8 @@ if __name__ == '__main__':
     k = total_flow * matrix_portrait.props.liq_visc * x_length / (
             area * (pressure_in - pressure_out))
 
+    print(pressure)
+    print('\n')
     print(k)
 
     t_stop = perf_counter()
