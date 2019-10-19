@@ -33,7 +33,8 @@ EquationPNM::EquationPNM(const std::vector<double> &_propsVector,
         throatConns(networkData.throatN,
                     std::make_pair(-1, -1)),
         porConns(networkData.poreN),
-        centralCoeff(dim, 0) {
+        centralCoeff(dim, 0),
+        pressure(dim, 0) {
 
     press.emplace_back(std::vector<double>(dim, 0));
     press.emplace_back(std::vector<double>(dim, 0));
@@ -41,8 +42,10 @@ EquationPNM::EquationPNM(const std::vector<double> &_propsVector,
     cfdProcedure(pIn, pOut);
 
 
-    for (int i = 0; i < dim; i++)
-        std::cout << press[iCurr][i] << std::endl;
+    for (int i = 0; i < dim; i++) {
+        std::cout << pressure[i] << std::endl;
+//        std::cout << press[iCurr][i] << ' ' << press[iPrev][i] << std::endl;
+    }
 }
 
 
@@ -148,28 +151,42 @@ void EquationPNM::calculateFreeVector(const double &pIn,
 
 void EquationPNM::calculateGuessPress(const double &pIn,
                                       const double &pOut) {
-    for (int i = 0; i < dim; i++)
-        press[iCurr][i] = pIn * (dim - 1 - i) / (dim - 1) +
-                          pOut * i / (dim - 1);
+    for (int i = 0; i < dim; i++) {
+//        press[iCurr][i] = pIn * (dim - 1 - i) / (dim - 1) +
+//                          pOut * i / (dim - 1);
+//
+//        press[iPrev][i] = pIn * (dim - 1 - i) / (dim - 1) +
+//                          pOut * i / (dim - 1);
+
+        pressure[i] = 244800;
+
+    }
 }
 
 void EquationPNM::calculateGuessVector() {
     for (int i = 0; i < dim; i++)
-        guessVector[i] = press[iPrev][i];
+        guessVector[i] = pressure[i];
+//        guessVector[i] = press[iPrev][i];
 }
 
 void EquationPNM::calculatePress() {
 
 //    BiCGSTAB biCGSTAB;
 //    biCGSTAB.compute(matrix);
-//    variable = biCGSTAB.solve(freeVector, guessVector);
+//    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
 
-    SparseLU sparseLU;
-    sparseLU.compute(matrix);
-    variable = sparseLU.solve(freeVector);
+    // SparseLU sparseLU;
+    // sparseLU.compute(matrix);
+    // variable = sparseLU.solve(freeVector);
+
+    LeastSqCG leastSqCG;
+    leastSqCG.compute(matrix);
+    leastSqCG.setTolerance(10.E-20);
+    variable = leastSqCG.solveWithGuess(freeVector, guessVector);
 
     for (int i = 0; i < dim; i++)
-        press[iCurr][i] = variable[i];
+        pressure[i] = variable[i];
+//        press[iCurr][i] = variable[i];
 }
 
 void EquationPNM::cfdProcedure(const double &pIn,
@@ -186,12 +203,4 @@ void EquationPNM::cfdProcedure(const double &pIn,
     calculateGuessVector();
 
     calculatePress();
-}
-
-double EquationPNM::calculatePressRelDiff() {
-    double relDiff = 0;
-    for (int i = 0; i < dim; i++)
-        relDiff += fabs(press[iCurr][i] - press[iPrev][i]) / press[iCurr][i] /
-                   dim;
-    return relDiff;
 }

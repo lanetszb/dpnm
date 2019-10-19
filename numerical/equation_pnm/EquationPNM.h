@@ -12,6 +12,8 @@ typedef Eigen::SparseMatrix<double, Eigen::RowMajor> Matrix;
 typedef Matrix::InnerIterator MatrixIterator;
 typedef Eigen::VectorXd Vector;
 typedef Eigen::BiCGSTAB<Eigen::SparseMatrix<double>> BiCGSTAB;
+typedef Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double>>
+        LeastSqCG;
 typedef Eigen::SparseLU<Eigen::SparseMatrix<double>> SparseLU;
 
 class EquationPNM {
@@ -37,9 +39,13 @@ public:
     virtual ~EquationPNM() = default;
 
     void calculateMatrix();
+
     void calcThroatConns();
+
     void calcPorConns();
+
     void calcMatCoeff();
+
     void calculateFreeVector(const double &pIn,
                              const double &pOut);
 
@@ -52,9 +58,6 @@ public:
 
     void cfdProcedure(const double &pIn,
                       const double &pOut);
-
-    double calculatePressRelDiff();
-
 
 
     std::vector<std::vector<double>> press;
@@ -78,8 +81,7 @@ public:
     std::vector<std::vector<int>> porConns;
     std::vector<double> connCoeff;
     std::vector<double> centralCoeff;
-
-    std::vector<double> pressures;
+    std::vector<double> pressure;
 
 };
 
