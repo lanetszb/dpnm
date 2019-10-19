@@ -44,69 +44,12 @@ EquationPNM::EquationPNM(const std::vector<double> &_propsVector,
     calcMatCoeff();
     networkData.findBoundaryPores(networkData.poreCoordX);
 
-    for (int i = 0; i < centralCoeff.size(); i++)
-        std::cout << centralCoeff[i] << std::endl;
-
-
-    std::vector<Triplet> triplets;
-    triplets.reserve(3 * dim - 4);
-
-    // Matrix construction
-
-    int pore_iterator = 0;
-    int bound_it = 0;
-
-    for (int i = 0; i < networkData.connNumber.size(); i++) {
-
-        triplets.emplace_back(i, i, centralCoeff[i]);
-        for (int j = 0; j < networkData.connNumber[i]; j++) {
-
-            if (i != networkData.boundaryPores[bound_it]) {
-                triplets.emplace_back(i,
-                                      networkData.poreConns[pore_iterator],
-                                      -1 *
-                                      connCoeff[porConns[i][j]]);
-                pore_iterator++;
-            } else {
-                triplets.emplace_back(i, i, 1);
-                pore_iterator += networkData.connNumber[i];
-                bound_it++;
-                break;
-            }
-        }
-    }
-
-    matrix.setFromTriplets(triplets.begin(), triplets.end());
-
-    for (int i = 0; i < dim; i++) {
-        freeVector[i] = 0;
-        guessVector[i] = 0;
-        variable[i] = 0;
-    }
-
-    // Matrix construction ended +++++++++++++++++++++++++++++++
-
+    calculateMatrix();
     calculateFreeVector(pIn, pOut);
     calculateGuessPress(pIn, pOut);
     calculateGuessVector();
+
     calculatePress();
-
-
-    auto iterativeAccuracy = 1.E-12;
-    std::cout << std::endl;
-
-    do {
-        std::swap(iCurr, iPrev);
-        calculateGuessVector();
-        calculatePress();
-
-        calculatePressRelDiff();
-        std::cout << calculatePressRelDiff() << std::endl;
-
-
-    } while (calculatePressRelDiff() > iterativeAccuracy);
-
-    std::cout << std::endl;
 
 
     for (int i = 0; i < dim; i++)
@@ -164,6 +107,45 @@ void EquationPNM::calcMatCoeff() {
             centralCoeff[i] += connCoeff[porConns[i][j]];
 }
 
+void EquationPNM::calculateMatrix() {
+
+    // Matrix construction
+
+    std::vector<Triplet> triplets;
+    triplets.reserve(3 * dim - 4);
+
+    int pore_iterator = 0;
+    int bound_it = 0;
+
+    for (int i = 0; i < networkData.connNumber.size(); i++) {
+
+        triplets.emplace_back(i, i, centralCoeff[i]);
+        for (int j = 0; j < networkData.connNumber[i]; j++) {
+
+            if (i != networkData.boundaryPores[bound_it]) {
+                triplets.emplace_back(i,
+                                      networkData.poreConns[pore_iterator],
+                                      -1 *
+                                      connCoeff[porConns[i][j]]);
+                pore_iterator++;
+            } else {
+                triplets.emplace_back(i, i, 1);
+                pore_iterator += networkData.connNumber[i];
+                bound_it++;
+                break;
+            }
+        }
+    }
+
+    matrix.setFromTriplets(triplets.begin(), triplets.end());
+
+    for (int i = 0; i < dim; i++) {
+        freeVector[i] = 0;
+        guessVector[i] = 0;
+        variable[i] = 0;
+    }
+}
+
 void EquationPNM::calculateFreeVector(const double &pIn,
                                       const double &pOut) {
 
@@ -196,16 +178,12 @@ void EquationPNM::calculatePress() {
     SparseLU sparseLU;
     sparseLU.compute(matrix);
 
-    std::cout << "guess " << guessVector << std::endl;
-    std::cout << std::endl;
-
 //    variable = biCGSTAB.solve(freeVector, guessVector);
     variable = sparseLU.solve(freeVector);
 
 
     for (int i = 0; i < dim; i++)
         press[iCurr][i] = variable[i];
-
 }
 
 double EquationPNM::calculatePressRelDiff() {
