@@ -27,6 +27,8 @@ class Network_Data_Cpp:
         s.conn_ind = None
         s.throat_radius = None
         s.throat_length = None
+        s.throat_number = None
+        s.throat_list = None
 
         # Pore data
         s.pores = None
@@ -46,10 +48,13 @@ class Network_Data_Cpp:
 
     def process_throats(s):
         s.throats = pd.read_csv(s.pore_throats, index_col=0)
-        s.throats = s.throats.sort_values(by=['pore_i'])
+        s.throats = s.throats.sort_values(by=['pore_i', 'pore_j'])
 
         s.conn_ind_in = list(s.throats['pore_i'])
         s.conn_ind_out = list(s.throats['pore_j'])
+
+        s.throat_number = len(s.conn_ind_in)
+        s.throat_list = np.arange(s.throat_number).tolist()
 
         s.throat_radius = list(s.throats['throat_diameter'] / 2)
         s.throat_length = list(s.throats['throat_length'])
@@ -75,6 +80,13 @@ class Network_Data_Cpp:
 
         for i in range(len(pore_conns_row)):
             pore_conns_row[i] = pore_conns_row[i].split(',')
+
+        for i in range(len(s.pore_list)):
+            for j in range(s.conn_number[i]):
+                pore_conns_row[i][j] = int(pore_conns_row[i][j])
+
+        for i in range(len(pore_conns_row)):
+            pore_conns_row[i].sort()
 
         for i in range(len(pore_conns_row)):
             for j in range(s.conn_number[i]):
