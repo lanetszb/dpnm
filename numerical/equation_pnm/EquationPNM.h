@@ -50,6 +50,9 @@ public:
 
     void calculatePress();
 
+    void cfdProcedure(const double &pIn,
+                      const double &pOut);
+
     double calculatePressRelDiff();
 
 

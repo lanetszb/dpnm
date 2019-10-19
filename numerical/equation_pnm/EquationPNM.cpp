@@ -38,18 +38,7 @@ EquationPNM::EquationPNM(const std::vector<double> &_propsVector,
     press.emplace_back(std::vector<double>(dim, 0));
     press.emplace_back(std::vector<double>(dim, 0));
 
-
-    calcThroatConns();
-    calcPorConns();
-    calcMatCoeff();
-    networkData.findBoundaryPores(networkData.poreCoordX);
-
-    calculateMatrix();
-    calculateFreeVector(pIn, pOut);
-    calculateGuessPress(pIn, pOut);
-    calculateGuessVector();
-
-    calculatePress();
+    cfdProcedure(pIn, pOut);
 
 
     for (int i = 0; i < dim; i++)
@@ -172,18 +161,31 @@ void EquationPNM::calculateGuessVector() {
 void EquationPNM::calculatePress() {
 
 //    BiCGSTAB biCGSTAB;
-//
 //    biCGSTAB.compute(matrix);
+//    variable = biCGSTAB.solve(freeVector, guessVector);
 
     SparseLU sparseLU;
     sparseLU.compute(matrix);
-
-//    variable = biCGSTAB.solve(freeVector, guessVector);
     variable = sparseLU.solve(freeVector);
-
 
     for (int i = 0; i < dim; i++)
         press[iCurr][i] = variable[i];
+}
+
+void EquationPNM::cfdProcedure(const double &pIn,
+                               const double &pOut) {
+
+    calcThroatConns();
+    calcPorConns();
+    calcMatCoeff();
+    networkData.findBoundaryPores(networkData.poreCoordX);
+
+    calculateMatrix();
+    calculateFreeVector(pIn, pOut);
+    calculateGuessPress(pIn, pOut);
+    calculateGuessVector();
+
+    calculatePress();
 }
 
 double EquationPNM::calculatePressRelDiff() {
