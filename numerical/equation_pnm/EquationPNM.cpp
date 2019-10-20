@@ -144,10 +144,16 @@ void EquationPNM::calculateFreeVector(const double &pIn,
 
 void EquationPNM::calculateGuessPress(const double &pIn,
                                       const double &pOut) {
-    for (int i = 0; i < dim; i++) {
-        pressure[i] = 244800;
 
-    }
+    auto min = std::min_element(std::begin(networkData.poreCoordX),
+                                std::end(networkData.poreCoordX));
+    auto max = std::max_element(std::begin(networkData.poreCoordX),
+                                std::end(networkData.poreCoordX));
+
+    for (int i = 0; i < dim; i++)
+        pressure[i] = propsPNM.pressOut +
+                      ((*max - networkData.poreCoordX[i]) / (*max - *min)) *
+                      (pIn - pOut);
 }
 
 void EquationPNM::calculateGuessVector() {
@@ -157,18 +163,19 @@ void EquationPNM::calculateGuessVector() {
 
 void EquationPNM::calculatePress() {
 
-//    BiCGSTAB biCGSTAB;
-//    biCGSTAB.compute(matrix);
-//    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
+    BiCGSTAB biCGSTAB;
+    biCGSTAB.compute(matrix);
+    biCGSTAB.setTolerance(propsPNM.itAccuracy);
+    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
 
     // SparseLU sparseLU;
     // sparseLU.compute(matrix);
     // variable = sparseLU.solve(freeVector);
 
-    LeastSqCG leastSqCG;
-    leastSqCG.compute(matrix);
-    leastSqCG.setTolerance(propsPNM.itAccuracy);
-    variable = leastSqCG.solveWithGuess(freeVector, guessVector);
+//    LeastSqCG leastSqCG;
+//    leastSqCG.compute(matrix);
+//    leastSqCG.setTolerance(propsPNM.itAccuracy);
+//    variable = leastSqCG.solveWithGuess(freeVector, guessVector);
 
     for (int i = 0; i < dim; i++)
         pressure[i] = variable[i];
