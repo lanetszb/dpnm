@@ -1,31 +1,29 @@
 #include <EquationPNM.h>
 #include <math.h>
 
-EquationPNM::EquationPNM(const std::vector<double> &_propsVector,
-                         const std::vector<int> &_throat_list,
-                         const std::vector<double> &_throat_radius,
-                         const std::vector<double> &_throat_length,
-                         const std::vector<double> &_conn_ind_in,
-                         const std::vector<double> &_conn_ind_out,
-                         const std::vector<double> &_pore_coord_x,
-                         const std::vector<double> &_pore_coord_y,
-                         const std::vector<double> &_pore_coord_z,
-                         const std::vector<double> &_pore_radius,
-                         const std::vector<int> &_pore_list,
-                         const std::vector<int> &_pore_conns,
-                         const std::vector<int> &_conn_number,
-                         const std::vector<int> &_pore_per_row) :
+EquationPNM::EquationPNM(const std::vector<double> &propsVector,
+                         const std::vector<int> &throat_list,
+                         const std::vector<double> &throat_radius,
+                         const std::vector<double> &throat_length,
+                         const std::vector<double> &conn_ind_in,
+                         const std::vector<double> &conn_ind_out,
+                         const std::vector<double> &pore_coord_x,
+                         const std::vector<double> &pore_coord_y,
+                         const std::vector<double> &pore_coord_z,
+                         const std::vector<double> &pore_radius,
+                         const std::vector<int> &pore_list,
+                         const std::vector<int> &pore_conns,
+                         const std::vector<int> &conn_number,
+                         const std::vector<int> &pore_per_row) :
 
-        propsPnm(_propsVector),
-        networkData(_throat_list, _throat_radius, _throat_length,
-                    _conn_ind_in, _conn_ind_out, _pore_coord_x, _pore_coord_y,
-                    _pore_coord_z, _pore_radius,
-                    _pore_list, _pore_conns, _conn_number, _pore_per_row),
+        propsPNM(propsVector),
+        networkData(throat_list, throat_radius, throat_length,
+                    conn_ind_in, conn_ind_out, pore_coord_x, pore_coord_y,
+                    pore_coord_z, pore_radius,
+                    pore_list, pore_conns, conn_number, pore_per_row),
         dim(networkData.poreN),
-        iCurr(0),
-        iPrev(1),
-        pIn(300000),
-        pOut(200000),
+        pIn(propsPNM.pressIn),
+        pOut(propsPNM.pressOut),
         matrix(dim, dim),
         freeVector(dim),
         guessVector(dim),
@@ -36,16 +34,11 @@ EquationPNM::EquationPNM(const std::vector<double> &_propsVector,
         centralCoeff(dim, 0),
         pressure(dim, 0) {
 
-    press.emplace_back(std::vector<double>(dim, 0));
-    press.emplace_back(std::vector<double>(dim, 0));
-
     cfdProcedure(pIn, pOut);
 
 
-    for (int i = 0; i < dim; i++) {
+    for (int i = 0; i < dim; i++)
         std::cout << pressure[i] << std::endl;
-//        std::cout << press[iCurr][i] << ' ' << press[iPrev][i] << std::endl;
-    }
 }
 
 
@@ -87,7 +80,7 @@ void EquationPNM::calcMatCoeff() {
 
         auto tR = networkData.throatRadius[i];
         auto tL = networkData.throatLength[i];
-        auto liqVisc = propsPnm.liqVisc;
+        auto liqVisc = propsPNM.liqVisc;
 
         auto cond = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
 
@@ -152,12 +145,6 @@ void EquationPNM::calculateFreeVector(const double &pIn,
 void EquationPNM::calculateGuessPress(const double &pIn,
                                       const double &pOut) {
     for (int i = 0; i < dim; i++) {
-//        press[iCurr][i] = pIn * (dim - 1 - i) / (dim - 1) +
-//                          pOut * i / (dim - 1);
-//
-//        press[iPrev][i] = pIn * (dim - 1 - i) / (dim - 1) +
-//                          pOut * i / (dim - 1);
-
         pressure[i] = 244800;
 
     }
@@ -166,7 +153,6 @@ void EquationPNM::calculateGuessPress(const double &pIn,
 void EquationPNM::calculateGuessVector() {
     for (int i = 0; i < dim; i++)
         guessVector[i] = pressure[i];
-//        guessVector[i] = press[iPrev][i];
 }
 
 void EquationPNM::calculatePress() {
@@ -181,12 +167,11 @@ void EquationPNM::calculatePress() {
 
     LeastSqCG leastSqCG;
     leastSqCG.compute(matrix);
-    leastSqCG.setTolerance(10.E-20);
+    leastSqCG.setTolerance(propsPNM.itAccuracy);
     variable = leastSqCG.solveWithGuess(freeVector, guessVector);
 
     for (int i = 0; i < dim; i++)
         pressure[i] = variable[i];
-//        press[iCurr][i] = variable[i];
 }
 
 void EquationPNM::cfdProcedure(const double &pIn,

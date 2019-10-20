@@ -44,6 +44,9 @@ public:
     double gasVisc;
     double liqDens;
     double liqVisc;
+    double pressIn;
+    double pressOut;
+    double itAccuracy;
 
 
     std::vector<double> getPropsVector() const;

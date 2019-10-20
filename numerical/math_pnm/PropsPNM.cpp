@@ -8,6 +8,9 @@ PropsPNM::PropsPNM(const std::vector<double> &_propsVector) :
         gasVisc(_propsVector[2]),
         liqDens(_propsVector[3]),
         liqVisc(_propsVector[4]),
+        pressIn(_propsVector[5]),
+        pressOut(_propsVector[6]),
+        itAccuracy(_propsVector[7]),
         propsVector(_propsVector) {}
 
 std::ostream &operator<<(std::ostream &stream, const PropsPNM &propsPNM) {
@@ -16,6 +19,9 @@ std::ostream &operator<<(std::ostream &stream, const PropsPNM &propsPNM) {
     stream << "gas_visc " << propsPNM.gasVisc << std::endl;
     stream << "liq_dens " << propsPNM.liqDens << std::endl;
     stream << "liq_visc " << propsPNM.liqVisc << std::endl;
+    stream << "press_in " << propsPNM.pressIn << std::endl;
+    stream << "press_out " << propsPNM.pressOut << std::endl;
+    stream << "it_accuracy " << propsPNM.itAccuracy << std::endl;
 
     return stream;
 }

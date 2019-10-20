@@ -21,20 +21,20 @@ class EquationPNM {
 public:
 
     explicit EquationPNM(
-            const std::vector<double> &_propsVector,
-            const std::vector<int> &_throat_list,
-            const std::vector<double> &_throat_radius,
-            const std::vector<double> &_throat_length,
-            const std::vector<double> &_conn_ind_in,
-            const std::vector<double> &_conn_ind_out,
-            const std::vector<double> &_pore_coord_x,
-            const std::vector<double> &_pore_coord_y,
-            const std::vector<double> &_pore_coord_z,
-            const std::vector<double> &_pore_radius,
-            const std::vector<int> &_pore_list,
-            const std::vector<int> &_pore_conns,
-            const std::vector<int> &_conn_number,
-            const std::vector<int> &_pore_per_row);
+            const std::vector<double> &propsVector,
+            const std::vector<int> &throat_list,
+            const std::vector<double> &throat_radius,
+            const std::vector<double> &throat_length,
+            const std::vector<double> &conn_ind_in,
+            const std::vector<double> &conn_ind_out,
+            const std::vector<double> &pore_coord_x,
+            const std::vector<double> &pore_coord_y,
+            const std::vector<double> &pore_coord_z,
+            const std::vector<double> &pore_radius,
+            const std::vector<int> &pore_list,
+            const std::vector<int> &pore_conns,
+            const std::vector<int> &conn_number,
+            const std::vector<int> &pore_per_row);
 
     virtual ~EquationPNM() = default;
 
@@ -60,16 +60,12 @@ public:
                       const double &pOut);
 
 
-    std::vector<std::vector<double>> press;
-
-    PropsPNM propsPnm;
+    PropsPNM propsPNM;
     NetworkData networkData;
 
     int &dim;
     double pIn;
     double pOut;
-    int iCurr;
-    int iPrev;
 
     Matrix matrix;
 

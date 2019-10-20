@@ -22,6 +22,12 @@ class Props:
         s.liq_dens = float(get('Properties_liquid', 'liq_dens'))
         s.liq_visc = float(get('Properties_liquid', 'liq_visc'))
 
+        # Getting simulation properties PNM
+
+        s.pressure_in = float(get('Properties_simulation', 'pressure_in'))
+        s.pressure_out = float(get('Properties_simulation', 'pressure_out'))
+        s.it_accuracy_PNM = float(get('Properties_simulation', 'it_accuracy'))
+
         # Getting diffusion properties
 
         s.time = float(get('Properties_diffusion', 'time'))
@@ -40,6 +46,9 @@ class Props:
         props_list.append(s.gas_visc)
         props_list.append(s.liq_dens)
         props_list.append(s.liq_visc)
+        props_list.append(s.pressure_in)
+        props_list.append(s.pressure_out)
+        props_list.append(s.it_accuracy_PNM)
         return np.array(props_list, dtype=float)
 
     def get_diff_props_array(s):
@@ -60,6 +69,9 @@ class Props:
         out_str += '\ngas_visc ' + str(s.gas_visc)
         out_str += '\nliq_dens ' + str(s.liq_dens)
         out_str += '\nliq_visc ' + str(s.liq_visc)
+        out_str += '\npress_in ' + str(s.pressure_in)
+        out_str += '\npress_out ' + str(s.pressure_out)
+        out_str += '\nit_accuracy ' + str(s.it_accuracy_PNM)
         return out_str
 
 
