@@ -16,7 +16,7 @@ public:
     friend std::ostream &
     operator<<(std::ostream &stream, const PropsPNM &propsPNM);
 
-    double getAGasDens() const ;
+    double getAGasDens() const;
 
     void setAGasDens(double aGasDens);
 

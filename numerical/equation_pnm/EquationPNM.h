@@ -59,6 +59,11 @@ public:
     void cfdProcedure(const double &pIn,
                       const double &pOut);
 
+    void calcThrFlowRate();
+    void calcPorFlowRate();
+
+    void getPorConnsIsOut();
+
 
     PropsPNM propsPNM;
     NetworkData networkData;
@@ -75,9 +80,14 @@ public:
 
     std::vector<std::pair<int, int>> throatConns;
     std::vector<std::vector<int>> porConns;
+    std::vector<std::vector<bool>> porConnsIsOut;
+
     std::vector<double> connCoeff;
     std::vector<double> centralCoeff;
     std::vector<double> pressure;
+
+    std::vector<double> thrFlowRate;
+    std::vector<double> porFlowRate;
 
 };
 
