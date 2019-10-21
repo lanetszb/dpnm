@@ -13,6 +13,7 @@ find_package(Eigen3 REQUIRED)
 
 
 include_directories(
+        numerical/coupling
         numerical/equation_pnm
         numerical/math_pnm
         numerical/equation_diff
@@ -22,6 +23,7 @@ include_directories(
 
 python_add_module(cfd
         numerical/wrapper.cpp
+        numerical/coupling/DiffusionPNM.cpp
         numerical/equation_pnm/EquationPNM.cpp
         numerical/math_pnm/PropsPNM.cpp
         numerical/math_pnm/NetworkData.cpp

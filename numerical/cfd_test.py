@@ -15,6 +15,7 @@ from numerical import EquationCpp
 from numerical import PropsPNMCpp
 from numerical import NetworkDataCpp
 from numerical import EquationPNM
+from numerical import DiffusionPNM
 
 from input import Props
 from input import Network_Data_Cpp
@@ -79,3 +80,7 @@ nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
 
 eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
                      pc_z, pr, pl, p_conn, conn_numb, ppr)
+
+diff_pnm = DiffusionPNM(props_array, props_pnm, thrList, tr, tl, conn_in,
+                        conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
+                        ppr)

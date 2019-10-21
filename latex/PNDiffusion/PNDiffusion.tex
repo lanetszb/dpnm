@@ -103,39 +103,44 @@
 %\newpage
 \printnomenclature[5em]
 
+
 \begin{center}
-{\large \textbf{Diffusion (1D)}}
+{\large \textbf{PN and Diffusion coupled}}
 \end{center}
 
 \begin{eqnarray}
-\label{eq:phys_D}
-\int \limits_{V} \frac{\partial c}{\partial t} d V - \oint \limits_{\Omega} D \vec{\nabla}c \; d\vec{\Omega} = 0,
-\end{eqnarray}
-
-\begin{eqnarray}
-\label{eq:num_D}
+\begin{cases}
 \begin{gathered}
-\frac{c^{n+1}_{i} - c^{n}_{i}}{\Delta t} V_{i} +D_{i-}\frac{c^{n+1}_{i} - c^{n+1}_{i-}}{L_{i-}} \Omega_{i-} - \\
-- D_{i+}\frac{c^{n+1}_{i+} - c^{n+1}_{i}}{L_{i+}} \Omega_{i+} = 0,
+\sum^{N_{i}}_{j=1, \; i\neq j} q_{ij} = 0,   \\
+q_{ij} = g_{ij} (P_{i} - P_{j}) + q^{m} ,
 \end{gathered}
+\end{cases}
 \end{eqnarray}
-
+%
 \begin{eqnarray}
 \begin{gathered}
-\label{eq:B_coeff}
-A_i c_{i-1}^{n+1} + B_i c_{i}^{n+1} + C_i c_{i+1}^{n+1} = D_{i}^n, \\
+q^{m} = q^{m} (\bar{P_n}, t),  
 \end{gathered}
 \end{eqnarray}
-
+%
 \begin{eqnarray}
 \begin{gathered}
-\label{eq:coeff}
-A_i = - \frac{D_{i-}}{L_{i-}} \Omega_{i-}, \;
-B_i = \frac{V_{i}}{\Delta t} + \frac{D_{i-}}{L_{i-}} \Omega_{i-} + \frac{D_{i+}}{L_{i+}}, \;
-C_i = - \frac{D_{i+}}{L_{i+}} \Omega_{i+}, \; 
-D_i = \frac{V_{i}}{\Delta t} c_{i}^n
+\bar{P_n} = \frac{P_i+P_j}{2}, 
 \end{gathered}
 \end{eqnarray}
-
+%
+\begin{eqnarray}
+\begin{gathered}
+q^m = q^{m'}(\bar{P}^{n+1}-\bar{P}^n+q^m(\bar{P}^n)),
+\end{gathered}
+\end{eqnarray}
+%
+\begin{eqnarray}
+\begin{gathered}
+q^{m'} = \frac{q^m(\bar{P}^n+\frac{\Delta{\tilde{P}}}{2})-q^m(\bar{P}^n-\frac{\Delta{\tilde{P}}}{2})}{\Delta{\tilde{P}}}
+\end{gathered}
+\end{eqnarray}
+%
 
 \end{document}
+

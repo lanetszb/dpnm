@@ -11,4 +11,4 @@ from numerical.cfd import EquationCpp
 from numerical.cfd import PropsPNMCpp
 from numerical.cfd import NetworkDataCpp
 from numerical.cfd import EquationPNM
-
+from numerical.cfd import DiffusionPNM

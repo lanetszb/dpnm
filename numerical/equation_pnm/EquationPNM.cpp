@@ -46,8 +46,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
     // for (int i = 0; i < dim; i++)
     //     std::cout << pressure[i] << std::endl;
     //
-    // for (int i = 0; i < dim; i++)
-    //     std::cout << i << ' ' << porFlowRate[i] << std::endl;
+    for (int i = 0; i < dim; i++)
+        std::cout << i << ' ' << porFlowRate[i] << std::endl;
 }
 
 
@@ -172,14 +172,14 @@ void EquationPNM::calculateGuessVector() {
 
 void EquationPNM::calculatePress() {
 
-    BiCGSTAB biCGSTAB;
-    biCGSTAB.compute(matrix);
-    biCGSTAB.setTolerance(propsPNM.itAccuracy);
-    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
+//    BiCGSTAB biCGSTAB;
+//    biCGSTAB.compute(matrix);
+//    biCGSTAB.setTolerance(propsPNM.itAccuracy);
+//    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
 
-    // SparseLU sparseLU;
-    // sparseLU.compute(matrix);
-    // variable = sparseLU.solve(freeVector);
+     SparseLU sparseLU;
+     sparseLU.compute(matrix);
+     variable = sparseLU.solve(freeVector);
 
 //    LeastSqCG leastSqCG;
 //    leastSqCG.compute(matrix);
@@ -209,8 +209,8 @@ void EquationPNM::cfdProcedure(const double &pIn,
 void EquationPNM::calcThrFlowRate() {
 
     for (int i = 0; i < networkData.throatN; i++)
-        thrFlowRate[i] = connCoeff[i] * (pressure[throatConns[i].second] -
-                                         pressure[throatConns[i].first]);
+        thrFlowRate[i] = connCoeff[i] * (pressure[throatConns[i].first] -
+                                         pressure[throatConns[i].second]);
 
     // std::cout << "Debit" << std::endl;
     //
