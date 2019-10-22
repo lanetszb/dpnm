@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(PythonLibs 3.7 REQUIRED)
 
 set(Boost_NO_BOOST_CMAKE TRUE)
+
 find_package(Boost REQUIRED COMPONENTS python37 numpy37)
 
 find_package(Eigen3 REQUIRED)
@@ -32,6 +33,7 @@ python_add_module(cfd
         numerical/math_diff/Local.cpp
         numerical/math_diff/Convective.cpp)
 
+target_compile_definitions(cfd PRIVATE BOOST_PYTHON_MAX_ARITY=17)
 
 target_include_directories(cfd PUBLIC
         ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
