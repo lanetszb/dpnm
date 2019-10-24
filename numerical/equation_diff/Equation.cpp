@@ -33,7 +33,7 @@ Equation::Equation(const std::vector<double> &propsVector,
         variable[i] = 0;
     }
 
-    std::cout << matrix << std::endl;
+//    std::cout << matrix << std::endl;
 
 }
 
@@ -61,7 +61,7 @@ void Equation::calculateMatrix() {
     it.valueRef() = alpha + betaLeft;
 }
 
-void Equation::calcConc(const double &concIni) {
+void Equation::calcConcIni(const double &concIni) {
 
     conc.emplace_back(std::vector<double>(dim, concIni));
     conc.emplace_back(std::vector<double>(dim, concIni));
@@ -95,11 +95,8 @@ void Equation::calcFlowRate() {
     flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) * convective.beta[1];
 }
 
-void Equation::cfdProcedure(const double &concIn, const double &radius,
-                            const double &effRadius, const double &thrLength,
-                            const double &concIni) {
-
-    calcConc(concIni);
+void Equation::cfdProcedure(const double &concThrWall, const double &radius,
+                            const double &effRadius, const double &thrLength) {
 
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
 
@@ -113,7 +110,7 @@ void Equation::cfdProcedure(const double &concIn, const double &radius,
                                  props.diffusivity);
         calculateGuessVector();
         calculateMatrix();
-        calculateFreeVector(concIn);
+        calculateFreeVector(concThrWall);
         calculateConc();
         calcFlowRate();
     }

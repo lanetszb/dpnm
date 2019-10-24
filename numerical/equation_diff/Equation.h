@@ -33,13 +33,12 @@ public:
 
     void calculateConc();
 
-    void cfdProcedure(const double &concIn, const double &radius,
-                      const double &effRadius, const double &thrLength,
-                      const double &concIni);
+    void cfdProcedure(const double &concThrWall, const double &radius,
+                      const double &effRadius, const double &thrLength);
 
     void calcFlowRate();
 
-    void calcConc(const double &concIni);
+    void calcConcIni(const double &concIni);
 
     int &dim;
 

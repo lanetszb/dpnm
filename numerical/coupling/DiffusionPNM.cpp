@@ -27,28 +27,11 @@ DiffusionPNM::DiffusionPNM(
         effRadius(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
         throatConc(equationPNM.networkData.throatN, 0),
-        conc_ini(121) {
+        conc_ini(4),
+        dP(0) {
 
-//    calcRockVolume();
-//    calcEffRadius();
-
-//    equationPNM.calculateGuessPress(equationPNM.propsPNM.pressIn,
-//                                    equationPNM.propsPNM.pressOut);
-//
-//    equationPNM.calcThroatConns();
-//    calcThroatAvPress();
-//
-//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-//        std::cout << throatAvPress[i] << std::endl;
-//    std::cout << std::endl;
-//
-//
-//    calcThroatConc();
-//
-//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-//        std::cout << throatConc[i] << std::endl;
-//    std::cout << std::endl;
-
+    cfdProcedure();
+    calcMatCoeffDiff();
 }
 
 double DiffusionPNM::calcSideLength(std::vector<double> &poreCoord) {
@@ -100,13 +83,43 @@ void DiffusionPNM::calcThroatAvPress() {
 
 }
 
-void DiffusionPNM::calcThroatConc() {
+void DiffusionPNM::calcThroatConc(const double &dP) {
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++)
-        throatConc[i] = calcLangmConc(throatAvPress[i]);
+        throatConc[i] = calcLangmConc(throatAvPress[i] + dP);
 }
 
-void DiffusionPNM::calcDiffFlow() {
+void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFLow) {
+
+    equation.calcConcIni(conc_ini);
+    std::vector<std::vector<double>> copyConcIni;
+
+    copyConcIni.push_back(equation.conc[0]);
+    copyConcIni.push_back(equation.conc[1]);
+
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+        equation.cfdProcedure(throatConc[i],
+                              equationPNM.networkData.throatRadius[i],
+                              effRadius[i],
+                              equationPNM.networkData.throatLength[i]);
+
+        diffFLow.emplace_back(equation.flowRate);
+
+        for (int i = 0; i < equation.props.gridBlockN; i++) {
+            equation.conc[0][i] = copyConcIni[0][i];
+            equation.conc[1][i] = copyConcIni[1][i];
+        }
+    }
+}
+
+void DiffusionPNM::calcDiffFlowDeriv() {
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        flowDerivDiff.emplace_back((diffFlowPlus[i] - diffFlowMinus[i]) / dP);
+}
+
+void DiffusionPNM::cfdProcedure() {
 
     calcRockVolume();
     calcEffRadius();
@@ -116,16 +129,44 @@ void DiffusionPNM::calcDiffFlow() {
 
     equationPNM.calcThroatConns();
     calcThroatAvPress();
-    calcThroatConc();
 
+    // Enhance and rethink later
 
+    calcThroatConc(dP);
+    calcDiffFlow(diffFlow);
 
+    dP = 100;
+    calcThroatConc(dP / 2);
+    calcDiffFlow(diffFlowPlus);
+
+    calcThroatConc(-1 * dP / 2);
+    calcDiffFlow(diffFlowMinus);
+
+    calcDiffFlowDeriv();
+    // +++++++++++++++++++++++++++++
 }
 
-void DiffusionPNM::calcDiffFlowDeriv() {
+void DiffusionPNM::calcMatCoeffDiff() {
 
-    double dP = 100;
+    equationPNM.calcPorConns();
+
+    for (int i = 0; i < flowDerivDiff.size(); i++)
+        connCoeffDiff.emplace_back(flowDerivDiff[i] / 2);
+
+
+    for (int i = 0; i < equationPNM.porConns.size(); i++) {
+        double coeffSum = 0;
+        for (int j = 0; j < equationPNM.porConns[i].size(); j++)
+            coeffSum += flowDerivDiff[equationPNM.porConns[i][j]] / 2;
+        centralCoeffDiff.emplace_back(coeffSum);
+    }
+
+//    std::cout << std::endl;
+//
+//    for (int i = 0; i < equationPNM.porConns.size(); i++)
+//        std::cout << centralCoeffDiff[i] << std::endl;
 }
+
 
 
 

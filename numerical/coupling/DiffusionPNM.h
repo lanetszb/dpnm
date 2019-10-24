@@ -42,13 +42,19 @@ public:
 
     double calcLangmConc(double pressure);
 
-    void calcThroatConc();
+    void calcThroatConc(const double &dP);
 
     void calcThroatAvPress();
 
-    void calcDiffFlow();
+    void calcDiffFlow(std::vector<double> &diffFLow);
 
     void calcDiffFlowDeriv();
+
+    void calcMatCoeffDiff();
+
+    void cfdProcedure();
+
+    void calcMatrixJointCoeff();
 
 
     double rockVolume;
@@ -60,8 +66,15 @@ public:
     std::vector<double> throatConc;
 
     std::vector<double> diffFlow;
+    std::vector<double> diffFlowPlus;
+    std::vector<double> diffFlowMinus;
 
-    std::vector<double> diffFlowDeriv;
+    double dP;
+
+    std::vector<double> flowDerivDiff;
+
+    std::vector<double> connCoeffDiff;
+    std::vector<double> centralCoeffDiff;
 };
 
 #endif
