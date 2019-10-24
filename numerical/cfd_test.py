@@ -26,22 +26,26 @@ props_array = props.get_diff_props_array()
 
 props_diff = props.get_props_array()
 
-props_cpp = PropsCpp(props_array)
+props_cpp = PropsCpp(props_array, props.langm_coeff)
 print(props_cpp)
 
-local_cpp = LocalCpp(props_array)
+local_cpp = LocalCpp(props_array, props.langm_coeff)
 
-convective_cpp = ConvectiveCpp(props_array)
+convective_cpp = ConvectiveCpp(props_array, props.langm_coeff)
 
-equation_cpp = EquationCpp(props_array)
+equation_cpp = EquationCpp(props_array, props.langm_coeff)
 
-equation_cpp.cfdProcedure(1000)
+radius = 4.86487966261438e-06
+eff_radius = radius * 5
+thr_length = 0.9999723657750931
+#
+equation_cpp.cfdProcedure(10000, radius, eff_radius, thr_length)
 
 conc = equation_cpp.getConc()
 print(conc)
 plt.plot(conc)
 
-plt.ylim(0, 3000)
+# plt.ylim(0, 5000)
 # plt.show()
 
 print("\n")
@@ -81,6 +85,6 @@ nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
 eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
                      pc_z, pr, pl, p_conn, conn_numb, ppr)
 
-diff_pnm = DiffusionPNM(props_array, props_pnm, thrList, tr, tl, conn_in,
+diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
-                        ppr)
+                        ppr, props_array, props.langm_coeff)

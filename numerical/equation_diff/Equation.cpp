@@ -1,9 +1,10 @@
 #include <Equation.h>
 
-Equation::Equation(const std::vector<double> &propsVector) :
-        props(propsVector),
-        local(propsVector),
-        convective(propsVector),
+Equation::Equation(const std::vector<double> &propsVector,
+                   const std::vector<double> &langmuirCoeff) :
+        props(propsVector, langmuirCoeff),
+        local(propsVector, langmuirCoeff),
+        convective(propsVector, langmuirCoeff),
         dim(props.gridBlockN),
         conc(std::vector<std::vector<double>>()),
         time(props.time),
@@ -92,17 +93,18 @@ void Equation::calcFlowRate() {
     flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) * convective.beta[1];
 }
 
-void Equation::cfdProcedure(const double &concIn) {
+void Equation::cfdProcedure(const double &concIn, const double &radius,
+                            const double &effRadius, const double &thrLength) {
 
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
 
         std::swap(iCurr, iPrev);
         local.calculateAlpha(props.timeStep,
-                             props.radius,
-                             props.effRadius);
-        convective.calculateBeta(props.radius,
-                                 props.effRadius,
-                                 props.length,
+                             radius,
+                             effRadius);
+        convective.calculateBeta(radius,
+                                 effRadius,
+                                 thrLength,
                                  props.diffusivity);
         calculateGuessVector();
         calculateMatrix();

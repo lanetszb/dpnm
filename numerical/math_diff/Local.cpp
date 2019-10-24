@@ -1,8 +1,9 @@
 #include <Local.h>
 #include <cmath>
 
-Local::Local(const std::vector<double> &propsVector) :
-        props(propsVector),
+Local::Local(const std::vector<double> &propsVector,
+             const std::vector<double> &langmuirCoeff) :
+        props(propsVector, langmuirCoeff),
         dRadius(0),
         alpha(std::vector<double>(props.gridBlockN, 0)) {}
 

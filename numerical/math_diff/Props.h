@@ -8,7 +8,8 @@ class Props {
 
 public:
 
-    explicit Props(const std::vector<double> &_propsVector);
+    explicit Props(const std::vector<double> &_propsVector, const
+    std::vector<double> _langmuirCoeff);
 
     virtual ~Props() {}
 
@@ -50,7 +51,13 @@ public:
 
     void setIterativeAccuracy(double iterativeAccuracy);
 
+    std::vector<double> getLangmuirCoeff() const;
+
+    std::vector<double> getPropsVector() const;
+
     void printPropsVector();
+
+    void printLangmuirCoeff();
 
     double time;
     double timeStep;
@@ -62,7 +69,7 @@ public:
     double diffusivity;
     double iterativeAccuracy;
 
-    std::vector<double> getPropsVector() const;
+    std::vector<double> langmuirCoeff;
 
 
 private:

@@ -1,9 +1,10 @@
 #include <Convective.h>
 #include <cmath>
 
-Convective::Convective(const std::vector<double> &propsVector) :
-        Local(propsVector),
-        props(propsVector),
+Convective::Convective(const std::vector<double> &propsVector,
+                       const std::vector<double> &langmuirCoeff) :
+        Local(propsVector, langmuirCoeff),
+        props(propsVector, langmuirCoeff),
         beta(std::vector<double>(props.gridBlockN + 1, 0)) {}
 
 int Convective::left(const int &index) {

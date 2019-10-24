@@ -37,17 +37,14 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         thrFlowRate(networkData.throatN, 0),
         porFlowRate(dim, 0) {
 
-    cfdProcedure(pIn, pOut);
-    calcThrFlowRate();
-    getPorConnsIsOut();
-    calcPorFlowRate();
+//    cfdProcedure(pIn, pOut);
 
 
     // for (int i = 0; i < dim; i++)
     //     std::cout << pressure[i] << std::endl;
     //
-    for (int i = 0; i < dim; i++)
-        std::cout << i << ' ' << porFlowRate[i] << std::endl;
+//    for (int i = 0; i < dim; i++)
+//        std::cout << i << ' ' << porFlowRate[i] << std::endl;
 }
 
 
@@ -204,6 +201,10 @@ void EquationPNM::cfdProcedure(const double &pIn,
     calculateGuessVector();
 
     calculatePress();
+
+    calcThrFlowRate();
+    getPorConnsIsOut();
+    calcPorFlowRate();
 }
 
 void EquationPNM::calcThrFlowRate() {
@@ -211,17 +212,6 @@ void EquationPNM::calcThrFlowRate() {
     for (int i = 0; i < networkData.throatN; i++)
         thrFlowRate[i] = connCoeff[i] * (pressure[throatConns[i].first] -
                                          pressure[throatConns[i].second]);
-
-    // std::cout << "Debit" << std::endl;
-    //
-    // for (int i = 0; i < networkData.throatN; i++)
-    //     std::cout << pressure[throatConns[i].second] << ' '
-    //               << pressure[throatConns[i].first] << ' '
-    //               << (pressure[throatConns[i].second] -
-    //                   pressure[throatConns[i].first]) << ' ' << thrFlowRate[i]
-    //               << std::endl;
-    //
-    // std::cout << std::endl;
 }
 
 void EquationPNM::getPorConnsIsOut() {

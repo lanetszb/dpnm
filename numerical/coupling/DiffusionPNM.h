@@ -26,7 +26,8 @@ public:
             const std::vector<int> &pore_conns,
             const std::vector<int> &conn_number,
             const std::vector<int> &pore_per_row,
-            const std::vector<double> &propsDiffusion);
+            const std::vector<double> &propsDiffusion,
+            const std::vector<double> &langmuirCoeff);
 
     virtual  ~DiffusionPNM() = default;
 
@@ -37,8 +38,28 @@ public:
 
     void calcRockVolume();
 
+    void calcEffRadius();
+
+    double calcLangmConc(double pressure);
+
+    void calcThroatConc();
+
+    void calcThroatAvPress();
+
+    void calcDiffFlow();
+
+    void calcDiffFlowDeriv();
+
     double rockVolume;
+    double langmConc;
+
     std::vector<double> effRadius;
+    std::vector<double> throatAvPress;
+    std::vector<double> throatConc;
+
+    std::vector<double> diffFlow;
+
+    std::vector<double> diffFlowDeriv;
 };
 
 #endif

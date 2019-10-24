@@ -7,7 +7,8 @@ class Local {
 
 public:
 
-    explicit Local(const std::vector<double> &propsVector);
+    explicit Local(const std::vector<double> &propsVector,
+                   const std::vector<double> &langmuirCoeff);
 
     virtual ~Local() = default;
 

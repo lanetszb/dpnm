@@ -8,7 +8,8 @@ class Convective : public Local {
 
 public:
 
-    explicit Convective(const std::vector<double> &propsVector);
+    explicit Convective(const std::vector<double> &propsVector,
+                        const std::vector<double> &langmuirCoeff);
 
     virtual ~Convective() = default;
 

@@ -39,6 +39,9 @@ class Props:
         s.diffusivity = float(get('Properties_diffusion', 'diffusivity'))
         s.it_accuracy = float(get('Properties_diffusion', 'iterative_accuracy'))
 
+        s.langm_coeff = str(get('Langmuir_isotherm', 'langm_coeff'))
+        s.langm_coeff = np.loadtxt(s.langm_coeff)
+
     def get_props_array(s):
         props_list = list()
         props_list.append(s.a_gas_dens)

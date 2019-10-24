@@ -20,7 +20,8 @@ class Equation {
 
 public:
 
-    explicit Equation(const std::vector<double> &propsVector);
+    explicit Equation(const std::vector<double> &propsVector,
+                      const std::vector<double> &langmuirCoeff);
 
     virtual ~Equation() = default;
 
@@ -32,14 +33,17 @@ public:
 
     void calculateConc();
 
-    void cfdProcedure(const double &concIn);
+    void cfdProcedure(const double &concIn, const double &radius,
+                      const double &effRadius, const double &thrLength);
 
     void calcFlowRate();
 
     int &dim;
 
     std::vector<std::vector<double>> conc;
+
     const std::vector<double> getConc() const;
+
     const double getFlowRate() const;
 
     Props props;

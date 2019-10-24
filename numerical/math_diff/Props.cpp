@@ -2,7 +2,8 @@
 #include <vector>
 
 
-Props::Props(const std::vector<double> &_propsVector) :
+Props::Props(const std::vector<double> &_propsVector, const
+std::vector<double> _langmuirCoeff) :
 
         time(_propsVector[0]),
         timeStep(_propsVector[1]),
@@ -13,7 +14,8 @@ Props::Props(const std::vector<double> &_propsVector) :
         concIni(_propsVector[5]),
         diffusivity(_propsVector[6]),
         iterativeAccuracy(_propsVector[7]),
-        propsVector(_propsVector) {}
+        propsVector(_propsVector),
+        langmuirCoeff(_langmuirCoeff) {}
 
 
 std::ostream &operator<<(std::ostream &stream, const Props &props) {
@@ -32,6 +34,10 @@ std::ostream &operator<<(std::ostream &stream, const Props &props) {
 
 std::vector<double> Props::getPropsVector() const {
     return propsVector;
+}
+
+std::vector<double> Props::getLangmuirCoeff() const {
+    return langmuirCoeff;
 }
 
 double Props::getLength() const {
@@ -86,6 +92,12 @@ void Props::printPropsVector() {
     for (auto &element : propsVector)
         std::cout << element << std::endl;
 }
+
+void Props::printLangmuirCoeff() {
+    for (auto &element : langmuirCoeff)
+        std::cout << element << std::endl;
+}
+
 
 double Props::getEffRadius() const {
     return effRadius;
