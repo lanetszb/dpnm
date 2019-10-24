@@ -15,10 +15,6 @@ Equation::Equation(const std::vector<double> &propsVector,
         guessVector(dim),
         variable(dim) {
 
-    conc.emplace_back(std::vector<double>(dim, props.concIni));
-    conc.emplace_back(std::vector<double>(dim, props.concIni));
-
-
     std::vector<Triplet> triplets;
     triplets.reserve(3 * dim - 4);
     triplets.emplace_back(0, 0, 1);
@@ -65,6 +61,12 @@ void Equation::calculateMatrix() {
     it.valueRef() = alpha + betaLeft;
 }
 
+void Equation::calcConc(const double &concIni) {
+
+    conc.emplace_back(std::vector<double>(dim, concIni));
+    conc.emplace_back(std::vector<double>(dim, concIni));
+}
+
 void Equation::calculateFreeVector(const double &conc_in) {
     freeVector[0] = local.alpha[0] * conc_in;
     for (int i = 1; i < dim; i++)
@@ -94,7 +96,10 @@ void Equation::calcFlowRate() {
 }
 
 void Equation::cfdProcedure(const double &concIn, const double &radius,
-                            const double &effRadius, const double &thrLength) {
+                            const double &effRadius, const double &thrLength,
+                            const double &concIni) {
+
+    calcConc(concIni);
 
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
 

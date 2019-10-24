@@ -26,7 +26,8 @@ DiffusionPNM::DiffusionPNM(
         equation(propsDiffusion, langmuirCoeff),
         effRadius(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
-        throatConc(equationPNM.networkData.throatN, 0) {
+        throatConc(equationPNM.networkData.throatN, 0),
+        conc_ini(121) {
 
 //    calcRockVolume();
 //    calcEffRadius();
@@ -116,6 +117,7 @@ void DiffusionPNM::calcDiffFlow() {
     equationPNM.calcThroatConns();
     calcThroatAvPress();
     calcThroatConc();
+
 
 
 }

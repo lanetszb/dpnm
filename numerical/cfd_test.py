@@ -38,8 +38,9 @@ equation_cpp = EquationCpp(props_array, props.langm_coeff)
 radius = 4.86487966261438e-06
 eff_radius = radius * 5
 thr_length = 0.9999723657750931
+conc_ini = 121000
 #
-equation_cpp.cfdProcedure(10000, radius, eff_radius, thr_length)
+equation_cpp.cfdProcedure(10000, radius, eff_radius, thr_length, conc_ini)
 
 conc = equation_cpp.getConc()
 print(conc)

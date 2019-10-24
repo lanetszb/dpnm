@@ -50,8 +50,10 @@ public:
 
     void calcDiffFlowDeriv();
 
+
     double rockVolume;
     double langmConc;
+    double conc_ini;
 
     std::vector<double> effRadius;
     std::vector<double> throatAvPress;
