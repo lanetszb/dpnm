@@ -38,6 +38,11 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         porFlowRate(dim, 0) {
 
 //    cfdProcedure(pIn, pOut);
+//
+//    std::cout << std::endl;
+//
+//    for (int i = 0; i < networkData.poreN; i++)
+//        std::cout << pressure[i] << std::endl;
 
 
     // for (int i = 0; i < dim; i++)
@@ -174,9 +179,9 @@ void EquationPNM::calculatePress() {
 //    biCGSTAB.setTolerance(propsPNM.itAccuracy);
 //    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
 
-     SparseLU sparseLU;
-     sparseLU.compute(matrix);
-     variable = sparseLU.solve(freeVector);
+    SparseLU sparseLU;
+    sparseLU.compute(matrix);
+    variable = sparseLU.solve(freeVector);
 
 //    LeastSqCG leastSqCG;
 //    leastSqCG.compute(matrix);

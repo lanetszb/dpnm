@@ -27,11 +27,29 @@ DiffusionPNM::DiffusionPNM(
         effRadius(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
         throatConc(equationPNM.networkData.throatN, 0),
+        matrixConc(equationPNM.networkData.throatN,
+                   std::vector<double>(equation.props.gridBlockN, 0)),
         conc_ini(4),
         dP(0) {
 
-    cfdProcedure();
-    calcMatCoeffDiff();
+
+//    for (int i = 0; i < equationPNM.porConns.size(); i++) {
+//        for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
+//            std::cout << equationPNM.porConns[i][j] << ' ';
+//        }
+//        std::cout << std::endl;
+//    }
+
+//    std::cout << std::endl;
+//
+//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+//        std::cout << diffFlow[i] << std::endl;
+//
+//    std::cout << std::endl;
+
+    cfdProcedureDiff();
+//    cfdProcedureDiff();
+//    cfdProcedureDiff();
 }
 
 double DiffusionPNM::calcSideLength(std::vector<double> &poreCoord) {
@@ -91,24 +109,59 @@ void DiffusionPNM::calcThroatConc(const double &dP) {
 
 void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFLow) {
 
-    equation.calcConcIni(conc_ini);
-    std::vector<std::vector<double>> copyConcIni;
-
-    copyConcIni.push_back(equation.conc[0]);
-    copyConcIni.push_back(equation.conc[1]);
-
+//    equation.calcConcIni(conc_ini);
+//
+//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+//        for (int j = 0; j < equation.props.gridBlockN; j++)
+//            matrixConc[i][j] = equation.conc[equation.iPrev][j];
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+
+        for (int j = 0; j < equation.props.gridBlockN; j++) {
+            equation.conc[0][j] = matrixConc[i][j];
+            equation.conc[1][j] = matrixConc[i][j];
+        }
+
         equation.cfdProcedure(throatConc[i],
                               equationPNM.networkData.throatRadius[i],
                               effRadius[i],
                               equationPNM.networkData.throatLength[i]);
 
+        for (int j = 0; j < equation.props.gridBlockN; j++) {
+            matrixConc[i][j] = equation.conc[equation.iCurr][j];
+        }
+
         diffFLow.emplace_back(equation.flowRate);
 
-        for (int i = 0; i < equation.props.gridBlockN; i++) {
-            equation.conc[0][i] = copyConcIni[0][i];
-            equation.conc[1][i] = copyConcIni[1][i];
+        for (int j = 0; j < equation.props.gridBlockN; j++)
+            matrixConc[i][j] = equation.conc[equation.iPrev][j];
+    }
+
+//    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+//        std::cout << i << std::endl;
+//        for (int j = 0; j < equation.props.gridBlockN; j++) {
+//            std::cout << matrixConc[i][j] << ' ';
+//        }
+//        std::cout << std::endl;
+//    }
+}
+
+void DiffusionPNM::updateConc() {
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+
+        for (int j = 0; j < equation.props.gridBlockN; j++) {
+            equation.conc[0][j] = matrixConc[i][j];
+            equation.conc[1][j] = matrixConc[i][j];
+        }
+
+        equation.cfdProcedure(throatConc[i],
+                              equationPNM.networkData.throatRadius[i],
+                              effRadius[i],
+                              equationPNM.networkData.throatLength[i]);
+
+        for (int j = 0; j < equation.props.gridBlockN; j++) {
+            matrixConc[i][j] = equation.conc[equation.iCurr][j];
         }
     }
 }
@@ -116,39 +169,18 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFLow) {
 void DiffusionPNM::calcDiffFlowDeriv() {
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++)
-        flowDerivDiff.emplace_back((diffFlowPlus[i] - diffFlowMinus[i]) / dP);
-}
-
-void DiffusionPNM::cfdProcedure() {
-
-    calcRockVolume();
-    calcEffRadius();
-
-    equationPNM.calculateGuessPress(equationPNM.propsPNM.pressIn,
-                                    equationPNM.propsPNM.pressOut);
-
-    equationPNM.calcThroatConns();
-    calcThroatAvPress();
-
-    // Enhance and rethink later
-
-    calcThroatConc(dP);
-    calcDiffFlow(diffFlow);
-
-    dP = 100;
-    calcThroatConc(dP / 2);
-    calcDiffFlow(diffFlowPlus);
-
-    calcThroatConc(-1 * dP / 2);
-    calcDiffFlow(diffFlowMinus);
-
-    calcDiffFlowDeriv();
-    // +++++++++++++++++++++++++++++
+        flowDerivDiff.emplace_back(
+                (diffFlowPlus[i] - diffFlowMinus[i]) / dP);
 }
 
 void DiffusionPNM::calcMatCoeffDiff() {
 
-    equationPNM.calcPorConns();
+//    for (int i = 0; i < equationPNM.porConns.size(); i++)
+//        std::cout << flowDerivDiff[i] << std::endl;
+
+/*    std::cout << std::endl;*/
+
+// to be rewritten
 
     for (int i = 0; i < flowDerivDiff.size(); i++)
         connCoeffDiff.emplace_back(flowDerivDiff[i] / 2);
@@ -160,13 +192,124 @@ void DiffusionPNM::calcMatCoeffDiff() {
             coeffSum += flowDerivDiff[equationPNM.porConns[i][j]] / 2;
         centralCoeffDiff.emplace_back(coeffSum);
     }
-
-//    std::cout << std::endl;
-//
-//    for (int i = 0; i < equationPNM.porConns.size(); i++)
-//        std::cout << centralCoeffDiff[i] << std::endl;
 }
 
+void DiffusionPNM::calcMatCoupledCoeff() {
+
+    equationPNM.calcMatCoeff();
+
+    for (int i = 0; i < equationPNM.connCoeff.size(); i++)
+        equationPNM.connCoeff[i] += connCoeffDiff[i];
+
+    for (int i = 0; i < equationPNM.centralCoeff.size(); i++)
+        equationPNM.centralCoeff[i] += centralCoeffDiff[i];
+}
+
+void DiffusionPNM::calcCoupledFreeVector() {
+
+    std::vector<double> porFlowDiff;
+    std::vector<double> porFlowDiffDer;
+
+    for (int i = 0; i < equationPNM.porConns.size(); i++) {
+        double coeffSum = 0;
+        for (int j = 0; j < equationPNM.porConns[i].size(); j++)
+            coeffSum += diffFlow[equationPNM.porConns[i][j]];
+        porFlowDiff.emplace_back(-1 * coeffSum);
+    }
+
+    for (int i = 0; i < equationPNM.porConns.size(); i++) {
+        double coeffSum = 0;
+        for (int j = 0; j < equationPNM.porConns[i].size(); j++)
+            coeffSum += flowDerivDiff[equationPNM.porConns[i][j]] *
+                        throatAvPress[equationPNM.porConns[i][j]];
+        porFlowDiffDer.emplace_back(coeffSum);
+    }
+
+    for (int i = 0; i < equationPNM.porConns.size(); i++)
+        equationPNM.freeVector[i] = porFlowDiff[i] + porFlowDiffDer[i];
+
+    equationPNM.calculateFreeVector(equationPNM.propsPNM.pressIn,
+                                    equationPNM.propsPNM.pressOut);
+}
+
+void DiffusionPNM::cfdProcedureDiff() {
+
+    equationPNM.networkData.findBoundaryPores(
+            equationPNM.networkData.poreCoordX);
+    equationPNM.calcPorConns();
+    equationPNM.calcThroatConns();
+
+    calcRockVolume();
+    calcEffRadius();
+
+    equationPNM.calculateGuessPress(equationPNM.propsPNM.pressIn,
+                                    equationPNM.propsPNM.pressOut);
+
+    calcThroatAvPress();
+
+    // Enhance and rethink later
+
+    equation.calcConcIni(conc_ini);
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        for (int j = 0; j < equation.props.gridBlockN; j++)
+            matrixConc[i][j] = equation.conc[equation.iCurr][j];
+
+    calcThroatConc(dP);
+    calcDiffFlow(diffFlow);
+
+    dP = 1000;
+    calcThroatConc(dP / 2);
+    calcDiffFlow(diffFlowPlus);
+
+    calcThroatConc(-1 * dP / 2);
+    calcDiffFlow(diffFlowMinus);
+
+    calcDiffFlowDeriv();
+//     +++++++++++++++++++++++++++++
+
+    calcMatCoeffDiff();
+    calcMatCoupledCoeff();
+
+    equationPNM.calculateMatrix();
+
+    calcCoupledFreeVector();
+
+    std::cout << "freeVector" << std::endl;
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        std::cout << equationPNM.freeVector[i] << std::endl;
+
+    equationPNM.calculateGuessPress(equationPNM.propsPNM.pressIn,
+                                    equationPNM.propsPNM.pressOut);
+
+    equationPNM.calculateGuessVector();
+
+
+//    std::cout << equationPNM.matrix << std::endl;
+//    std::cout << std::endl;
+
+    equationPNM.calculatePress();
+//    std::cout << std::endl;
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        std::cout << equationPNM.pressure[i] << std::endl;
+
+    std::cout << std::endl;
+
+
+//    std::cout << equationPNM.matrix << std::endl;
+
+    updateConc();
+
+//    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+//        std::cout << i << std::endl;
+//        for (int j = 0; j < equation.props.gridBlockN; j++) {
+//            std::cout << matrixConc[i][j] << ' ';
+//        }
+//        std::cout << std::endl;
+//    }
+
+}
 
 
 

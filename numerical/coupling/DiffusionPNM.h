@@ -52,9 +52,13 @@ public:
 
     void calcMatCoeffDiff();
 
-    void cfdProcedure();
+    void cfdProcedureDiff();
 
-    void calcMatrixJointCoeff();
+    void calcMatCoupledCoeff();
+
+    void calcCoupledFreeVector();
+
+    void updateConc();
 
 
     double rockVolume;
@@ -64,6 +68,8 @@ public:
     std::vector<double> effRadius;
     std::vector<double> throatAvPress;
     std::vector<double> throatConc;
+
+    std::vector<std::vector<double>> matrixConc;
 
     std::vector<double> diffFlow;
     std::vector<double> diffFlowPlus;

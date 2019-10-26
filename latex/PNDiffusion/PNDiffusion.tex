@@ -112,32 +112,41 @@
 \begin{cases}
 \begin{gathered}
 \sum^{N_{i}}_{j=1, \; i\neq j} q_{ij} = 0,   \\
-q_{ij} = g_{ij} (P_{i} - P_{j}) + q^{m} ,
+q_{ij} = g_{ij} \left(P_{i} - P_{j}\right) + \hat{q}_{ij} ,
 \end{gathered}
 \end{cases}
 \end{eqnarray}
 %
 \begin{eqnarray}
 \begin{gathered}
-q^{m} = q^{m} (\bar{P_n}, t),  
+\hat{q}_{ij} =\hat{q}_{ij} \left(\bar{P}_{ij}, t\right),  
 \end{gathered}
 \end{eqnarray}
 %
 \begin{eqnarray}
 \begin{gathered}
-\bar{P_n} = \frac{P_i+P_j}{2}, 
+\bar{P}_{ij} = \frac{P_i+P_j}{2}, 
 \end{gathered}
 \end{eqnarray}
 %
 \begin{eqnarray}
 \begin{gathered}
-q^m = q^{m'}(\bar{P}^{n+1}-\bar{P}^n+q^m(\bar{P}^n)),
+\hat{q}_{ij}^{n+1} = \hat{q}_{ij}'^n\left(\bar{P}_{ij}^{n+1}-\bar{P}_{ij}^n\right)+\hat{q}_{ij}^n,
 \end{gathered}
 \end{eqnarray}
 %
 \begin{eqnarray}
 \begin{gathered}
-q^{m'} = \frac{q^m(\bar{P}^n+\frac{\Delta{\tilde{P}}}{2})-q^m(\bar{P}^n-\frac{\Delta{\tilde{P}}}{2})}{\Delta{\tilde{P}}}
+\hat{q}_{ij}^{m} = \hat{q}_{ij}\left(\bar{P}_{ij}^m\right),
+\end{gathered}
+\end{eqnarray}
+
+
+
+\begin{eqnarray}
+\begin{gathered}
+\hat{q}_{ij}'^n = \frac{\hat{q}_{ij}\left(\bar{P}_{ij}^n+ \frac{1}{2}\Delta_P\right)-
+\hat{q}_{ij}\left(\bar{P}_{ij}^n-\frac{1}{2}\Delta_P\right)}{{\Delta_P}}.
 \end{gathered}
 \end{eqnarray}
 %
