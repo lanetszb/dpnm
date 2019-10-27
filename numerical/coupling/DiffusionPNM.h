@@ -46,7 +46,7 @@ public:
 
     void calcThroatAvPress();
 
-    void calcDiffFlow(std::vector<double> &diffFLow);
+    void calcDiffFlow(std::vector<double> &diffFlowVector);
 
     void calcDiffFlowDeriv();
 
@@ -59,6 +59,10 @@ public:
     void calcCoupledFreeVector();
 
     void updateConc();
+
+    void setInitialCond();
+
+    void calcCoupledFlow();
 
 
     double rockVolume;

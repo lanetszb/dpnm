@@ -174,14 +174,14 @@ void EquationPNM::calculateGuessVector() {
 
 void EquationPNM::calculatePress() {
 
-//    BiCGSTAB biCGSTAB;
-//    biCGSTAB.compute(matrix);
-//    biCGSTAB.setTolerance(propsPNM.itAccuracy);
-//    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
+    BiCGSTAB biCGSTAB;
+    biCGSTAB.compute(matrix);
+    biCGSTAB.setTolerance(propsPNM.itAccuracy);
+    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
 
-    SparseLU sparseLU;
-    sparseLU.compute(matrix);
-    variable = sparseLU.solve(freeVector);
+//    SparseLU sparseLU;
+//    sparseLU.compute(matrix);
+//    variable = sparseLU.solve(freeVector);
 
 //    LeastSqCG leastSqCG;
 //    leastSqCG.compute(matrix);
