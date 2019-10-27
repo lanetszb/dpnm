@@ -37,20 +37,27 @@ equation_cpp = EquationCpp(props_array, props.langm_coeff)
 
 radius = 4.86487966261438e-06
 eff_radius = radius * 5
-thr_length = 0.9999723657750931
-conc_ini = 121000
+thr_length = 0.9999723657e-4
+# conc_ini = 121000
+conc_wall = 3
 
-# equation_cpp.cfdProcedure(10000, radius, eff_radius, thr_length, conc_ini)
+equation_cpp.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
+
+conc = equation_cpp.getConc()
+
+plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
+plt.gca().set(title='Concentration distribution, t = 0.1 (sec)',
+              xlabel='Radius (m)',
+              ylabel='Concentration (kg/m3)')
+
+print(conc)
+plt.plot(conc)
+
+plt.ylim(3, 6)
+plt.show()
+
+# print("\n")
 #
-# conc = equation_cpp.getConc()
-# print(conc)
-# plt.plot(conc)
-
-# plt.ylim(0, 5000)
-# plt.show()
-
-print("\n")
-
 props_pnm = props.get_props_array()
 props_pnm_cpp = PropsPNMCpp(props_pnm)
 print(props_pnm_cpp)
@@ -79,7 +86,7 @@ p_conn = network_data_cpp.pore_conns
 conn_numb = network_data_cpp.conn_number
 ppr = network_data_cpp.pore_per_row
 
-#
+
 nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
                         pr, pl, p_conn, conn_numb, ppr)
 

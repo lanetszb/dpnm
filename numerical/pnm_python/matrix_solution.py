@@ -94,9 +94,12 @@ if __name__ == '__main__':
     x_length = x_max - x_min
     area = x_length ** 2
 
+
     k = total_flow * matrix_portrait.props.liq_visc * x_length / (
             area * (pressure_in - pressure_out))
 
+    print(total_flow)
+    print('\n')
     print(pressure)
     print('\n')
     print(k)

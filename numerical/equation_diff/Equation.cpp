@@ -98,6 +98,8 @@ void Equation::calcFlowRate() {
 void Equation::cfdProcedure(const double &concThrWall, const double &radius,
                             const double &effRadius, const double &thrLength) {
 
+    calcConcIni(props.concIni);
+
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
 
         std::swap(iCurr, iPrev);

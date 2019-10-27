@@ -46,7 +46,7 @@ def plot_network_stats(property_list):
     x = property_list
     plt.hist(x, bins=50, ec='black')
     plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
-    plt.gca().set(title='property', ylabel='Frequency')
+    plt.gca().set(title='Throat radius', ylabel='Frequency')
 
     fig2.autofmt_xdate()
 

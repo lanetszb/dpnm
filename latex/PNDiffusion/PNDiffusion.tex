@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt,russian]{extreport}
- 
+
 \usepackage{extsizes}
 \usepackage{cmap} % для кодировки шрифтов в pdf
 \usepackage[T2A]{fontenc}
@@ -20,7 +20,7 @@
 %\renewcommand\theequation{{\color{fontColor}\arabic{equation_diff}}}
 
 
-  
+
 \usepackage{graphicx} % для вставки картинок
 \graphicspath{{images/}}
 \usepackage{amssymb,amsfonts,amsmath,amsthm} % математические дополнения от АМС
@@ -35,10 +35,10 @@
 \usepackage{makecell}
 \usepackage{multirow} % улучшенное форматирование таблиц
 \usepackage{ulem} % подчеркивания
-\usepackage{longtable} 
+\usepackage{longtable}
 \usepackage{multirow}
 \usepackage{multicol}
- 
+
 \linespread{1.3} % полуторный интервал
 \renewcommand{\rmdefault}{ftm} % Times New Roman
 \frenchspacing
@@ -52,10 +52,10 @@
 \setlength{\headheight}{17pt}
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
-\fancypagestyle{plain}{ 
-    \fancyhf{}
-    \rhead{\thepage}}
-    
+\fancypagestyle{plain}{
+\fancyhf{}
+\rhead{\thepage}}
+
 \usepackage{geometry}
 \geometry{left=1.5cm}
 \geometry{right=1.5cm}
@@ -94,62 +94,75 @@
 
 \begin{document}
 
-\pagecolor{pageColor}
-\color{fontColor}
-\Russian
-%\maketitle
-%\newpage
-%\tableofcontents{\thispagestyle{empty}}
-%\newpage
-\printnomenclature[5em]
+    \pagecolor{pageColor}
+    \color{fontColor}
+    \Russian
+    %\maketitle
+    %\newpage
+    %\tableofcontents{\thispagestyle{empty}}
+    %\newpage
+    \printnomenclature[5em]
 
 
-\begin{center}
-{\large \textbf{PN and Diffusion coupled}}
-\end{center}
+    \begin{center}
+    {\large \textbf{PN and Diffusion coupled}}
+    \end{center}
 
-\begin{eqnarray}
-\begin{cases}
-\begin{gathered}
-\sum^{N_{i}}_{j=1, \; i\neq j} q_{ij} = 0,   \\
-q_{ij} = g_{ij} \left(P_{i} - P_{j}\right) + \hat{q}_{ij} ,
-\end{gathered}
-\end{cases}
-\end{eqnarray}
-%
-\begin{eqnarray}
-\begin{gathered}
-\hat{q}_{ij} =\hat{q}_{ij} \left(\bar{P}_{ij}, t\right),  
-\end{gathered}
-\end{eqnarray}
-%
-\begin{eqnarray}
-\begin{gathered}
-\bar{P}_{ij} = \frac{P_i+P_j}{2}, 
-\end{gathered}
-\end{eqnarray}
-%
-\begin{eqnarray}
-\begin{gathered}
-\hat{q}_{ij}^{n+1} = \hat{q}_{ij}'^n\left(\bar{P}_{ij}^{n+1}-\bar{P}_{ij}^n\right)+\hat{q}_{ij}^n,
-\end{gathered}
-\end{eqnarray}
-%
-\begin{eqnarray}
-\begin{gathered}
-\hat{q}_{ij}^{m} = \hat{q}_{ij}\left(\bar{P}_{ij}^m\right),
-\end{gathered}
-\end{eqnarray}
-
-
-
-\begin{eqnarray}
-\begin{gathered}
-\hat{q}_{ij}'^n = \frac{\hat{q}_{ij}\left(\bar{P}_{ij}^n+ \frac{1}{2}\Delta_P\right)-
-\hat{q}_{ij}\left(\bar{P}_{ij}^n-\frac{1}{2}\Delta_P\right)}{{\Delta_P}}.
-\end{gathered}
-\end{eqnarray}
-%
+    \begin{eqnarray}
+        \begin{cases}
+            \begin{gathered}
+                \sum^{N_{i}}_{j=1, \; i\neq j} q_{ij} = 0,   \\
+                q_{ij} = g_{ij} \cdot \left(P^{n+1}_{i} - P^{n+1}_{j}\right) + \alpha^n_{ij} \hat{q}^{n+1}_{ij} ,
+            \end{gathered}
+        \end{cases}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \sum^{\Gamma_{i}}_{j=1, \; i\neq j} q_{ij}=\begin{cases}
+                                                       P^{n+1}_{i} - \tilde{P}^{n+1}_{i}: \text{Dirichlet},\\
+                                                       \; \; g_{ij} \cdot \left(P^{n+1}_{i} - P^{n+1}_{j}\right) + \alpha^n_{ij} \hat{q}^{n+1}_{ij} - \tilde{q}^{n+1}_{i}: & \text{Neumann},
+        \end{cases}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            g_{ij} = \frac{\pi R^4_{ij}}{8 \mu L_{ij}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \alpha^n_{ij} =\begin{cases}
+                           -1: & P^{n}_{i} < P^{n}_{j},\\
+                           \; \; \frac{1}{2} : & P^{n}_{i} = P^{n}_{j},\\
+                           \; \; 1: & P^{n}_{i} > P^{n}_{j},
+        \end{cases}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \hat{q}_{ij}^{n+1} = \hat{q}_{ij}'^n \cdot \left(\bar{P}_{ij}^{n+1}-\bar{P}_{ij}^n\right)+\hat{q}_{ij}^n,
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \hat{q}_{ij}'^n = \frac{\hat{q}_{ij}\left(\bar{P}_{ij}^n+ \frac{1}{2}\Delta_P\right)-
+            \hat{q}_{ij}\left(\bar{P}_{ij}^n-\frac{1}{2}\Delta_P\right)}{{\Delta_P}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \bar{P}^{n}_{ij} = \frac{P^n_i+P^n_j}{2},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \hat{q}_{ij}^{n} = \hat{q}_{ij}\left(\bar{P}_{ij}^n\right).
+        \end{gathered}
+    \end{eqnarray}
+    %
 
 \end{document}
 

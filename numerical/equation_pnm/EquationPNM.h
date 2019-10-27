@@ -38,7 +38,7 @@ public:
 
     virtual ~EquationPNM() = default;
 
-    void calculateMatrix();
+    void calculateMatrix(const std::vector<double> &extraCoeff);
 
     void calcThroatConns();
 
@@ -60,9 +60,14 @@ public:
                       const double &pOut);
 
     void calcThrFlowRate();
+
     void calcPorFlowRate();
 
     void getPorConnsIsOut();
+
+    void getPorConnsIsOutByPressure();
+
+    void setInitialCond();
 
 
     PropsPNM propsPNM;
@@ -72,6 +77,8 @@ public:
     double pIn;
     double pOut;
 
+    double qIn;
+
     Matrix matrix;
 
     Vector freeVector;
@@ -80,7 +87,9 @@ public:
 
     std::vector<std::pair<int, int>> throatConns;
     std::vector<std::vector<int>> porConns;
+
     std::vector<std::vector<bool>> porConnsIsOut;
+    std::vector<std::vector<int>> porConnsIsOutByPressure;
 
     std::vector<double> connCoeff;
     std::vector<double> centralCoeff;
@@ -88,6 +97,12 @@ public:
 
     std::vector<double> thrFlowRate;
     std::vector<double> porFlowRate;
+
+    std::vector<double> extraCoeff;
+
+    // manual construction, has to be automatised later
+
+    std::vector<double> inletFlow;
 
 };
 

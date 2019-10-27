@@ -111,7 +111,10 @@ BOOST_PYTHON_MODULE (cfd) {
 
             .def("cfdProcedure",
                  &Equation::cfdProcedure,
-                 p::args("conc_in"))
+                 p::args("conc_in",
+                         "radius",
+                         "effective_radius",
+                         "thr_length"))
 
             .def("getConc",
                  &Equation::getConc)
