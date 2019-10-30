@@ -38,7 +38,9 @@ public:
 
     virtual ~EquationPNM() = default;
 
-    void calculateMatrix(const int &boundCond);
+    void calculateMatrix(const int &boundCond,
+                         const std::vector<double> &connCoeff,
+                         const std::vector<double> &centralCoeff);
 
     void calcThroatConns();
 

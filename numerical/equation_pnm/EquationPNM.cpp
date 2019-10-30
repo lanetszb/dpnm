@@ -176,7 +176,9 @@ void EquationPNM::calcMatCoeff() {
             centralCoeff[i] += connCoeff[porConns[i][j]];
 }
 
-void EquationPNM::calculateMatrix(const int &boundCond) {
+void EquationPNM::calculateMatrix(const int &boundCond,
+                                  const std::vector<double> &connCoeff,
+                                  const std::vector<double> &centralCoeff) {
 
     // Matrix construction
 
@@ -300,7 +302,7 @@ void EquationPNM::cfdProcedure(const double &pIn,
 
 //    getPorConnsIsOutByPressure();
 
-    calculateMatrix(0);
+    calculateMatrix(0, connCoeff, centralCoeff);
     calculateFreeVector(pIn, pOut);
 //    calculateGuessPress(pIn, pOut);
 //    calculateGuessVector();

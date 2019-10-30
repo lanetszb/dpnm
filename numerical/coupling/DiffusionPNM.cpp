@@ -275,7 +275,7 @@ void DiffusionPNM::calcCoupledFlow() {
     calcMatCoeffDiff();
     calcMatCoupledCoeff();
 
-    equationPNM.calculateMatrix(0);
+    equationPNM.calculateMatrix(0, connCoeffDiff, centralCoeffDiff);
 
     calcCoupledFreeVector();
 
