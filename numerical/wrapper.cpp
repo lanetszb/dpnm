@@ -71,14 +71,18 @@ BOOST_PYTHON_MODULE (cfd) {
                              p::args("props_array",
                                      "langmuir_coeff")))
 
-            .def("calculateAlpha",
+            .def("calculate_alpha",
                  &Local::calculateAlpha,
                  p::args("dt",
                          "radius",
-                         "effRadius"))
+                         "effRadius",
+                         "throat_length"))
 
-            .def("get_alpha",
-                 &Local::getAlpha);
+            .add_property("alpha",
+                 &Local::getAlpha)
+
+            .add_property("radius_curr",
+                 &Local::getRadCurr);
 //
 //
     p::class_<Convective>("ConvectiveCpp",

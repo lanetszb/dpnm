@@ -4,7 +4,7 @@
 #include <Props.h>
 #include <Local.h>
 
-class Convective : public Local {
+class Convective {
 
 public:
 
@@ -20,7 +20,8 @@ public:
     void calculateBeta(const double &radius,
                        const double &effRadius,
                        const double &length,
-                       const double &diffusivity);
+                       const double &diffusivity,
+                       const double &gridBlockN);
 
     double omegaCylindric(const double &radius, const double &length);
 
@@ -30,7 +31,7 @@ public:
                                              const double &diffusivity);
 
     Props props;
-
+    Local local;
     std::vector<double> beta;
 
     const std::vector<double> getBeta() const;

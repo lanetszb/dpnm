@@ -24,13 +24,20 @@ public:
                         const double &effRadius,
                         const double &thrLength);
 
+    void calcRadiusCurr(const double &radius, const double &effRadius,
+                        const int &gridBlockN);
+
+    const std::vector<double> getAlpha() const;
+
+    const std::vector<double> getRadCurr() const;
+
     Props props;
 
     double dRadius;
+    std::vector<double> radiusCurr;
 
     std::vector<double> alpha;
 
-    const std::vector<double> getAlpha() const;
 
 };
 

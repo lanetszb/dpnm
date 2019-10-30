@@ -77,7 +77,7 @@ void DiffusionPNM::calcRockVolume() {
 void DiffusionPNM::calcEffRadius() {
 
     for (int i = 0; i < effRadius.size(); i++)
-        effRadius[i] = 1.e-20 * rockVolume / equationPNM.networkData.throatN;
+        effRadius[i] = 0.00001 * rockVolume / equationPNM.networkData.throatN;
 }
 
 double DiffusionPNM::calcLangmConc(double pressure) {
@@ -303,35 +303,34 @@ void DiffusionPNM::cfdProcedureDiff() {
 
 
     for (double t = equation.props.timeStep;
-         t <= 20 * equation.props.timeStep; t += equation.props.timeStep) {
+         t <= 1000 * equation.props.timeStep; t += equation.props.timeStep) {
 
         calcCoupledFlow();
 
-        double sum = 0;
-        for (int i = 0; i < equationPNM.porFlowRate.size();i++)
-            sum+=equationPNM.porFlowRate[i];
-
-        std::cout << "totalFlow" << std::endl;
-        std::cout << sum << std::endl;
-        std::cout << std::endl;
+//        double sum = 0;
+//        for (int i = 0; i < equationPNM.porFlowRate.size();i++)
+//            sum+=equationPNM.porFlowRate[i];
+//
+//        std::cout << "totalFlow" << std::endl;
+//        std::cout << sum << std::endl;
+//        std::cout << std::endl;
 //
 //        std::cout << "freeVector" << std::endl;
 //        std::cout << equationPNM.freeVector << std::endl;
 //        std::cout << std::endl;
 //
-//        for (int i = 0; i < equationPNM.networkData.poreN; i++)
-//            std::cout << equationPNM.pressure[i] << std::endl;
-//        std::cout << std::endl;
-////
+        for (int i = 0; i < equationPNM.networkData.poreN; i++)
+            std::cout << equationPNM.pressure[i] << std::endl;
+        std::cout << std::endl;
 //        std::cout << std::endl;
 //
-//        for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-//            std::cout << i << std::endl;
-//            for (int j = 0; j < equation.props.gridBlockN; j++) {
-//                std::cout << matrixConc[i][j] << ' ';
-//            }
-//            std::cout << std::endl;
-//        }
+        for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+            std::cout << i << std::endl;
+            for (int j = 0; j < equation.props.gridBlockN; j++) {
+                std::cout << matrixConc[i][j] << ' ';
+            }
+            std::cout << std::endl;
+        }
     }
 
 

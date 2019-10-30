@@ -5,7 +5,8 @@ Local::Local(const std::vector<double> &propsVector,
              const std::vector<double> &langmuirCoeff) :
         props(propsVector, langmuirCoeff),
         dRadius(0),
-        alpha(std::vector<double>(props.gridBlockN, 0)) {}
+        alpha(props.gridBlockN, 0),
+        radiusCurr(props.gridBlockN + 1, 0) {}
 
 int Local::left(const int &index) {
     return index;
@@ -21,24 +22,33 @@ double Local::calcDelRadius(const double &radius, const double &effRadius,
     return (effRadius - radius) / gridBlockN;
 }
 
+void Local::calcRadiusCurr(const double &radius, const double &effRadius,
+                           const int &gridBlockN) {
+
+    dRadius = calcDelRadius(radius, effRadius, gridBlockN);
+
+    for (int i = 0; i < gridBlockN + 1; i++)
+        radiusCurr[i] = radius + i * dRadius;
+}
+
 void Local::calculateAlpha(const double &dt,
                            const double &radius,
                            const double &effRadius,
                            const double &thrLength) {
 
-    dRadius = calcDelRadius(radius, effRadius, alpha.size());
+    calcRadiusCurr(radius, effRadius, props.gridBlockN);
 
-    for (int i = 0; i < alpha.size(); i++) {
-
-        auto r_out = radius + (i + 1) * dRadius;
-        auto r_in = radius + i * dRadius;
-
-        alpha[i] = (M_PI * thrLength * (r_out * r_out - r_in * r_in)) / dt;
-    }
+    for (int i = 0; i < alpha.size(); i++)
+        alpha[i] = (M_PI * thrLength *
+                    (radiusCurr[right(i)] * radiusCurr[right(i)] -
+                     radiusCurr[left(i)] * radiusCurr[left(i)])) / dt;
 }
-
 const std::vector<double> Local::getAlpha() const {
     return alpha;
+}
+
+const std::vector<double> Local::getRadCurr() const {
+    return radiusCurr;
 }
 
 

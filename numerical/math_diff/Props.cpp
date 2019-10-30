@@ -98,7 +98,6 @@ void Props::printLangmuirCoeff() {
         std::cout << element << std::endl;
 }
 
-
 double Props::getEffRadius() const {
     return effRadius;
 }

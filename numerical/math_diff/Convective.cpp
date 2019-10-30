@@ -3,9 +3,9 @@
 
 Convective::Convective(const std::vector<double> &propsVector,
                        const std::vector<double> &langmuirCoeff) :
-        Local(propsVector, langmuirCoeff),
         props(propsVector, langmuirCoeff),
-        beta(std::vector<double>(props.gridBlockN + 1, 0)) {}
+        local(propsVector, langmuirCoeff),
+        beta(props.gridBlockN + 1, 0) {}
 
 int Convective::left(const int &index) {
     return index - 1;
@@ -16,7 +16,7 @@ int Convective::right(const int &index) {
 }
 
 double Convective::omegaCylindric(const double &radius, const double &length) {
-    return 2 * M_PI * length * radius;
+    return 2 * M_PI * radius * length;
 }
 
 double Convective::omegaSpheric(const double &radius) {
@@ -32,17 +32,15 @@ std::vector<double> Convective::calc_diffusivityList(const int &gridBlockN,
 void Convective::calculateBeta(const double &radius,
                                const double &effRadius,
                                const double &length,
-                               const double &diffusivity) {
+                               const double &diffusivity,
+                               const double &gridBlockN) {
 
-    dRadius = calcDelRadius(radius, effRadius, beta.size() - 1);
+    local.calcRadiusCurr(radius, effRadius, gridBlockN);
     auto diffusivityList = calc_diffusivityList(beta.size(), diffusivity);
 
     for (int i = 0; i < beta.size(); i++) {
-
-        auto radius_curr = radius + i * dRadius;
-        auto omega = omegaCylindric(radius_curr, length);
-
-        beta[i] = diffusivityList[i] * omega / dRadius;
+        auto omega = omegaCylindric(local.radiusCurr[i], length);
+        beta[i] = diffusivityList[i] * omega / local.dRadius;
     }
 }
 

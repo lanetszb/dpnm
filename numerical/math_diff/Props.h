@@ -59,6 +59,8 @@ public:
 
     void printLangmuirCoeff();
 
+    void calcRadiusCurr();
+
     double time;
     double timeStep;
     double length;

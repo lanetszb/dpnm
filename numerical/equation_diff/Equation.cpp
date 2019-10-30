@@ -107,10 +107,12 @@ void Equation::cfdProcedure(const double &concThrWall, const double &radius,
                              radius,
                              effRadius,
                              thrLength);
+
         convective.calculateBeta(radius,
                                  effRadius,
                                  thrLength,
-                                 props.diffusivity);
+                                 props.diffusivity,
+                                 props.gridBlockN);
         calculateGuessVector();
         calculateMatrix();
         calculateFreeVector(concThrWall);

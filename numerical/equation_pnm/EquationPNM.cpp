@@ -349,7 +349,7 @@ void EquationPNM::getPorConnsIsOutByPressure() {
             if (porConnsIsOut[i][j] and
                 pressure[throatConns[porConns[i][j]].first] >=
                 pressure[throatConns[porConns[i][j]].second])
-                porConnsIsOutByPressure[i][j] = 1;
+                porConnsIsOutByPressure[i][j] = 0;
             else if (porConnsIsOut[i][j] == false and
                      pressure[throatConns[porConns[i][j]].first] >
                      pressure[throatConns[porConns[i][j]].second])
