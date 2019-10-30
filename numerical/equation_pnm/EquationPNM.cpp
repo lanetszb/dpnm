@@ -39,7 +39,6 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         pressure(dim, 0),
         thrFlowRate(networkData.throatN, 0),
         porFlowRate(dim, 0),
-        extraCoeff(networkData.throatN, 0),
         inletFlow(9) {
 
     double myArray[9] = {1.15176e-14, 6.12608e-14, 1.92216e-12, 1.59089e-11,
@@ -53,6 +52,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
     setInitialCond();
 
     cfdProcedure(pIn, pOut);
+
+    std::cout << matrix << std::endl;
 
 //    std::cout << std::endl;
 //
@@ -104,8 +105,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //    std::cout << matrix << std::endl;
 //    std::cout << std::endl;
 //
-    std::cout << std::endl;
-
+//    std::cout << std::endl;
+//
     for (int i = 0; i < networkData.poreN; i++)
         std::cout << pressure[i] << std::endl;
 //
@@ -113,10 +114,10 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //    for (int i = 0; i < networkData.throatN; i++)
 //        std::cout << thrFlowRate[i] << std::endl;
 
-    std::cout << std::endl;
-
-    for (int i = 0; i < dim; i++)
-        std::cout << i << ' ' << porFlowRate[i] << std::endl;
+//    std::cout << std::endl;
+//
+//    for (int i = 0; i < dim; i++)
+//        std::cout << i << ' ' << porFlowRate[i] << std::endl;
 }
 
 
@@ -175,7 +176,7 @@ void EquationPNM::calcMatCoeff() {
             centralCoeff[i] += connCoeff[porConns[i][j]];
 }
 
-void EquationPNM::calculateMatrix(const std::vector<double> &extraCoeff) {
+void EquationPNM::calculateMatrix(const int &boundCond) {
 
     // Matrix construction
 
@@ -191,14 +192,11 @@ void EquationPNM::calculateMatrix(const std::vector<double> &extraCoeff) {
         for (int j = 0; j < networkData.connNumber[i]; j++) {
 
 //            if (i != networkData.boundaryPores[bound_it]) {
-            if (i != networkData.boundaryPoresOut[bound_it]) {
+            if (i != networkData.boundaryPoresOut[bound_it] and
+                boundCond == 0) {
 //                and porConnsIsOut[i][j] == true) {
-                triplets.emplace_back(i,
-                                      networkData.poreConns[pore_iterator],
-                                      -1 *
-                                      connCoeff[porConns[i][j]] +
-                                      porConnsIsOutByPressure[i][j] *
-                                      extraCoeff[porConns[i][j]]);
+                triplets.emplace_back(i, networkData.poreConns[pore_iterator],
+                                      -1 * connCoeff[porConns[i][j]]);
                 pore_iterator++;
 //            } else if (i != networkData.boundaryPoresOut[bound_it] and
 //                       porConnsIsOut[i][j] == false) {
@@ -302,7 +300,7 @@ void EquationPNM::cfdProcedure(const double &pIn,
 
 //    getPorConnsIsOutByPressure();
 
-    calculateMatrix(extraCoeff);
+    calculateMatrix(0);
     calculateFreeVector(pIn, pOut);
 //    calculateGuessPress(pIn, pOut);
 //    calculateGuessVector();
@@ -350,10 +348,11 @@ void EquationPNM::getPorConnsIsOutByPressure() {
                 pressure[throatConns[porConns[i][j]].first] >=
                 pressure[throatConns[porConns[i][j]].second])
                 porConnsIsOutByPressure[i][j] = 0;
+
             else if (porConnsIsOut[i][j] == false and
                      pressure[throatConns[porConns[i][j]].first] >
                      pressure[throatConns[porConns[i][j]].second])
-                porConnsIsOutByPressure[i][j] = -1;
+                porConnsIsOutByPressure[i][j] = 1;
         }
 }
 

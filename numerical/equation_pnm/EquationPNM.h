@@ -38,7 +38,7 @@ public:
 
     virtual ~EquationPNM() = default;
 
-    void calculateMatrix(const std::vector<double> &extraCoeff);
+    void calculateMatrix(const int &boundCond);
 
     void calcThroatConns();
 
@@ -98,7 +98,6 @@ public:
     std::vector<double> thrFlowRate;
     std::vector<double> porFlowRate;
 
-    std::vector<double> extraCoeff;
 
     // manual construction, has to be automatised later
 
