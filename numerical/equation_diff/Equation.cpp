@@ -105,7 +105,8 @@ void Equation::cfdProcedure(const double &concThrWall, const double &radius,
         std::swap(iCurr, iPrev);
         local.calculateAlpha(props.timeStep,
                              radius,
-                             effRadius);
+                             effRadius,
+                             thrLength);
         convective.calculateBeta(radius,
                                  effRadius,
                                  thrLength,

@@ -19,8 +19,10 @@ public:
     double calcDelRadius(const double &radius, const double &effRadius,
                          const int &gridBlockN);
 
-    void calculateAlpha(const double &dt, const double &radius,
-                        const double &effRadius);
+    void calculateAlpha(const double &dt,
+                        const double &radius,
+                        const double &effRadius,
+                        const double &thrLength);
 
     Props props;
 

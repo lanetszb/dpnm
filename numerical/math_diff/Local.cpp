@@ -21,8 +21,10 @@ double Local::calcDelRadius(const double &radius, const double &effRadius,
     return (effRadius - radius) / gridBlockN;
 }
 
-void Local::calculateAlpha(const double &dt, const double &radius,
-                           const double &effRadius) {
+void Local::calculateAlpha(const double &dt,
+                           const double &radius,
+                           const double &effRadius,
+                           const double &thrLength) {
 
     dRadius = calcDelRadius(radius, effRadius, alpha.size());
 
@@ -31,7 +33,7 @@ void Local::calculateAlpha(const double &dt, const double &radius,
         auto r_out = radius + (i + 1) * dRadius;
         auto r_in = radius + i * dRadius;
 
-        alpha[i] = (M_PI * props.length * (r_out * r_out - r_in * r_in)) / dt;
+        alpha[i] = (M_PI * thrLength * (r_out * r_out - r_in * r_in)) / dt;
     }
 }
 
