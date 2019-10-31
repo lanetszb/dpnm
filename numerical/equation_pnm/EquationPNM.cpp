@@ -194,21 +194,13 @@ void EquationPNM::calculateMatrix(const int &boundCond,
         triplets.emplace_back(i, i, centralCoeff[i]);
         for (int j = 0; j < networkData.connNumber[i]; j++) {
 
-//            if (i != networkData.boundaryPores[bound_it]) {
             if ((i != boundPores[bound_it] and boundCond == 0) or
                 (i != boundPores[bound_it] and boundCond == 1)) {
-//                and porConnsIsOut[i][j] == true) {
+
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
                                       -1 * connCoeff[porConns[i][j]]);
                 pore_iterator++;
-//            } else if (i != networkData.boundaryPoresOut[bound_it] and
-//                       porConnsIsOut[i][j] == false) {
-//                triplets.emplace_back(i,
-//                                      networkData.poreConns[pore_iterator],
-//                                      -1 *
-//                                      connCoeff[porConns[i][j]] -
-//                                      extraCoeff[porConns[i][j]]);
-//                pore_iterator++;
+
             } else {
                 triplets.emplace_back(i, i, 1);
                 pore_iterator += networkData.connNumber[i];
@@ -264,16 +256,21 @@ void EquationPNM::calculateGuessVector() {
         guessVector[i] = pressure[i];
 }
 
-void EquationPNM::calculatePress() {
+void EquationPNM::calculatePress(const int &solverMethod) {
 
-//    BiCGSTAB biCGSTAB;
-//    biCGSTAB.compute(matrix);
-//    biCGSTAB.setTolerance(propsPNM.itAccuracy);
-//    variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
+    if (solverMethod == 0) {
 
-    SparseLU sparseLU;
-    sparseLU.compute(matrix);
-    variable = sparseLU.solve(freeVector);
+        BiCGSTAB biCGSTAB;
+        biCGSTAB.compute(matrix);
+        biCGSTAB.setTolerance(propsPNM.itAccuracy);
+        variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
+    }
+
+    if (solverMethod == 1) {
+        SparseLU sparseLU;
+        sparseLU.compute(matrix);
+        variable = sparseLU.solve(freeVector);
+    }
 
 //    LeastSqCG leastSqCG;
 //    leastSqCG.compute(matrix);
@@ -310,10 +307,11 @@ void EquationPNM::cfdProcedure(const double &pIn,
                     networkData.boundaryPores);
 
     calculateFreeVector(1, pIn, pOut);
-//    calculateGuessPress(pIn, pOut);
-//    calculateGuessVector();
 
-    calculatePress();
+    calculateGuessPress(pIn, pOut);
+    calculateGuessVector();
+
+    calculatePress(1);
 
     getPorConnsIsOutByPressure();
 

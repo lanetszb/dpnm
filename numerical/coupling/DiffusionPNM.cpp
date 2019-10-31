@@ -283,7 +283,7 @@ void DiffusionPNM::calcCoupledFlow() {
 
     equationPNM.calculateGuessVector();
 
-    equationPNM.calculatePress();
+    equationPNM.calculatePress(1);
 
     equationPNM.calcPorFlowRate();
 

@@ -58,7 +58,7 @@ public:
 
     void calculateGuessVector();
 
-    void calculatePress();
+    void calculatePress(const int &solverMethod);
 
     void cfdProcedure(const double &pIn,
                       const double &pOut);
