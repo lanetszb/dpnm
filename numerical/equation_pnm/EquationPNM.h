@@ -41,7 +41,9 @@ public:
     void calculateMatrix(const int &boundCond,
                          const std::vector<double> &connCoeff,
                          const std::vector<double> &centralCoeff,
-                         const std::vector<int> &boundPores);
+                         const std::vector<int> &boundPores,
+                         std::vector<std::vector<int>> &inOutCoeff,
+                         const std::vector<double> &diffCoeff);
 
     void calcThroatConns();
 
@@ -60,7 +62,9 @@ public:
 
     void calculatePress(const int &solverMethod);
 
-    void cfdProcedure(const double &pIn,
+    void cfdProcedure(const int &boundCond,
+                      const std::vector<int> &boundPores,
+                      const double &pIn,
                       const double &pOut);
 
     void calcThrFlowRate();
