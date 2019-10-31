@@ -24,7 +24,6 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         dim(networkData.poreN),
         pIn(propsPNM.pressIn),
         pOut(propsPNM.pressOut),
-        qIn(2.e-12),
         matrix(dim, dim),
         freeVector(dim),
         guessVector(dim),
@@ -38,20 +37,22 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         connCoeff(networkData.throatN, 0),
         pressure(dim, 0),
         thrFlowRate(networkData.throatN, 0),
-        porFlowRate(dim, 0),
-        inletFlow(9) {
+        porFlowRate(dim, 0) {
 
-    double myArray[9] = {1.15176e-14, 6.12608e-14, 1.92216e-12, 1.59089e-11,
-                         6.47996e-14, 3.21586e-14, 4.81131e-14, 1.24778e-11,
-                         2.5613e-13};
-
-    for (int i = 0; i < 9; i++)
-        inletFlow[i] = myArray[i];
+//    double myArray[9] = {1.15176e-14, 6.12608e-14, 1.92216e-12, 1.59089e-11,
+//                         6.47996e-14, 3.21586e-14, 4.81131e-14, 1.24778e-11,
+//                         2.5613e-13};
+//
+//    for (int i = 0; i < 9; i++)
+//        inletFlow[i] = myArray[i];
 
 
     setInitialCond();
 
     cfdProcedure(pIn, pOut);
+
+    for (int i = 0; i < inletFlow.size(); i++)
+        std::cout << inletFlow[i] << std::endl;
 
 //    std::cout << matrix << std::endl;
 //
@@ -106,8 +107,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //
 //    std::cout << std::endl;
 //
-    for (int i = 0; i < networkData.poreN; i++)
-        std::cout << pressure[i] << std::endl;
+//    for (int i = 0; i < networkData.poreN; i++)
+//        std::cout << pressure[i] << std::endl;
 //
 //
 //    for (int i = 0; i < networkData.throatN; i++)
@@ -115,8 +116,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 
 //    std::cout << std::endl;
 //
-    for (int i = 0; i < dim; i++)
-        std::cout << i << ' ' << porFlowRate[i] << std::endl;
+//    for (int i = 0; i < dim; i++)
+//        std::cout << i << ' ' << porFlowRate[i] << std::endl;
 }
 
 
@@ -225,14 +226,16 @@ void EquationPNM::calculateFreeVector(const int &boundCond,
     if (boundCond == 1) {
         for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
             freeVector[i] = pIn;
+
     } else {
         for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
             freeVector[i] = inletFlow[i];
     }
 
-    for (int i = networkData.poreN - 1; i >
-                                        networkData.poreN - 1 -
-                                        networkData.boundaryPoresOut.size(); i--)
+    int boundPoreSize = networkData.poreN - 1 -
+                        networkData.boundaryPoresOut.size();
+
+    for (int i = networkData.poreN - 1; i > boundPoreSize; i--)
         freeVector[i] = pOut;
 }
 
@@ -317,6 +320,8 @@ void EquationPNM::cfdProcedure(const double &pIn,
     calcThrFlowRate();
     calcPorFlowRate();
 
+    calcInletFlow(networkData.boundaryPoresIn.size());
+
 //    calculateFreeVector(pIn, pOut);
 }
 
@@ -373,4 +378,10 @@ void EquationPNM::calcPorFlowRate() {
             else
                 porFlowRate[i] -= thrFlowRate[porConns[i][j]];
         }
+}
+
+void EquationPNM::calcInletFlow(const int &boundPorSize) {
+
+    for (int i = 0; i < boundPorSize; i++)
+        inletFlow.emplace_back(porFlowRate[i]);
 }

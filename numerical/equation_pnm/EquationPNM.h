@@ -73,6 +73,8 @@ public:
 
     void setInitialCond();
 
+    void calcInletFlow(const int &boundPorSize);
+
 
     PropsPNM propsPNM;
     NetworkData networkData;
@@ -80,8 +82,6 @@ public:
     int &dim;
     double pIn;
     double pOut;
-
-    double qIn;
 
     Matrix matrix;
 
