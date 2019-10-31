@@ -226,7 +226,8 @@ void DiffusionPNM::calcCoupledFreeVector() {
         equationPNM.freeVector[i] = porFlowDiff[i] + porFlowDiffDer[i];
 
 
-    equationPNM.calculateFreeVector(equationPNM.propsPNM.pressIn,
+    equationPNM.calculateFreeVector(0,
+                                    equationPNM.propsPNM.pressIn,
                                     equationPNM.propsPNM.pressOut);
 }
 
@@ -275,7 +276,8 @@ void DiffusionPNM::calcCoupledFlow() {
     calcMatCoeffDiff();
     calcMatCoupledCoeff();
 
-    equationPNM.calculateMatrix(0, connCoeffDiff, centralCoeffDiff);
+    equationPNM.calculateMatrix(0, connCoeffDiff, centralCoeffDiff,
+                                equationPNM.networkData.boundaryPoresOut);
 
     calcCoupledFreeVector();
 

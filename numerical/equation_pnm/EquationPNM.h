@@ -40,7 +40,8 @@ public:
 
     void calculateMatrix(const int &boundCond,
                          const std::vector<double> &connCoeff,
-                         const std::vector<double> &centralCoeff);
+                         const std::vector<double> &centralCoeff,
+                         const std::vector<int> &boundPores);
 
     void calcThroatConns();
 
@@ -48,7 +49,8 @@ public:
 
     void calcMatCoeff();
 
-    void calculateFreeVector(const double &pIn,
+    void calculateFreeVector(const int &boundCond,
+                             const double &pIn,
                              const double &pOut);
 
     void calculateGuessPress(const double &pIn,

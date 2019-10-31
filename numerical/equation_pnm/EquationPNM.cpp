@@ -178,7 +178,8 @@ void EquationPNM::calcMatCoeff() {
 
 void EquationPNM::calculateMatrix(const int &boundCond,
                                   const std::vector<double> &connCoeff,
-                                  const std::vector<double> &centralCoeff) {
+                                  const std::vector<double> &centralCoeff,
+                                  const std::vector<int> &boundPores) {
 
     // Matrix construction
 
@@ -194,8 +195,8 @@ void EquationPNM::calculateMatrix(const int &boundCond,
         for (int j = 0; j < networkData.connNumber[i]; j++) {
 
 //            if (i != networkData.boundaryPores[bound_it]) {
-            if (i != networkData.boundaryPoresOut[bound_it] and
-                boundCond == 0) {
+            if ((i != boundPores[bound_it] and boundCond == 0) or
+                (i != boundPores[bound_it] and boundCond == 1)) {
 //                and porConnsIsOut[i][j] == true) {
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
                                       -1 * connCoeff[porConns[i][j]]);
@@ -226,14 +227,17 @@ void EquationPNM::calculateMatrix(const int &boundCond,
     }
 }
 
-void EquationPNM::calculateFreeVector(const double &pIn,
+void EquationPNM::calculateFreeVector(const int &boundCond,
+                                      const double &pIn,
                                       const double &pOut) {
 
-//    for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
-//        freeVector[i] = pIn;
-
-    for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
-        freeVector[i] = inletFlow[i];
+    if (boundCond == 1) {
+        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
+            freeVector[i] = pIn;
+    } else {
+        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
+            freeVector[i] = inletFlow[i];
+    }
 
     for (int i = networkData.poreN - 1; i >
                                         networkData.poreN - 1 -
@@ -302,8 +306,10 @@ void EquationPNM::cfdProcedure(const double &pIn,
 
 //    getPorConnsIsOutByPressure();
 
-    calculateMatrix(0, connCoeff, centralCoeff);
-    calculateFreeVector(pIn, pOut);
+    calculateMatrix(1, connCoeff, centralCoeff,
+                    networkData.boundaryPores);
+
+    calculateFreeVector(1, pIn, pOut);
 //    calculateGuessPress(pIn, pOut);
 //    calculateGuessVector();
 
