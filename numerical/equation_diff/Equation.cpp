@@ -98,9 +98,9 @@ void Equation::calcFlowRate() {
 void Equation::cfdProcedure(const double &concThrWall, const double &radius,
                             const double &effRadius, const double &thrLength) {
 
-    calcConcIni(props.concIni);
+//    calcConcIni(props.concIni);
 
-    for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
+//    for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
 
         std::swap(iCurr, iPrev);
         local.calculateAlpha(props.timeStep,
@@ -118,7 +118,7 @@ void Equation::cfdProcedure(const double &concThrWall, const double &radius,
         calculateFreeVector(concThrWall);
         calculateConc();
         calcFlowRate();
-    }
+//    }
 }
 
 const std::vector<double> Equation::getConc() const {

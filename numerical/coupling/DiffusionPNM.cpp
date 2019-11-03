@@ -224,6 +224,7 @@ void DiffusionPNM::calcCoupledFreeVector() {
             coeffSum += equationPNM.porConnsIsOutByPressure[i][j] *
                         diffFlow[equationPNM.porConns[i][j]];
         }
+        porFlowDiff[i] = coeffSum;
     }
 
     for (int i = 0; i < equationPNM.porConns.size(); i++) {
@@ -329,7 +330,7 @@ void DiffusionPNM::cfdProcedureDiff() {
 
     setInitialCond();
 
-    for (double t = equation.props.timeStep; t <= 40 * equation.props.timeStep;
+    for (double t = equation.props.timeStep; t <= 1000 * equation.props.timeStep;
          t += equation.props.timeStep) {
 
         calcCoupledFlow();
@@ -339,10 +340,10 @@ void DiffusionPNM::cfdProcedureDiff() {
 //                  << diffFlowMinus[i] << std::endl;
 //        std::cout << std::endl;
 
-//        for (int i = 0; i < equationPNM.networkData.poreN; i++)
-//            std::cout << equationPNM.pressure[i] << std::endl;
-//
-//        std::cout << std::endl;
+        for (int i = 0; i < equationPNM.networkData.poreN; i++)
+            std::cout << equationPNM.pressure[i] << std::endl;
+
+        std::cout << std::endl;
 //
 //        std::cout << equationPNM.freeVector << std::endl;
 //        std::cout << equationPNM.freeVector << std::endl;
