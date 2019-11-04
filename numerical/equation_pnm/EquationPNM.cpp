@@ -427,7 +427,7 @@ void EquationPNM::calcTotFlow() {
 
     for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
         for (int j = 0; j < networkData.poreList.size(); j++)
-            if (networkData.boundaryPoresIn[i] == networkData.poreList[j]) {
+            if (networkData.boundaryPoresOut[i] == networkData.poreList[j]) {
                 totFlowRate += porFlowRate[j];
             }
 

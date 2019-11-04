@@ -323,6 +323,8 @@ void DiffusionPNM::calcCoupledFlow() {
 
     equationPNM.calculatePress(1);
 
+    equationPNM.calcThrFlowRate();
+
     equationPNM.calcPorFlowRate();
 
     equationPNM.calcTotFlow();
@@ -368,7 +370,7 @@ void DiffusionPNM::cfdProcedureDiff() {
         float average = accumulate(cAV.begin(), cAV.end(), 0.0) / cAV.size();
 
 //        std::cout << average << std::endl;
-//
+        std::cout << equationPNM.totFlowRate << std::endl;
 //        std::cout << std::endl;
     }
     std::cout << std::endl;
