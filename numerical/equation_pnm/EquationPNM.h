@@ -79,6 +79,8 @@ public:
 
     void calcInletFlow(const int &boundPorSize);
 
+    void calcTotFlow();
+
 
     PropsPNM propsPNM;
     NetworkData networkData;
@@ -105,6 +107,8 @@ public:
 
     std::vector<double> thrFlowRate;
     std::vector<double> porFlowRate;
+
+    double totFlowRate;
 
 
     // manual construction, has to be automatised later

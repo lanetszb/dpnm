@@ -159,5 +159,5 @@ if __name__ == '__main__':
 
     plot_network_conns(conn_ind, pore_coords, pore_list)
 
-    prop_plt = network_data.throat_length
+    prop_plt = network_data.throat_radius
     plot_network_stats(prop_plt)

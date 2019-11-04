@@ -51,8 +51,14 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //
 //    cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
 //
+//    calcTotFlow();
+
 //    for (int i = 0; i < networkData.poreN; i++)
 //        std::cout << pressure[i] << std::endl;
+//
+//    std::cout << std::endl;
+//
+//    std::cout << totFlowRate << std::endl;
 //
 //    std::cout << matrix << std::endl;
 //
@@ -398,6 +404,9 @@ void EquationPNM::getPorConnsIsOutByPressure() {
 void EquationPNM::calcPorFlowRate() {
 
     for (int i = 0; i < porFlowRate.size(); i++)
+        porFlowRate[i] = 0;
+
+    for (int i = 0; i < porFlowRate.size(); i++)
         for (int j = 0; j < porConns[i].size(); j++) {
             if (porConnsIsOutByPressure[i][j] == 0)
                 porFlowRate[i] += thrFlowRate[porConns[i][j]];
@@ -410,4 +419,16 @@ void EquationPNM::calcInletFlow(const int &boundPorSize) {
 
     for (int i = 0; i < boundPorSize; i++)
         inletFlow.emplace_back(porFlowRate[i]);
+}
+
+void EquationPNM::calcTotFlow() {
+
+    totFlowRate = 0;
+
+    for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
+        for (int j = 0; j < networkData.poreList.size(); j++)
+            if (networkData.boundaryPoresIn[i] == networkData.poreList[j]) {
+                totFlowRate += porFlowRate[j];
+            }
+
 }
