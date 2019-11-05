@@ -220,9 +220,9 @@ void EquationPNM::calculateMatrix(const int &boundCond,
                 (i != boundPores[bound_it] and boundCond == 1)) {
 
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
-                                      -1 * connCoeff[porConns[i][j]] +
-                                      inOutCoeff[i][j] *
-                                      diffCoeff[porConns[i][j]]);
+                                      -1 * connCoeff[porConns[i][j]]
+                                      - 1 * inOutCoeff[i][j] *
+                                        diffCoeff[porConns[i][j]]);
                 pore_iterator++;
 
             } else {
