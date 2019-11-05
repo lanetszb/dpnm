@@ -64,6 +64,10 @@ public:
 
     void calcCoupledFlow();
 
+    const std::vector<double> getPressureAverage() const;
+
+    const std::vector <double> getConcAverage() const;
+
 
     double rockVolume;
     double langmConc;
@@ -85,6 +89,9 @@ public:
 
     std::vector<double> connCoeffDiff;
     std::vector<double> centralCoeffDiff;
+
+    std::vector<double> pressureAverage;
+    std::vector<double> concAverage;
 };
 
 #endif

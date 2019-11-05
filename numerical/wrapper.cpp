@@ -79,10 +79,10 @@ BOOST_PYTHON_MODULE (cfd) {
                          "throat_length"))
 
             .add_property("alpha",
-                 &Local::getAlpha)
+                          &Local::getAlpha)
 
             .add_property("radius_curr",
-                 &Local::getRadCurr);
+                          &Local::getRadCurr);
 //
 //
     p::class_<Convective>("ConvectiveCpp",
@@ -262,7 +262,13 @@ BOOST_PYTHON_MODULE (cfd) {
                                             "conn_number",
                                             "pore_per_row",
                                             "props_diffusion",
-                                            "langmuir_coeff")));
+                                            "langmuir_coeff")))
+
+            .def("get_pressure_av",
+                 &DiffusionPNM::getPressureAverage)
+
+            .def("get_conc_av",
+                 &DiffusionPNM::getConcAverage);
 }
 
 

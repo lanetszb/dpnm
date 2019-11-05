@@ -36,7 +36,7 @@ DiffusionPNM::DiffusionPNM(
         flowDerivDiff(equationPNM.networkData.throatN, 0),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
-        conc_ini(1.2),
+        conc_ini(1.),
         dP(0) {
 
     //    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
@@ -262,6 +262,9 @@ void DiffusionPNM::calcCoupledFreeVector() {
     equationPNM.calculateFreeVector(0,
                                     equationPNM.propsPNM.pressIn,
                                     equationPNM.propsPNM.pressOut);
+
+    for (int i = 0; i < equationPNM.networkData.boundaryPoresIn.size(); i++)
+        equationPNM.freeVector[i] += -1 * (porFlowDiffDer[i] + porFlowDiff[i]);
 }
 
 void DiffusionPNM::setInitialCond() {
@@ -344,30 +347,25 @@ void DiffusionPNM::calcCoupledFlow() {
 void DiffusionPNM::cfdProcedureDiff() {
 
     setInitialCond();
-    std::vector<double> pAV;
 
-    for (double t = equation.props.timeStep; t <= 10 * equation.props.timeStep;
+    double sum = 0;
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        sum += equationPNM.pressure[i];
+
+    pressureAverage.emplace_back(sum / equationPNM.networkData.poreN);
+
+
+    concAverage.emplace_back(conc_ini);
+
+    for (double t = equation.props.timeStep; t <= equation.props.time;
          t += equation.props.timeStep) {
 
-        std::vector<double> cAV(equationPNM.networkData.poreN, 0);
+        std::vector<double> cAV(equationPNM.networkData.throatN, 0);
 
         calcCoupledFlow();
 
-        std::cout << "pressure" << std::endl;
-        for (int i = 0; i < equationPNM.networkData.poreN; i++)
-            std::cout << equationPNM.pressure[i] << std::endl;
 
-        std::cout << std::endl;
 //
-
-//        for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-//            std::cout << i << std::endl;
-//            for (int j = 0; j < equation.props.gridBlockN; j++) {
-//                std::cout << matrixConc[i][j] << ' ';
-//            }
-//            std::cout << std::endl;
-//        }
-
 //        std::cout << std::endl;
 
 //        for (int i = 0; i < diffFlow.size(); i++)
@@ -378,47 +376,53 @@ void DiffusionPNM::cfdProcedureDiff() {
         for (int i = 0; i < equationPNM.networkData.poreN; i++) {
             sum += equationPNM.pressure[i];
         }
-        pAV.emplace_back(sum / equationPNM.networkData.poreN);
-//
-//
-//        std::cout << equationPNM.freeVector << std::endl;
-//        std::cout << equationPNM.freeVector << std::endl;
+        pressureAverage.emplace_back(sum / equationPNM.networkData.poreN);
+
+
         sum = 0;
         for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+            sum = 0;
             for (int j = 0; j < equation.props.gridBlockN; j++) {
                 sum += matrixConc[i][j];
             }
             sum = sum / equation.props.gridBlockN;
-            cAV.emplace_back(sum);
+
+            cAV[i] = sum;
         }
 
-        float average = accumulate(cAV.begin(), cAV.end(), 0.0) / cAV.size();
-
-//     std::cout << equationPNM.totFlowRate << std::endl;
-//        std::cout << equationPNM.totFlowRate << std::endl;
-
-    }
-
-
-    std::cout << std::endl;
-    std::cout << "pressure" << std::endl;
-    for (int i = 0; i < pAV.size(); i++)
-        std::cout << pAV[i] << std::endl;
-
-
-    std::cout << std::endl;
-
-    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-        std::cout << i << std::endl;
-        for (int j = 0; j < equation.props.gridBlockN; j++) {
-            std::cout << matrixConc[i][j] << ' ';
-        }
+        for (int i = 0; i < cAV.size(); i++)
+            std::cout << cAV[i] << ' ' << std::endl;
         std::cout << std::endl;
+
+
+        double concAv = accumulate(cAV.begin(), cAV.end(), 0.0) / cAV.size();
+        concAverage.emplace_back(concAv);
     }
 }
 
+const std::vector<double> DiffusionPNM::getPressureAverage() const {
+    return pressureAverage;
+}
+
+const std::vector<double> DiffusionPNM::getConcAverage() const {
+    return concAverage;
+}
 
 
+//        std::cout << "pressure" << std::endl;
+//        for (int i = 0; i < equationPNM.networkData.poreN; i++)
+//            std::cout << equationPNM.pressure[i] << std::endl;
+//
+//        std::cout << std::endl;
+//
+
+//        for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+//            std::cout << i << std::endl;
+//            for (int j = 0; j < equation.props.gridBlockN; j++) {
+//                std::cout << matrixConc[i][j] << ' ';
+//            }
+//            std::cout << std::endl;
+//        }
 
 
 
