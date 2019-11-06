@@ -338,7 +338,11 @@ void DiffusionPNM::calcCoupledFlow() {
 
     equationPNM.calcPorFlowRate();
 
-    equationPNM.calcTotFlow();
+    equationPNM.calcTotFlow(equationPNM.networkData.boundaryPoresOut);
+    totalFlowPoresOut.emplace_back(-1 * equationPNM.totFlowRate);
+
+    equationPNM.calcTotFlow(equationPNM.networkData.boundaryPoresIn);
+    totalFlowPoresIn.emplace_back(equationPNM.totFlowRate);
 
     updateConc();
 
@@ -354,8 +358,12 @@ void DiffusionPNM::cfdProcedureDiff() {
 
     pressureAverage.emplace_back(sum / equationPNM.networkData.poreN);
 
-
     concAverage.emplace_back(conc_ini);
+    totalFlowDiff.emplace_back(0);
+
+    totalFlowPoresOut.emplace_back(-1 * equationPNM.totFlowRate);
+    totalFlowPoresIn.emplace_back(-1 * equationPNM.totFlowRate);
+
 
     for (double t = equation.props.timeStep; t <= equation.props.time;
          t += equation.props.timeStep) {
@@ -365,13 +373,6 @@ void DiffusionPNM::cfdProcedureDiff() {
         calcCoupledFlow();
 
 
-//
-//        std::cout << std::endl;
-
-//        for (int i = 0; i < diffFlow.size(); i++)
-//            std::cout << diffFlow[i] << ' ' << diffFlowPlus[i] << ' '
-//                      << diffFlowMinus[i] << std::endl;
-//        std::cout << std::endl;
         double sum = 0;
         for (int i = 0; i < equationPNM.networkData.poreN; i++) {
             sum += equationPNM.pressure[i];
@@ -390,13 +391,17 @@ void DiffusionPNM::cfdProcedureDiff() {
             cAV[i] = sum;
         }
 
-        for (int i = 0; i < cAV.size(); i++)
-            std::cout << cAV[i] << ' ' << std::endl;
-        std::cout << std::endl;
-
 
         double concAv = accumulate(cAV.begin(), cAV.end(), 0.0) / cAV.size();
         concAverage.emplace_back(concAv);
+
+
+        double diffFlowAv = accumulate(diffFlow.begin(), diffFlow.end(), 0.0) /
+                            diffFlow.size();
+
+        totalFlowDiff.emplace_back(diffFlowAv);
+
+
     }
 }
 
@@ -407,6 +412,21 @@ const std::vector<double> DiffusionPNM::getPressureAverage() const {
 const std::vector<double> DiffusionPNM::getConcAverage() const {
     return concAverage;
 }
+
+const std::vector<double> DiffusionPNM::getTotalFlowPoresOut() const {
+    return totalFlowPoresOut;
+}
+
+const std::vector<double> DiffusionPNM::getTotalFlowPoresIn() const {
+    return totalFlowPoresIn;
+}
+
+
+const std::vector<double> DiffusionPNM::getTotalFlowDiff() const {
+    return totalFlowDiff;
+}
+
+
 
 
 //        std::cout << "pressure" << std::endl;

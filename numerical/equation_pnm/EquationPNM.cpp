@@ -354,6 +354,8 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     calcInletFlow(networkData.boundaryPoresIn.size());
 
+    calcTotFlow(networkData.boundaryPoresOut);
+
 //    calculateFreeVector(pIn, pOut);
 }
 
@@ -421,14 +423,13 @@ void EquationPNM::calcInletFlow(const int &boundPorSize) {
         inletFlow.emplace_back(porFlowRate[i]);
 }
 
-void EquationPNM::calcTotFlow() {
+void EquationPNM::calcTotFlow(const std::vector<int> &boundPores) {
 
     totFlowRate = 0;
 
-    for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
+    for (int i = 0; i < boundPores.size(); i++)
         for (int j = 0; j < networkData.poreList.size(); j++)
-            if (networkData.boundaryPoresOut[i] == networkData.poreList[j]) {
+            if (boundPores[i] == networkData.poreList[j]) {
                 totFlowRate += porFlowRate[j];
             }
-
 }

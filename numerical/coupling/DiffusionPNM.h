@@ -66,7 +66,13 @@ public:
 
     const std::vector<double> getPressureAverage() const;
 
-    const std::vector <double> getConcAverage() const;
+    const std::vector<double> getConcAverage() const;
+
+    const std::vector<double> getTotalFlowPoresOut() const;
+
+    const std::vector<double> getTotalFlowPoresIn() const;
+
+    const std::vector<double> getTotalFlowDiff() const;
 
 
     double rockVolume;
@@ -92,6 +98,11 @@ public:
 
     std::vector<double> pressureAverage;
     std::vector<double> concAverage;
+
+    std::vector<double> totalFlowPoresOut;
+    std::vector<double> totalFlowPoresIn;
+
+    std::vector<double> totalFlowDiff;
 };
 
 #endif

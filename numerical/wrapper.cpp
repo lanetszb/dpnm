@@ -268,7 +268,17 @@ BOOST_PYTHON_MODULE (cfd) {
                  &DiffusionPNM::getPressureAverage)
 
             .def("get_conc_av",
-                 &DiffusionPNM::getConcAverage);
+                 &DiffusionPNM::getConcAverage)
+
+            .def("get_flow_pores_out",
+                 &DiffusionPNM::getTotalFlowPoresOut)
+
+            .def("get_flow_pores_in",
+                 &DiffusionPNM::getTotalFlowPoresIn)
+
+            .def("get_flow_diff",
+                 &DiffusionPNM::getTotalFlowDiff);
+
 }
 
 

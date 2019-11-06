@@ -71,7 +71,7 @@ print(props_cpp)
 # plt.ylim(0, 50)
 # plt.show()
 
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # print("\n")
 # #
@@ -114,7 +114,7 @@ diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
                         ppr, props_array, props.langm_coeff)
 
 # =============================================================================
-# Figure 1
+# Figure 1 (Avg Pore Pressure and Avg Concentration)
 t = np.arange(0, props.time, props.time_step)
 data1 = diff_pnm.get_pressure_av()
 data2 = diff_pnm.get_conc_av()
@@ -122,19 +122,56 @@ data2 = diff_pnm.get_conc_av()
 fig, ax1 = plt.subplots()
 
 color = 'tab:red'
-ax1.set_xlabel('time (s)')
+ax1.set_xlabel('time (s)', fontsize='large')
 ax1.set_ylabel('Average Pore Pressure (Pa)', color=color)
-ax1.plot(t, data1, color=color)
+ax1.plot(t, data1, color=color, label='Average Pore Pressure')
 ax1.tick_params(axis='y', labelcolor=color)
 
 ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
 
 color = 'tab:blue'
-ax2.set_ylabel('Average Concentration (kg/m3)', color=color)  # we already handled the x-label with ax1
-ax2.plot(t, data2, color=color)
+ax2.set_ylabel('Avg Concentration (kg/m3)',
+               color=color, fontsize='large')  # we already handled the x-label with ax1
+ax2.plot(t, data2, color=color, label='Avg Matrix Concentration')
 ax2.tick_params(axis='y', labelcolor=color)
 
+fig.legend(loc="upper center", fontsize='x-large')
 fig.tight_layout()  # otherwise the right y-label is slightly clipped
 plt.show()
 
 # =============================================================================
+# Figure 2 (Total Flow Rate)
+# t = np.arange(0, props.time, props.time_step)
+# data1 = diff_pnm.get_pressure_av()
+# data2 = diff_pnm.get_flow_pores_out()
+# data3 = diff_pnm.get_flow_pores_in()
+#
+# fig, ax1 = plt.subplots()
+#
+# color = 'tab:red'
+# ax1.set_xlabel('time (s)')
+# ax1.set_ylabel('Average Pore Pressure (Pa)', color=color)
+# ax1.set_ylim([250000, 300000])
+#
+# ax1.plot(t, data1, color=color, label='Average Pore Pressure')
+# ax1.tick_params(axis='y', labelcolor=color)
+#
+# # ax1.legend(loc = 0)
+#
+# ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+#
+# color = 'tab:blue'
+# ax2.set_ylabel('Total Flow Rate (m/sec)',
+#                color=color)  # we already handled the x-label with ax1
+# ax2.plot(t, data2, color=color, label='Outlet Flow Rate')
+# ax2.plot(t, data3, color='tab:green', label='Inlet Flow Rate')
+# # ax2.plot(t, data2-data3, color=color)
+#
+# ax2.tick_params(axis='y', labelcolor=color)
+#
+# # ax2.legend(loc=0)
+#
+#
+# fig.legend(loc="upper center", fontsize='x-large')
+# fig.tight_layout()  # otherwise the right y-label is slightly clipped
+# plt.show()

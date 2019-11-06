@@ -79,7 +79,7 @@ public:
 
     void calcInletFlow(const int &boundPorSize);
 
-    void calcTotFlow();
+    void calcTotFlow(const std::vector<int> &boundPores);
 
 
     PropsPNM propsPNM;
