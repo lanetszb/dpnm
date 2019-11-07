@@ -277,7 +277,10 @@ BOOST_PYTHON_MODULE (cfd) {
                  &DiffusionPNM::getTotalFlowPoresIn)
 
             .def("get_flow_diff",
-                 &DiffusionPNM::getTotalFlowDiff);
+                 &DiffusionPNM::getTotalFlowDiff)
+
+            .def("get_pressure_by_pore",
+                 &DiffusionPNM::getPorePressure);
 
 }
 

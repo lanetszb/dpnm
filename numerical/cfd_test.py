@@ -115,29 +115,29 @@ diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
 
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
-t = np.arange(0, props.time, props.time_step)
-data1 = diff_pnm.get_pressure_av()
-data2 = diff_pnm.get_conc_av()
-
-fig, ax1 = plt.subplots()
-
-color = 'tab:red'
-ax1.set_xlabel('time (s)', fontsize='large')
-ax1.set_ylabel('Average Pore Pressure (Pa)', color=color)
-ax1.plot(t, data1, color=color, label='Average Pore Pressure')
-ax1.tick_params(axis='y', labelcolor=color)
-
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-color = 'tab:blue'
-ax2.set_ylabel('Avg Concentration (kg/m3)',
-               color=color, fontsize='large')  # we already handled the x-label with ax1
-ax2.plot(t, data2, color=color, label='Avg Matrix Concentration')
-ax2.tick_params(axis='y', labelcolor=color)
-
-fig.legend(loc="upper center", fontsize='x-large')
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.show()
+# t = np.arange(0, props.time, props.time_step)
+# data1 = diff_pnm.get_pressure_av()
+# data2 = diff_pnm.get_conc_av()
+#
+# fig, ax1 = plt.subplots()
+#
+# color = 'tab:red'
+# ax1.set_xlabel('time (s)', fontsize='large')
+# ax1.set_ylabel('Average Pore Pressure (Pa)', color=color)
+# ax1.plot(t, data1, color=color, label='Average Pore Pressure')
+# ax1.tick_params(axis='y', labelcolor=color)
+#
+# ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+#
+# color = 'tab:blue'
+# ax2.set_ylabel('Avg Concentration (kg/m3)',
+#                color=color, fontsize='large')  # we already handled the x-label with ax1
+# ax2.plot(t, data2, color=color, label='Avg Matrix Concentration')
+# ax2.tick_params(axis='y', labelcolor=color)
+#
+# fig.legend(loc="upper center", fontsize='x-large')
+# fig.tight_layout()  # otherwise the right y-label is slightly clipped
+# plt.show()
 
 # =============================================================================
 # Figure 2 (Total Flow Rate)
@@ -175,3 +175,81 @@ plt.show()
 # fig.legend(loc="upper center", fontsize='x-large')
 # fig.tight_layout()  # otherwise the right y-label is slightly clipped
 # plt.show()
+
+# Figure 3 (Langmuir isotherm and density)
+# p_av = diff_pnm.get_pressure_av()
+p_av = np.arange(200000, 600000, 20000)
+# a_dens (kg/m3) is a coefficient for equation density = a * P + b
+a_dens = 6.71079e-06
+# b_dens (kg/m3/Pa) is b coefficient for equation density = a * P + b
+b_dens = -2.37253E-02
+rho_const = 1.653
+
+
+def calc_langm_conc(pressure):
+    langm_conc = 0
+    for i in range(len(props.langm_coeff)):
+        langm_conc += props.langm_coeff[i] * pressure ** i
+    return langm_conc
+
+
+langm_conc_list = []
+for i in range(len(p_av)):
+    langm_conc_list.append(calc_langm_conc(p_av[i]))
+
+density_list = []
+for i in range(len(p_av)):
+    density_list.append(a_dens * p_av[i] + b_dens)
+
+density_const_list = []
+for i in range(len(p_av)):
+    density_const_list.append(rho_const)
+
+fig, ax1 = plt.subplots()
+
+color = 'tab:red'
+ax1.set_xlabel('pressure (Pa)')
+ax1.set_ylabel('Langmuir Concentration (Pa)', color=color)
+ax1.set_ylim([0.7, 1.5])
+
+ax1.plot(p_av, langm_conc_list, color=color, label='Langmuir Concentration')
+ax1.tick_params(axis='y', labelcolor=color)
+
+# ax1.legend(loc = 0)
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = 'tab:blue'
+ax2.set_ylabel('Gas Density (kg/m3)',
+               color=color)  # we already handled the x-label with ax1
+ax2.plot(p_av, density_const_list, color=color, label='Constant Density')
+ax2.plot(p_av, density_list, color='tab:green', label='Real Density')
+# ax2.plot(t, data2-data3, color=color)
+
+ax2.tick_params(axis='y', labelcolor=color)
+
+# ax2.legend(loc=0)
+
+
+fig.legend(loc="upper center", fontsize='x-large')
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.show()
+#
+# # Figure 4 (Pressure and Concentration by Length)
+# length_coords = list(dict.fromkeys(pc_x))
+#
+# pore_by_coord = [[] for x in range(len(length_coords))]
+#
+# for i in range(len(length_coords)):
+#     for j in range(len(pc_x)):
+#         if length_coords[i] == pc_x[j]:
+#             pore_by_coord[i].append(j)
+#
+# for i in range(len(length_coords)):
+#     length_coords[i] = [length_coords[i]]
+#
+# pores_by_coords = [[a] + [b] for a, b in zip(length_coords,
+#                                            pore_by_coord)]
+#
+# pressure_by_pore = diff_pnm.get_pressure_by_pore()
+

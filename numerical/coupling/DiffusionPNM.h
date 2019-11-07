@@ -64,6 +64,8 @@ public:
 
     void calcCoupledFlow();
 
+    // Getters for Python
+
     const std::vector<double> getPressureAverage() const;
 
     const std::vector<double> getConcAverage() const;
@@ -73,6 +75,8 @@ public:
     const std::vector<double> getTotalFlowPoresIn() const;
 
     const std::vector<double> getTotalFlowDiff() const;
+
+    const std::vector<double> getPorePressure() const;
 
 
     double rockVolume;

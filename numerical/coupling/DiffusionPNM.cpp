@@ -36,7 +36,7 @@ DiffusionPNM::DiffusionPNM(
         flowDerivDiff(equationPNM.networkData.throatN, 0),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
-        conc_ini(1.),
+        conc_ini(1.0),
         dP(0) {
 
     //    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
@@ -57,8 +57,8 @@ DiffusionPNM::DiffusionPNM(
                              equationPNM.pIn,
                              equationPNM.pOut);
 
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        std::cout << equationPNM.pressure[i] << std::endl;
+//    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+//        std::cout << equationPNM.pressure[i] << std::endl;
 
 //    std::cout << std::endl;
 //
@@ -71,16 +71,16 @@ DiffusionPNM::DiffusionPNM(
                              equationPNM.pIn,
                              equationPNM.pOut);
 
-    std::cout << std::endl;
+//    std::cout << std::endl;
+//
+//    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+//        std::cout << equationPNM.pressure[i] << std::endl;
 
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        std::cout << equationPNM.pressure[i] << std::endl;
-
-    std::cout << std::endl;
-
-    std::cout << equationPNM.matrix << std::endl;
-
-    std::cout << std::endl;
+//    std::cout << std::endl;
+//
+//    std::cout << equationPNM.matrix << std::endl;
+//
+//    std::cout << std::endl;
 
     cfdProcedureDiff();
 }
@@ -400,10 +400,10 @@ void DiffusionPNM::cfdProcedureDiff() {
                             diffFlow.size();
 
         totalFlowDiff.emplace_back(diffFlowAv);
-
-
     }
 }
+
+// Getters for Python
 
 const std::vector<double> DiffusionPNM::getPressureAverage() const {
     return pressureAverage;
@@ -421,10 +421,15 @@ const std::vector<double> DiffusionPNM::getTotalFlowPoresIn() const {
     return totalFlowPoresIn;
 }
 
-
 const std::vector<double> DiffusionPNM::getTotalFlowDiff() const {
     return totalFlowDiff;
 }
+
+const std::vector<double> DiffusionPNM::getPorePressure() const {
+    return equationPNM.pressure;
+}
+
+
 
 
 
