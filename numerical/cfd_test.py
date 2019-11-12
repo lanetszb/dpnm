@@ -109,9 +109,9 @@ nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
 eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
                      pc_z, pr, pl, p_conn, conn_numb, ppr)
 #
-diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
-                        conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
-                        ppr, props_array, props.langm_coeff)
+# diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
+#                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
+#                         ppr, props_array, props.langm_coeff)
 
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)

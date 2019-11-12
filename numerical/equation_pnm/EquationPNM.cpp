@@ -39,19 +39,14 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         thrFlowRate(networkData.throatN, 0),
         porFlowRate(dim, 0) {
 
-//    double myArray[9] = {1.15176e-14, 6.12608e-14, 1.92216e-12, 1.59089e-11,
-//                         6.47996e-14, 3.21586e-14, 4.81131e-14, 1.24778e-11,
-//                         2.5613e-13};
-//
-//    for (int i = 0; i < 9; i++)
-//        inletFlow[i] = myArray[i];
 
+    setInitialCond();
 
-//    setInitialCond();
-//
-//    cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
-//
-//    calcTotFlow();
+    cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
+
+    std::cout << 'completed' << std::endl;
+
+//    calcTotFlow(networkData.boundaryPores);
 
 //    for (int i = 0; i < networkData.poreN; i++)
 //        std::cout << pressure[i] << std::endl;

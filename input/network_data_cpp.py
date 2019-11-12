@@ -19,6 +19,7 @@ class Network_Data_Cpp:
 
         s.pore_throats = str(s.config.get('PNData', 'pore_throats'))
         s.pores_data = str(s.config.get('PNData', 'pores_data'))
+        s.boundary_pores = str(s.config.get('PNData', 'boundary_pores'))
 
         # Declare some future variables
         # Throat data
@@ -41,10 +42,21 @@ class Network_Data_Cpp:
 
         s.inlet_pores = None
         s.outlet_pores = None
-        s.boundary_pores = None
+        # s.boundary_pores = None
         s.pore_per_row = None
 
         s.all_conns = None
+
+        # boundary pores
+
+        s.pore_left_x = None
+        s.pore_right_x = None
+
+        s.pore_front_y = None
+        s.pore_back_y = None
+
+        s.pore_top_z = None
+        s.pore_bot_z = None
 
     def process_throats(s):
         s.throats = pd.read_csv(s.pore_throats, index_col=0)
@@ -61,6 +73,7 @@ class Network_Data_Cpp:
 
     def process_pores(s):
         s.pores = pd.read_csv(s.pores_data, index_col=0)
+        s.boundary_pores = pd.read_csv(s.boundary_pores)
 
         s.pore_coords_x = list(s.pores['x_coord'])
         s.pore_coords_y = list(s.pores['y_coord'])
@@ -72,6 +85,16 @@ class Network_Data_Cpp:
 
         s.conn_number = s.pores['conn_number']
         s.conn_number = list(s.conn_number)
+
+        # boundary pores
+        s.pore_left_x = s.boundary_pores['pore_left_x']
+        s.pore_right_x = s.boundary_pores['pore_right_x']
+
+        s.pore_front_y = s.boundary_pores['pore_front_y']
+        s.pore_back_y = s.boundary_pores['pore_back_y']
+
+        s.pore_top_z = s.boundary_pores['pore_top_z']
+        s.pore_bot_z = s.boundary_pores['pore_bot_z']
 
     def process_pore_conns(s):
 
@@ -101,7 +124,7 @@ class Network_Data_Cpp:
                 s.pore_per_row[i][j] = int(s.pore_per_row[i][j])
 
         s.pore_per_row = [[a] + b for a, b in zip(s.pore_list,
-                                                     s.pore_per_row)]
+                                                  s.pore_per_row)]
         s.pore_per_row = np.array(
             [elem for single_list in s.pore_per_row for elem in
              single_list])
