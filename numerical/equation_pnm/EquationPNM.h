@@ -36,7 +36,8 @@ public:
             const std::vector<int> &conn_number,
             const std::vector<int> &pore_per_row,
             const std::vector<bool> &pore_left_x,
-            const std::vector<bool> &pore_right_x);
+            const std::vector<bool> &pore_right_x,
+            const std::vector<double> &hydraulic_cond);
 
     virtual ~EquationPNM() = default;
 

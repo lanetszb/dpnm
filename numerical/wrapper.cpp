@@ -170,7 +170,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<int>,
                                    std::vector<int>,
                                    std::vector<bool>,
-                                   std::vector<bool>>(
+                                   std::vector<bool>,
+                                   std::vector<double>>(
                                    p::args("throat_list",
                                            "throat_radius",
                                            "throat_length",
@@ -185,7 +186,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "conn_number",
                                            "pore_per_row",
                                            "pore_left_x",
-                                           "pore_right_x")))
+                                           "pore_right_x",
+                                           "hydr_cond")))
             .def("__str__", __str__<NetworkData>)
 
             .add_property("throat_radius",
@@ -218,7 +220,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<int>,
                                    std::vector<int>,
                                    std::vector<bool>,
-                                   std::vector<bool>>(
+                                   std::vector<bool>,
+                                   std::vector<double>>(
                                    p::args(
                                            "props_array",
                                            "throat_list",
@@ -235,7 +238,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "conn_number",
                                            "pore_per_row",
                                            "pore_left_x",
-                                           "pore_right_x")));
+                                           "pore_right_x",
+                                           "hydr_cond")));
 //            .def("__str__", __str__<EquationPNM>);
 
     p::class_<DiffusionPNM>("DiffusionPNM",
@@ -256,7 +260,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                     std::vector<double>,
                                     std::vector<double>,
                                     std::vector<bool>,
-                                    std::vector<bool>>(
+                                    std::vector<bool>,
+                                    std::vector<double>>(
                                     p::args("props_vector",
                                             "throat_list",
                                             "throat_radius",
@@ -274,7 +279,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                             "props_diffusion",
                                             "langmuir_coeff",
                                             "pore_left_x",
-                                            "pore_right_x")))
+                                            "pore_right_x",
+                                            "hydr_cond")))
 
             .def("get_pressure_av",
                  &DiffusionPNM::getPressureAverage)

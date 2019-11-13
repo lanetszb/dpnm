@@ -16,13 +16,15 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<int> &conn_number,
                          const std::vector<int> &pore_per_row,
                          const std::vector<bool> &pore_left_x,
-                         const std::vector<bool> &pore_right_x) :
+                         const std::vector<bool> &pore_right_x,
+                         const std::vector<double> &hydraulic_cond) :
 
         propsPNM(propsVector),
         networkData(throat_list, throat_radius, throat_length,
                     conn_ind_in, conn_ind_out, pore_coord_x, pore_coord_y,
                     pore_coord_z, pore_radius, pore_list, pore_conns,
-                    conn_number, pore_per_row, pore_left_x, pore_right_x),
+                    conn_number, pore_per_row, pore_left_x, pore_right_x,
+                    hydraulic_cond),
         dim(networkData.poreN),
         pIn(propsPNM.pressIn),
         pOut(propsPNM.pressOut),
@@ -51,12 +53,10 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 
 //    calcTotFlow(networkData.boundaryPores);
 
-    for (int i = 0; i < networkData.poreN; i++)
-        std::cout << pressure[i] << std::endl;
-
-    std::cout << std::endl;
-
-    std::cout << "Q= " << totFlowRate << std::endl;
+//    for (int i = 0; i < networkData.poreN; i++)
+//        std::cout << pressure[i] << std::endl;
+//
+//    std::cout << std::endl;
 
 
     auto min = std::min_element(std::begin(networkData.poreCoordX),
@@ -65,9 +65,18 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
     auto max = std::max_element(std::begin(networkData.poreCoordX),
                                 std::end(networkData.poreCoordX));
 
-    auto length = (*max - *min);
-    auto area = length * length;
+    for (int i = 0; i < connCoeff.size(); i++)
+        std::cout << connCoeff[i] << std::endl;
 
+    std::cout << std::endl;
+
+//    auto length = (*max - *min);
+//    auto area = length * length;
+
+    double length = 1.E-6 * 1000;
+    double area = 1.E-6 * 1000 * 1.E-6;
+
+    std::cout << "Q= " << totFlowRate << std::endl;
     std::cout << "length " << length << std::endl;
     std::cout << "area " << area << std::endl;
     std::cout << "dP " << propsPNM.pressIn - propsPNM.pressOut << std::endl;
@@ -77,7 +86,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 
     std::cout << "perm =" << perm << std::endl;
     //
-//    std::cout << std::endl;
+    std::cout << std::endl;
 //
 //    std::cout << totFlowRate << std::endl;
 //
@@ -87,9 +96,9 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //
 //    cfdProcedure(0, networkData.boundaryPoresOut, pIn, pOut);
 //
-//    for (int i = 0; i < networkData.poreN; i++)
-//        std::cout << pressure[i] << std::endl;
-//
+    for (int i = 0; i < networkData.poreN; i++)
+        std::cout << pressure[i] << std::endl;
+
 //    std::cout << matrix << std::endl;
 
 
@@ -115,7 +124,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //        std::cout << throatConns[i].first << ' ' << throatConns[i].second
 //                  << std::endl;
 //    }
-//
+
 //    std::cout << "porConnsIsOut" << std::endl;
 //    for (int i = 0; i < porConnsIsOutByPressure.size(); i++) {
 //        for (int j = 0; j < networkData.connNumber[i]; j++) {
@@ -207,9 +216,38 @@ void EquationPNM::calcMatCoeff() {
         auto tL = networkData.throatLength[i];
         auto liqVisc = propsPNM.liqVisc;
 
-        auto cond = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
+        auto rI = networkData.poreRadius[throatConns[i].first];
+        auto rJ = networkData.poreRadius[throatConns[i].second];
 
-        connCoeff[i] = cond;
+        // auto cond = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
+        // 3D
+        // auto gIJ = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
+        // auto gI = (M_PI * rI * rI * rI) / (8 * liqVisc);
+        // auto gJ = (M_PI * rJ * rJ * rJ) / (8 * liqVisc);
+        double dz = 1.E-6;
+        // 2D
+        // auto gIJ = (dz * 2 * tR * tR * tR) / (3 * liqVisc * tL);
+        // auto gI = (dz * 2 * rI * rI) / (3 * liqVisc);
+        // auto gJ = (dz * 2 * rJ * rJ) / (3 * liqVisc);
+
+        // 2D reversed y and z (Parallel Plates)
+         auto gIJ = (tR * 2 * dz * dz * dz) / (3. * liqVisc * tL);
+         auto gI = (1. / 2. * rI * 2 * dz * dz * dz) / (3. * liqVisc * rI);
+         auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
+
+        // 2D reversed y and z (Parallel Plates)
+        // auto gIJ = (tR * dz * dz * dz) / (6. * liqVisc * tL);
+        // auto gI = (rI * dz * dz * dz) / (12. * liqVisc * rI);
+        // auto gJ = (rJ * dz * dz * dz) / (12. * liqVisc * rJ);
+
+        // 2D reversed y and z (Ellipse Channel)
+        // auto gIJ = (tR * 2 * dz * dz * dz) / (3. * liqVisc * tL);
+        // auto gI = (1. / 2. * rI * 2 * dz * dz * dz) / (3. * liqVisc * rI);
+        // auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
+
+
+        connCoeff[i] = 1 / (1 / gI + 1 / gIJ + 1 / gJ);
+        // connCoeff[i] = networkData.hydraulicCond[i];
     }
 
     for (int i = 0; i < porConns.size(); i++)

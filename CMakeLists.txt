@@ -33,7 +33,7 @@ python_add_module(cfd
         numerical/math_diff/Local.cpp
         numerical/math_diff/Convective.cpp)
 
-target_compile_definitions(cfd PRIVATE BOOST_PYTHON_MAX_ARITY=20)
+target_compile_definitions(cfd PRIVATE BOOST_PYTHON_MAX_ARITY=22)
 
 target_include_directories(cfd PUBLIC
         ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})

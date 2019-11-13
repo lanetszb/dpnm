@@ -24,7 +24,8 @@ public :
                          const std::vector<int> &_conn_number,
                          const std::vector<int> &_pore_per_row,
                          const std::vector<bool> &_pore_left_x,
-                         const std::vector<bool> &_pore_right_x);
+                         const std::vector<bool> &_pore_right_x,
+                         const std::vector<double> &_hydraulic_cond);
 
     virtual ~NetworkData() {}
 
@@ -74,6 +75,8 @@ public :
     std::vector<int> boundaryPores;
     std::vector<int> boundaryPoresIn;
     std::vector<int> boundaryPoresOut;
+
+    std::vector<double> hydraulicCond;
 
 
 private:

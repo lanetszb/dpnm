@@ -29,7 +29,8 @@ public:
             const std::vector<double> &propsDiffusion,
             const std::vector<double> &langmuirCoeff,
             const std::vector<bool> &pore_left_x,
-            const std::vector<bool> &pore_right_x);
+            const std::vector<bool> &pore_right_x,
+            const std::vector<double> &hydraulic_cond);
 
     virtual  ~DiffusionPNM() = default;
 

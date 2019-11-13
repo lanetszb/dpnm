@@ -15,7 +15,8 @@ NetworkData::NetworkData(const std::vector<int> &_throat_list,
                          const std::vector<int> &_conn_number,
                          const std::vector<int> &_pore_per_row,
                          const std::vector<bool> &_pore_left_x,
-                         const std::vector<bool> &_pore_right_x) :
+                         const std::vector<bool> &_pore_right_x,
+                         const std::vector<double> &_hydraulic_cond) :
 
         throatList(_throat_list),
         throatRadius(_throat_radius),
@@ -37,7 +38,8 @@ NetworkData::NetworkData(const std::vector<int> &_throat_list,
         porPerRow(_pore_per_row),
 
         poreLeftX(_pore_left_x),
-        poreRightX(_pore_right_x) {}
+        poreRightX(_pore_right_x),
+        hydraulicCond(_hydraulic_cond) {}
 
 std::ostream &operator<<(std::ostream &stream, const NetworkData &networkData) {
 

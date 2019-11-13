@@ -58,6 +58,10 @@ class Network_Data_Cpp:
         s.pore_top_z = None
         s.pore_bot_z = None
 
+        # hydraulic conductance
+
+        s.hydraulic_cond_coeff = None
+
     def process_throats(s):
         s.throats = pd.read_csv(s.pore_throats, index_col=0)
         s.throats = s.throats.sort_values(by=['pore_i', 'pore_j'])
@@ -70,6 +74,9 @@ class Network_Data_Cpp:
 
         s.throat_radius = list(s.throats['throat_diameter'] / 2)
         s.throat_length = list(s.throats['throat_length'])
+
+        # hydraulic coeffs
+        s.hydraulic_cond_coeff = list(s.throats['hydr_cond'])
 
     def process_pores(s):
         s.pores = pd.read_csv(s.pores_data, index_col=0)
@@ -87,11 +94,11 @@ class Network_Data_Cpp:
         s.conn_number = list(s.conn_number)
 
         # boundary pores
-        # s.pore_left_x = s.boundary_pores['pore_left_x']
-        # s.pore_right_x = s.boundary_pores['pore_right_x']
+        s.pore_left_x = s.boundary_pores['pore_left_x']
+        s.pore_right_x = s.boundary_pores['pore_right_x']
 
-        s.pore_left_x = s.boundary_pores['pore_front_y']
-        s.pore_right_x = s.boundary_pores['pore_back_y']
+        # s.pore_left_x = s.boundary_pores['pore_front_y']
+        # s.pore_right_x = s.boundary_pores['pore_back_y']
 
         s.pore_front_y = s.boundary_pores['pore_front_y']
         s.pore_back_y = s.boundary_pores['pore_back_y']
