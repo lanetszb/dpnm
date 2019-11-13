@@ -34,7 +34,9 @@ public:
             const std::vector<int> &pore_list,
             const std::vector<int> &pore_conns,
             const std::vector<int> &conn_number,
-            const std::vector<int> &pore_per_row);
+            const std::vector<int> &pore_per_row,
+            const std::vector<bool> &pore_left_x,
+            const std::vector<bool> &pore_right_x);
 
     virtual ~EquationPNM() = default;
 

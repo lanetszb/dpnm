@@ -27,7 +27,9 @@ public:
             const std::vector<int> &conn_number,
             const std::vector<int> &pore_per_row,
             const std::vector<double> &propsDiffusion,
-            const std::vector<double> &langmuirCoeff);
+            const std::vector<double> &langmuirCoeff,
+            const std::vector<bool> &pore_left_x,
+            const std::vector<bool> &pore_right_x);
 
     virtual  ~DiffusionPNM() = default;
 

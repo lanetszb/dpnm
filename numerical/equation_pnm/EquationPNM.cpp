@@ -14,13 +14,15 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<int> &pore_list,
                          const std::vector<int> &pore_conns,
                          const std::vector<int> &conn_number,
-                         const std::vector<int> &pore_per_row) :
+                         const std::vector<int> &pore_per_row,
+                         const std::vector<bool> &pore_left_x,
+                         const std::vector<bool> &pore_right_x) :
 
         propsPNM(propsVector),
         networkData(throat_list, throat_radius, throat_length,
                     conn_ind_in, conn_ind_out, pore_coord_x, pore_coord_y,
-                    pore_coord_z, pore_radius,
-                    pore_list, pore_conns, conn_number, pore_per_row),
+                    pore_coord_z, pore_radius, pore_list, pore_conns,
+                    conn_number, pore_per_row, pore_left_x, pore_right_x),
         dim(networkData.poreN),
         pIn(propsPNM.pressIn),
         pOut(propsPNM.pressOut),
@@ -42,15 +44,39 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 
     setInitialCond();
 
+
     cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
 
-    std::cout << 'completed' << std::endl;
+//    std::cout << 'completed' << std::endl;
 
 //    calcTotFlow(networkData.boundaryPores);
 
-//    for (int i = 0; i < networkData.poreN; i++)
-//        std::cout << pressure[i] << std::endl;
-//
+    for (int i = 0; i < networkData.poreN; i++)
+        std::cout << pressure[i] << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "Q= " << totFlowRate << std::endl;
+
+
+    auto min = std::min_element(std::begin(networkData.poreCoordX),
+                                std::end(networkData.poreCoordX));
+
+    auto max = std::max_element(std::begin(networkData.poreCoordX),
+                                std::end(networkData.poreCoordX));
+
+    auto length = (*max - *min);
+    auto area = length * length;
+
+    std::cout << "length " << length << std::endl;
+    std::cout << "area " << area << std::endl;
+    std::cout << "dP " << propsPNM.pressIn - propsPNM.pressOut << std::endl;
+
+    auto perm = totFlowRate * propsPNM.liqVisc * length / area /
+                (propsPNM.pressIn - propsPNM.pressOut);
+
+    std::cout << "perm =" << perm << std::endl;
+    //
 //    std::cout << std::endl;
 //
 //    std::cout << totFlowRate << std::endl;
@@ -243,19 +269,30 @@ void EquationPNM::calculateFreeVector(const int &boundCond,
                                       const double &pOut) {
 
     if (boundCond == 1) {
-        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
-            freeVector[i] = pIn;
+        for (int i = 0; i < networkData.poreN; i++)
+            if (networkData.poreLeftX[i])
+                freeVector[i] = pIn;
+//        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
+//            freeVector[i] = pIn;
 
     } else {
-        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
-            freeVector[i] = inletFlow[i];
+        for (int i = 0; i < networkData.poreN; i++)
+            if (networkData.poreLeftX[i])
+                freeVector[i] = inletFlow[i];
+
+//        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
+//            freeVector[i] = inletFlow[i];
     }
+    for (int i = 0; i < networkData.poreN; i++)
+        if (networkData.poreRightX[i])
+            freeVector[i] = pOut;
 
-    int boundPoreSize = networkData.poreN - 1 -
-                        networkData.boundaryPoresOut.size();
 
-    for (int i = networkData.poreN - 1; i > boundPoreSize; i--)
-        freeVector[i] = pOut;
+//    int boundPoreSize = networkData.poreN - 1 -
+//                        networkData.boundaryPoresOut.size();
+//
+//    for (int i = networkData.poreN - 1; i > boundPoreSize; i--)
+//        freeVector[i] = pOut;
 }
 
 void EquationPNM::calculateGuessPress(const double &pIn,
@@ -328,10 +365,16 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     std::vector<double> diffCoeff(networkData.throatN, 0);
 
+    std::vector<int> boundPoresInput;
+
+    for (int i = 0; i < networkData.poreN; i++)
+        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
+            boundPoresInput.emplace_back(i);
+
     calculateMatrix(boundCond,
                     connCoeff,
                     centralCoeff,
-                    boundPores,
+                    boundPoresInput,
                     porConnsIsOutByPressure,
                     diffCoeff);
 
@@ -347,9 +390,16 @@ void EquationPNM::cfdProcedure(const int &boundCond,
     calcThrFlowRate();
     calcPorFlowRate();
 
-    calcInletFlow(networkData.boundaryPoresIn.size());
 
-    calcTotFlow(networkData.boundaryPoresOut);
+    calcInletFlow(networkData.poreRightX.size());
+
+    std::vector<int> boundPoresIn;
+
+    for (int i = 0; i < networkData.poreN; i++)
+        if (networkData.poreLeftX[i])
+            boundPoresIn.emplace_back(i);
+
+    calcTotFlow(boundPoresIn);
 
 //    calculateFreeVector(pIn, pOut);
 }

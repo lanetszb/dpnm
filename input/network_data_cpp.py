@@ -87,8 +87,11 @@ class Network_Data_Cpp:
         s.conn_number = list(s.conn_number)
 
         # boundary pores
-        s.pore_left_x = s.boundary_pores['pore_left_x']
-        s.pore_right_x = s.boundary_pores['pore_right_x']
+        # s.pore_left_x = s.boundary_pores['pore_left_x']
+        # s.pore_right_x = s.boundary_pores['pore_right_x']
+
+        s.pore_left_x = s.boundary_pores['pore_front_y']
+        s.pore_right_x = s.boundary_pores['pore_back_y']
 
         s.pore_front_y = s.boundary_pores['pore_front_y']
         s.pore_back_y = s.boundary_pores['pore_back_y']

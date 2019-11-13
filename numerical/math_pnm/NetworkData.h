@@ -9,7 +9,7 @@ class NetworkData {
 
 public :
 
-    explicit NetworkData(const std::vector<int> & _throat_list,
+    explicit NetworkData(const std::vector<int> &_throat_list,
                          const std::vector<double> &_throat_radius,
                          const std::vector<double> &_throat_length,
                          const std::vector<double> &_conn_ind_in,
@@ -22,8 +22,9 @@ public :
                          const std::vector<int> &_pore_list,
                          const std::vector<int> &_pore_conns,
                          const std::vector<int> &_conn_number,
-                         const std::vector<int> &_pore_per_row
-    );
+                         const std::vector<int> &_pore_per_row,
+                         const std::vector<bool> &_pore_left_x,
+                         const std::vector<bool> &_pore_right_x);
 
     virtual ~NetworkData() {}
 
@@ -66,6 +67,9 @@ public :
     std::vector<int> poreConns;
     std::vector<int> connNumber;
     std::vector<int> porPerRow;
+
+    std::vector<bool> poreLeftX;
+    std::vector<bool> poreRightX;
 
     std::vector<int> boundaryPores;
     std::vector<int> boundaryPoresIn;

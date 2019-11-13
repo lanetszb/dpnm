@@ -17,13 +17,15 @@ DiffusionPNM::DiffusionPNM(
         const std::vector<int> &conn_number,
         const std::vector<int> &pore_per_row,
         const std::vector<double> &propsDiffusion,
-        const std::vector<double> &langmuirCoeff) :
+        const std::vector<double> &langmuirCoeff,
+        const std::vector<bool> &pore_left_x,
+        const std::vector<bool> &pore_right_x) :
 
 
         equationPNM(propsPNM, throat_list, throat_radius, throat_length,
                     conn_ind_in, conn_ind_out, pore_coord_x, pore_coord_y,
                     pore_coord_z, pore_radius, pore_list, pore_conns,
-                    conn_number, pore_per_row),
+                    conn_number, pore_per_row, pore_left_x, pore_right_x),
         equation(propsDiffusion, langmuirCoeff),
         effRadius(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
