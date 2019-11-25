@@ -20,6 +20,8 @@ from numerical import DiffusionPNM
 from input import Props
 from input import Network_Data_Cpp
 
+from output import plot_x_y
+
 props = Props(config_file=sys.argv[1])
 #
 props_array = props.get_diff_props_array()
@@ -65,23 +67,8 @@ for i in range(len(radius_curr) - 1):
     grid_centers.append((radius_curr[i + 1] +
                          radius_curr[i]) / 2)
 
-
-def plot_x_y(x_values, y_values, x_name, y_name):
-    plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
-
-    plt.suptitle('Concentration distribution, t = 0.1 (sec)', y=1.0,
-                 fontsize=17)
-
-    plt.xlabel(x_name, fontsize=16)
-    plt.ylabel(y_name, fontsize=16)
-
-    print(conc)
-    plt.plot(x_values, y_values)
-    plt.ylim(min(y_values), max(y_values) + 0.1 * max(y_values))
-    plt.show()
-
-
-plot_x_y(grid_centers, conc, 'Radius (m)', 'Concentration (kg/m3)')
+plot_x_y(grid_centers, conc, 'Radius (m)', 'Concentration (kg/m3)',
+         'Concentration distribution')
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # print("\n")
