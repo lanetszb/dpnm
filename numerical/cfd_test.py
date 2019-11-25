@@ -59,29 +59,29 @@ radius_curr = local_cpp.radius_curr
 #
 flow_rate = equation_cpp.getFlowRate()
 #
+
 grid_centers = []
 for i in range(len(radius_curr) - 1):
     grid_centers.append((radius_curr[i + 1] +
                          radius_curr[i]) / 2)
 
-plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
-# plt.gca().set(title='Concentration distribution, t = 0.1 (sec)',
-#                xlabel='Radius (m)',
-#                ylabel='Concentration (kg/m3)')
+
+def plot_x_y(x_values, y_values, x_name, y_name):
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
+
+    plt.suptitle('Concentration distribution, t = 0.1 (sec)', y=1.0,
+                 fontsize=17)
+
+    plt.xlabel(x_name, fontsize=16)
+    plt.ylabel(y_name, fontsize=16)
+
+    print(conc)
+    plt.plot(x_values, y_values)
+    plt.ylim(min(y_values), max(y_values) + 0.1 * max(y_values))
+    plt.show()
 
 
-# plt.gca().set(title='Concentration distribution, t = 0.1 (sec)')
-
-plt.suptitle('Concentration distribution, t = 0.1 (sec)', y=1.0, fontsize=17)
-
-plt.xlabel('Radius (m)', fontsize=16)
-plt.ylabel('Concentration (kg/m3)', fontsize=16)
-print(conc)
-plt.plot(grid_centers, conc)
-#
-plt.ylim(1, 6)
-plt.show()
-
+plot_x_y(grid_centers, conc, 'Radius (m)', 'Concentration (kg/m3)')
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # print("\n")
