@@ -44,12 +44,12 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         porFlowRate(dim, 0) {
 
 
-    setInitialCond();
-
-
-    cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
-
-//    std::cout << 'completed' << std::endl;
+//    setInitialCond();
+//
+//
+//    cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
+//
+//    std::cout << "completed" << std::endl;
 
 //    calcTotFlow(networkData.boundaryPores);
 
@@ -59,34 +59,34 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //    std::cout << std::endl;
 
 
-    auto min = std::min_element(std::begin(networkData.poreCoordX),
-                                std::end(networkData.poreCoordX));
-
-    auto max = std::max_element(std::begin(networkData.poreCoordX),
-                                std::end(networkData.poreCoordX));
-
-    for (int i = 0; i < connCoeff.size(); i++)
-        std::cout << connCoeff[i] << std::endl;
-
-    std::cout << std::endl;
+//    auto min = std::min_element(std::begin(networkData.poreCoordX),
+//                                std::end(networkData.poreCoordX));
+//
+//    auto max = std::max_element(std::begin(networkData.poreCoordX),
+//                                std::end(networkData.poreCoordX));
+//
+//    for (int i = 0; i < connCoeff.size(); i++)
+//        std::cout << connCoeff[i] << std::endl;
+//
+//    std::cout << std::endl;
 
 //    auto length = (*max - *min);
 //    auto area = length * length;
 
-    double length = 1.E-6 * 1000;
-    double area = 1.E-6 * 1000 * 1.E-6;
-
-    std::cout << "Q= " << totFlowRate << std::endl;
-    std::cout << "length " << length << std::endl;
-    std::cout << "area " << area << std::endl;
-    std::cout << "dP " << propsPNM.pressIn - propsPNM.pressOut << std::endl;
-
-    auto perm = totFlowRate * propsPNM.liqVisc * length / area /
-                (propsPNM.pressIn - propsPNM.pressOut);
-
-    std::cout << "perm =" << perm << std::endl;
+//    double length = 1.E-6 * 1000;
+//    double area = 1.E-6 * 1000 * 1.E-6;
+//
+//    std::cout << "Q= " << totFlowRate << std::endl;
+//    std::cout << "length " << length << std::endl;
+//    std::cout << "area " << area << std::endl;
+//    std::cout << "dP " << propsPNM.pressIn - propsPNM.pressOut << std::endl;
+//
+//    auto perm = totFlowRate * propsPNM.liqVisc * length / area /
+//                (propsPNM.pressIn - propsPNM.pressOut);
+//
+//    std::cout << "perm =" << perm << std::endl;
     //
-    std::cout << std::endl;
+//    std::cout << std::endl;
 //
 //    std::cout << totFlowRate << std::endl;
 //
@@ -96,8 +96,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 //
 //    cfdProcedure(0, networkData.boundaryPoresOut, pIn, pOut);
 //
-    for (int i = 0; i < networkData.poreN; i++)
-        std::cout << pressure[i] << std::endl;
+//    for (int i = 0; i < networkData.poreN; i++)
+//        std::cout << pressure[i] << std::endl;
 
 //    std::cout << matrix << std::endl;
 

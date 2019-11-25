@@ -61,26 +61,27 @@ DiffusionPNM::DiffusionPNM(
                              equationPNM.pIn,
                              equationPNM.pOut);
 
-//    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-//        std::cout << equationPNM.pressure[i] << std::endl;
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        std::cout << equationPNM.pressure[i] << std::endl;
 
-//    std::cout << std::endl;
-//
-//    std::cout << "inletFlow" << std::endl;
-//
-//    for (int i = 0; i < equationPNM.inletFlow.size(); i++)
-//        std::cout << equationPNM.inletFlow[i] << std::endl;
+    std::cout << std::endl;
 
-    equationPNM.cfdProcedure(0, equationPNM.networkData.boundaryPoresOut,
+    std::cout << "inletFlow" << std::endl;
+
+    for (int i = 0; i < equationPNM.inletFlow.size(); i++)
+        std::cout << equationPNM.inletFlow[i] << std::endl;
+
+    equationPNM.cfdProcedure(0,
+                             equationPNM.networkData.boundaryPoresOut,
                              equationPNM.pIn,
                              equationPNM.pOut);
 
-//    std::cout << std::endl;
-//
-//    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-//        std::cout << equationPNM.pressure[i] << std::endl;
+    std::cout << std::endl;
 
-//    std::cout << std::endl;
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        std::cout << equationPNM.pressure[i] << std::endl;
+
+    std::cout << std::endl;
 //
 //    std::cout << equationPNM.matrix << std::endl;
 //
@@ -112,7 +113,7 @@ void DiffusionPNM::calcRockVolume() {
 void DiffusionPNM::calcEffRadius() {
 
     for (int i = 0; i < effRadius.size(); i++)
-        effRadius[i] = equationPNM.networkData.throatRadius[i] * 1.65;
+        effRadius[i] = equationPNM.networkData.throatRadius[i] * 11.65;
 //        effRadius[i] = 0.0005 * rockVolume / equationPNM.networkData.throatN;
 }
 
@@ -151,10 +152,10 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
             equation.conc[1][j] = matrixConc[i][j];
         }
 
-        equation.cfdProcedure(throatConc[i],
-                              equationPNM.networkData.throatRadius[i],
-                              effRadius[i],
-                              equationPNM.networkData.throatLength[i]);
+        equation.cfdProcedureOneStep(throatConc[i],
+                                     equationPNM.networkData.throatRadius[i],
+                                     effRadius[i],
+                                     equationPNM.networkData.throatLength[i]);
 
         for (int j = 0; j < equation.props.gridBlockN; j++) {
             matrixConc[i][j] = equation.conc[equation.iCurr][j];

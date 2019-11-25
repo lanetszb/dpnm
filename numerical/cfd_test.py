@@ -23,124 +23,113 @@ from input import Network_Data_Cpp
 from output import plot_x_y
 
 props = Props(config_file=sys.argv[1])
-#
-props_array = props.get_diff_props_array()
 
-props_diff = props.get_props_array()
+props_diff = props.get_diff_props_array()
 
-props_cpp = PropsCpp(props_array, props.langm_coeff)
+props_cpp = PropsCpp(props_diff, props.langm_coeff)
 print(props_cpp)
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-local_cpp = LocalCpp(props_array, props.langm_coeff)
-
-# ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-convective_cpp = ConvectiveCpp(props_array, props.langm_coeff)
-#
-equation_cpp = EquationCpp(props_array, props.langm_coeff)
+# local_cpp = LocalCpp(props_diff, props.langm_coeff)
+# convective_cpp = ConvectiveCpp(props_diff, props.langm_coeff)
+# equation_cpp = EquationCpp(props_diff, props.langm_coeff)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
-radius = 4.86487966261438e-06
-eff_radius = radius * 5
-thr_length = 0.9999723657e-4
-conc_wall = 1
+# radius = 4.86487966261438e-06
+# eff_radius = radius * 5
+# thr_length = 0.9999723657e-4
+# conc_wall = 1
 #
-local_cpp.calculate_alpha(props_cpp.time, radius, eff_radius, thr_length)
-
-print('test')
+# local_cpp.calculate_alpha(props_cpp.time, radius, eff_radius, thr_length)
 #
-equation_cpp.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
+# equation_cpp.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
 #
-
-conc = equation_cpp.getConc()
-radius_curr = local_cpp.radius_curr
+# conc = equation_cpp.getConc()
+# radius_curr = local_cpp.radius_curr
+# #
+# flow_rate = equation_cpp.getFlowRate()
 #
-flow_rate = equation_cpp.getFlowRate()
+# grid_centers = []
+# for i in range(len(radius_curr) - 1):
+#     grid_centers.append((radius_curr[i + 1] +
+#                          radius_curr[i]) / 2)
 #
-
-grid_centers = []
-for i in range(len(radius_curr) - 1):
-    grid_centers.append((radius_curr[i + 1] +
-                         radius_curr[i]) / 2)
-
-plot_x_y(grid_centers, conc, 'Radius (m)', 'Concentration (kg/m3)',
-         'Concentration distribution')
+# plot_x_y(grid_centers, conc, 'Radius (m)', 'Concentration (kg/m3)',
+#          'Concentration distribution')
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# print("\n")
-# #
-# props_pnm = props.get_props_array()
-# props_pnm_cpp = PropsPNMCpp(props_pnm)
-# print(props_pnm_cpp)
+print("\n")
 #
-# network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
-# network_data_cpp.process_throats()
-# network_data_cpp.process_pores()
-# network_data_cpp.process_pore_conns()
-# network_data_cpp.process_pore_per_row()
-#
-# thrList = network_data_cpp.throat_list
-# tr = network_data_cpp.throat_radius
-# tl = network_data_cpp.throat_length
-#
-# conn_in = network_data_cpp.conn_ind_in
-# conn_out = network_data_cpp.conn_ind_out
-#
-# pc_x = network_data_cpp.pore_coords_x
-# pc_y = network_data_cpp.pore_coords_y
-# pc_z = network_data_cpp.pore_coords_z
-#
-# pr = network_data_cpp.pore_radius
-#
-# pl = network_data_cpp.pore_list
-# p_conn = network_data_cpp.pore_conns
-# conn_numb = network_data_cpp.conn_number
-# ppr = network_data_cpp.pore_per_row
-#
-# plx = network_data_cpp.pore_left_x
-# prx = network_data_cpp.pore_right_x
-#
-# hydr_cond = network_data_cpp.hydraulic_cond_coeff
-#
-# nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
-#                         pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
-#
-# eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
-#                      pc_z, pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
-#
-# diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
-#                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
-#                         ppr, props_array, props.langm_coeff)
+props_pnm = props.get_props_array()
+props_pnm_cpp = PropsPNMCpp(props_pnm)
+print(props_pnm_cpp)
+
+network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
+network_data_cpp.process_throats()
+network_data_cpp.process_pores()
+network_data_cpp.process_pore_conns()
+network_data_cpp.process_pore_per_row()
+
+thrList = network_data_cpp.throat_list
+tr = network_data_cpp.throat_radius
+tl = network_data_cpp.throat_length
+
+conn_in = network_data_cpp.conn_ind_in
+conn_out = network_data_cpp.conn_ind_out
+
+pc_x = network_data_cpp.pore_coords_x
+pc_y = network_data_cpp.pore_coords_y
+pc_z = network_data_cpp.pore_coords_z
+
+pr = network_data_cpp.pore_radius
+
+pl = network_data_cpp.pore_list
+p_conn = network_data_cpp.pore_conns
+conn_numb = network_data_cpp.conn_number
+ppr = network_data_cpp.pore_per_row
+
+plx = network_data_cpp.pore_left_x
+prx = network_data_cpp.pore_right_x
+
+hydr_cond = network_data_cpp.hydraulic_cond_coeff
+
+nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
+                        pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
+
+eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
+                     pc_z, pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
+
+diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
+                        conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
+                        ppr, props_diff, props.langm_coeff, plx, prx, hydr_cond)
 
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
-# t = np.arange(0, props.time, props.time_step)
-# data1 = diff_pnm.get_pressure_av()
-# data2 = diff_pnm.get_conc_av()
-#
-# fig, ax1 = plt.subplots()
-#
-# color = 'tab:red'
-# ax1.set_xlabel('time (s)', fontsize='large')
-# ax1.set_ylabel('Average Pore Pressure (Pa)', color=color)
-# ax1.plot(t, data1, color=color, label='Average Pore Pressure')
-# ax1.tick_params(axis='y', labelcolor=color)
-#
-# ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-#
-# color = 'tab:blue'
-# ax2.set_ylabel('Avg Concentration (kg/m3)',
-#                color=color, fontsize='large')  # we already handled the x-label with ax1
-# ax2.plot(t, data2, color=color, label='Avg Matrix Concentration')
-# ax2.tick_params(axis='y', labelcolor=color)
-#
-# fig.legend(loc="upper center", fontsize='x-large')
-# fig.tight_layout()  # otherwise the right y-label is slightly clipped
-# plt.show()
+t = np.arange(0, props.time, props.time_step)
+data1 = diff_pnm.get_pressure_av()
+data2 = diff_pnm.get_conc_av()
+
+fig, ax1 = plt.subplots()
+
+color = 'tab:red'
+ax1.set_xlabel('time (s)', fontsize='large')
+ax1.set_ylabel('Average Pore Pressure (Pa)', color=color)
+ax1.plot(t, data1, color=color, label='Average Pore Pressure')
+ax1.tick_params(axis='y', labelcolor=color)
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color = 'tab:blue'
+ax2.set_ylabel('Avg Concentration (kg/m3)',
+               color=color, fontsize='large')  # we already handled the x-label with ax1
+ax2.plot(t, data2, color=color, label='Avg Matrix Concentration')
+ax2.tick_params(axis='y', labelcolor=color)
+
+fig.legend(loc="upper center", fontsize='x-large')
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.show()
 
 # =============================================================================
 # Figure 2 (Total Flow Rate)
