@@ -95,29 +95,37 @@ void Equation::calcFlowRate() {
     flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) * convective.beta[1];
 }
 
+void Equation::cfdProcedureOneStep(const double &concThrWall,
+                                   const double &radius,
+                                   const double &effRadius,
+                                   const double &thrLength) {
+
+    std::swap(iCurr, iPrev);
+    local.calculateAlpha(props.timeStep,
+                         radius,
+                         effRadius,
+                         thrLength);
+
+    convective.calculateBeta(radius,
+                             effRadius,
+                             thrLength,
+                             props.diffusivity,
+                             props.gridBlockN);
+    calculateGuessVector();
+    calculateMatrix();
+    calculateFreeVector(concThrWall);
+    calculateConc();
+    calcFlowRate();
+
+}
+
 void Equation::cfdProcedure(const double &concThrWall, const double &radius,
                             const double &effRadius, const double &thrLength) {
 
     calcConcIni(props.concIni);
 
     for (double t = props.timeStep; t <= props.time; t += props.timeStep) {
-
-        std::swap(iCurr, iPrev);
-        local.calculateAlpha(props.timeStep,
-                             radius,
-                             effRadius,
-                             thrLength);
-
-        convective.calculateBeta(radius,
-                                 effRadius,
-                                 thrLength,
-                                 props.diffusivity,
-                                 props.gridBlockN);
-        calculateGuessVector();
-        calculateMatrix();
-        calculateFreeVector(concThrWall);
-        calculateConc();
-        calcFlowRate();
+        cfdProcedureOneStep(concThrWall, radius, effRadius, thrLength);
     }
 }
 

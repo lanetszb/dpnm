@@ -36,6 +36,9 @@ public:
     void cfdProcedure(const double &concThrWall, const double &radius,
                       const double &effRadius, const double &thrLength);
 
+    void cfdProcedureOneStep(const double &concThrWall, const double &radius,
+                      const double &effRadius, const double &thrLength);
+
     void calcFlowRate();
 
     void calcConcIni(const double &concIni);
