@@ -80,7 +80,7 @@ public:
 
     void setInitialCond();
 
-    void calcInletFlow(const int &boundPorSize);
+    void calcInletFlow(const std::vector<bool> &boundPorIn);
 
     void calcTotFlow(const std::vector<int> &boundPores);
 

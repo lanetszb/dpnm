@@ -40,7 +40,7 @@ DiffusionPNM::DiffusionPNM(
         flowDerivDiff(equationPNM.networkData.throatN, 0),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
-        conc_ini(1.0),
+        conc_ini(2.0),
         dP(0) {
 
     //    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
@@ -56,8 +56,15 @@ DiffusionPNM::DiffusionPNM(
 
     equationPNM.setInitialCond();
 
+    std::vector<int> boundPoresInput;
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        if (equationPNM.networkData.poreLeftX[i] or
+            equationPNM.networkData.poreRightX[i])
+            boundPoresInput.emplace_back(i);
+
     equationPNM.cfdProcedure(1,
-                             equationPNM.networkData.boundaryPores,
+                             boundPoresInput,
                              equationPNM.pIn,
                              equationPNM.pOut);
 
@@ -71,8 +78,14 @@ DiffusionPNM::DiffusionPNM(
     for (int i = 0; i < equationPNM.inletFlow.size(); i++)
         std::cout << equationPNM.inletFlow[i] << std::endl;
 
+    std::vector<int> boundPoresRight;
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        if (equationPNM.networkData.poreRightX[i])
+            boundPoresRight.emplace_back(i);
+
     equationPNM.cfdProcedure(0,
-                             equationPNM.networkData.boundaryPoresOut,
+                             boundPoresRight,
                              equationPNM.pIn,
                              equationPNM.pOut);
 
@@ -81,11 +94,6 @@ DiffusionPNM::DiffusionPNM(
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         std::cout << equationPNM.pressure[i] << std::endl;
 
-    std::cout << std::endl;
-//
-//    std::cout << equationPNM.matrix << std::endl;
-//
-//    std::cout << std::endl;
 
     cfdProcedureDiff();
 }
@@ -324,10 +332,22 @@ void DiffusionPNM::calcCoupledFlow() {
 
     calcMatCoupledCoeff();
 
+    std::vector<int> boundPoresRight;
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        if (equationPNM.networkData.poreRightX[i])
+            boundPoresRight.emplace_back(i);
+
+    std::vector<int> boundPoresLeft;
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        if (equationPNM.networkData.poreLeftX[i])
+            boundPoresLeft.emplace_back(i);
+
     equationPNM.calculateMatrix(0,
                                 equationPNM.connCoeff,
                                 equationPNM.centralCoeff,
-                                equationPNM.networkData.boundaryPoresOut,
+                                boundPoresRight,
                                 equationPNM.porConnsIsOutByPressure,
                                 connCoeffDiff);
 
@@ -343,10 +363,10 @@ void DiffusionPNM::calcCoupledFlow() {
 
     equationPNM.calcPorFlowRate();
 
-    equationPNM.calcTotFlow(equationPNM.networkData.boundaryPoresOut);
+    equationPNM.calcTotFlow(boundPoresRight);
     totalFlowPoresOut.emplace_back(-1 * equationPNM.totFlowRate);
 
-    equationPNM.calcTotFlow(equationPNM.networkData.boundaryPoresIn);
+    equationPNM.calcTotFlow(boundPoresLeft);
     totalFlowPoresIn.emplace_back(equationPNM.totFlowRate);
 
     updateConc();
@@ -366,8 +386,8 @@ void DiffusionPNM::cfdProcedureDiff() {
     concAverage.emplace_back(conc_ini);
     totalFlowDiff.emplace_back(0);
 
-    totalFlowPoresOut.emplace_back(-1 * equationPNM.totFlowRate);
-    totalFlowPoresIn.emplace_back(-1 * equationPNM.totFlowRate);
+    totalFlowPoresOut.emplace_back(equationPNM.totFlowRate);
+    totalFlowPoresIn.emplace_back(equationPNM.totFlowRate);
 
 
     for (double t = equation.props.timeStep; t <= equation.props.time;
@@ -405,6 +425,13 @@ void DiffusionPNM::cfdProcedureDiff() {
                             diffFlow.size();
 
         totalFlowDiff.emplace_back(diffFlowAv);
+
+        std::cout << std::endl;
+
+        std::cout << "Pressure" << std::endl;
+        for (int i = 0; i < equationPNM.networkData.poreN; i++)
+            std::cout << equationPNM.pressure[i] << std::endl;
+        std::cout << std::endl;
     }
 }
 

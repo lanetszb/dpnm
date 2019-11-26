@@ -46,128 +46,22 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
 
 //    setInitialCond();
 //
+//    std::vector<int> boundPoresInput;
 //
-//    cfdProcedure(1, networkData.boundaryPores, pIn, pOut);
+//    for (int i = 0; i < networkData.poreN; i++)
+//        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
+//            boundPoresInput.emplace_back(i);
+//
+//    cfdProcedure(1, boundPoresInput, pIn, pOut);
 //
 //    std::cout << "completed" << std::endl;
-
+//
 //    calcTotFlow(networkData.boundaryPores);
-
-//    for (int i = 0; i < networkData.poreN; i++)
-//        std::cout << pressure[i] << std::endl;
-//
-//    std::cout << std::endl;
-
-
-//    auto min = std::min_element(std::begin(networkData.poreCoordX),
-//                                std::end(networkData.poreCoordX));
-//
-//    auto max = std::max_element(std::begin(networkData.poreCoordX),
-//                                std::end(networkData.poreCoordX));
-//
-//    for (int i = 0; i < connCoeff.size(); i++)
-//        std::cout << connCoeff[i] << std::endl;
-//
-//    std::cout << std::endl;
-
-//    auto length = (*max - *min);
-//    auto area = length * length;
-
-//    double length = 1.E-6 * 1000;
-//    double area = 1.E-6 * 1000 * 1.E-6;
-//
-//    std::cout << "Q= " << totFlowRate << std::endl;
-//    std::cout << "length " << length << std::endl;
-//    std::cout << "area " << area << std::endl;
-//    std::cout << "dP " << propsPNM.pressIn - propsPNM.pressOut << std::endl;
-//
-//    auto perm = totFlowRate * propsPNM.liqVisc * length / area /
-//                (propsPNM.pressIn - propsPNM.pressOut);
-//
-//    std::cout << "perm =" << perm << std::endl;
-    //
-//    std::cout << std::endl;
-//
-//    std::cout << totFlowRate << std::endl;
-//
-//    std::cout << matrix << std::endl;
-//
-//    std::cout << std::endl;
-//
-//    cfdProcedure(0, networkData.boundaryPoresOut, pIn, pOut);
 //
 //    for (int i = 0; i < networkData.poreN; i++)
 //        std::cout << pressure[i] << std::endl;
-
-//    std::cout << matrix << std::endl;
-
-
-//    for (int i = 0; i < inletFlow.size(); i++)
-//        std::cout << inletFlow[i] << std::endl;
-
-//    std::cout << matrix << std::endl;
 //
 
-//
-//    std::cout << "porConns" << std::endl;
-//    for (int i = 0; i < porConns.size(); i++) {
-//        for (int j = 0; j < porConns[i].size(); j++) {
-//            std::cout << porConns[i][j] << ' ';
-//        }
-//        std::cout << std::endl;
-//    }
-//
-//    std::cout << std::endl;
-//
-//    std::cout << "throatConns" << std::endl;
-//    for (int i = 0; i < networkData.throatN; i++) {
-//        std::cout << throatConns[i].first << ' ' << throatConns[i].second
-//                  << std::endl;
-//    }
-
-//    std::cout << "porConnsIsOut" << std::endl;
-//    for (int i = 0; i < porConnsIsOutByPressure.size(); i++) {
-//        for (int j = 0; j < networkData.connNumber[i]; j++) {
-//            std::cout << porConnsIsOut[i][j] << ' ';
-//        }
-//        std::cout << std::endl;
-//    }
-//
-//    std::cout << "porConnsIsOutByPressure" << std::endl;
-//    for (int i = 0; i < porConnsIsOutByPressure.size(); i++) {
-//        for (int j = 0; j < networkData.connNumber[i]; j++) {
-//            std::cout << porConnsIsOutByPressure[i][j] << ' ';
-//        }
-//        std::cout << std::endl;
-//    }
-
-//    std::cout << "throatFlow" << std::endl;
-//    for (int i = 0; i < networkData.throatN; i++) {
-//        std::cout << i << ' ' << thrFlowRate[i] << std::endl;
-//    }
-//    std::cout << std::endl;
-
-
-//    std::cout << "FreeVector" << std::endl;
-//    std::cout << freeVector << std::endl;
-//    std::cout << std::endl;
-//
-//    std::cout << "matrix" << std::endl;
-//    std::cout << matrix << std::endl;
-//    std::cout << std::endl;
-//
-//    std::cout << std::endl;
-//
-
-//
-//
-//    for (int i = 0; i < networkData.throatN; i++)
-//        std::cout << thrFlowRate[i] << std::endl;
-
-//    std::cout << std::endl;
-//
-//    for (int i = 0; i < dim; i++)
-//        std::cout << i << ' ' << porFlowRate[i] << std::endl;
 }
 
 
@@ -231,9 +125,9 @@ void EquationPNM::calcMatCoeff() {
         // auto gJ = (dz * 2 * rJ * rJ) / (3 * liqVisc);
 
         // 2D reversed y and z (Parallel Plates)
-         auto gIJ = (tR * 2 * dz * dz * dz) / (3. * liqVisc * tL);
-         auto gI = (1. / 2. * rI * 2 * dz * dz * dz) / (3. * liqVisc * rI);
-         auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
+        auto gIJ = (tR * 2 * dz * dz * dz) / (3. * liqVisc * tL);
+        auto gI = (1. / 2. * rI * 2 * dz * dz * dz) / (3. * liqVisc * rI);
+        auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
 
         // 2D reversed y and z (Parallel Plates)
         // auto gIJ = (tR * dz * dz * dz) / (6. * liqVisc * tL);
@@ -316,7 +210,7 @@ void EquationPNM::calculateFreeVector(const int &boundCond,
     } else {
         for (int i = 0; i < networkData.poreN; i++)
             if (networkData.poreLeftX[i])
-                freeVector[i] = inletFlow[i];
+                freeVector[i] = porFlowRate[i];
 
 //        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
 //            freeVector[i] = inletFlow[i];
@@ -403,16 +297,10 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     std::vector<double> diffCoeff(networkData.throatN, 0);
 
-    std::vector<int> boundPoresInput;
-
-    for (int i = 0; i < networkData.poreN; i++)
-        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
-            boundPoresInput.emplace_back(i);
-
     calculateMatrix(boundCond,
                     connCoeff,
                     centralCoeff,
-                    boundPoresInput,
+                    boundPores,
                     porConnsIsOutByPressure,
                     diffCoeff);
 
@@ -429,7 +317,7 @@ void EquationPNM::cfdProcedure(const int &boundCond,
     calcPorFlowRate();
 
 
-    calcInletFlow(networkData.poreRightX.size());
+    calcInletFlow(networkData.poreLeftX);
 
     std::vector<int> boundPoresIn;
 
@@ -500,10 +388,11 @@ void EquationPNM::calcPorFlowRate() {
         }
 }
 
-void EquationPNM::calcInletFlow(const int &boundPorSize) {
+void EquationPNM::calcInletFlow(const std::vector<bool> &boundPorIn) {
 
-    for (int i = 0; i < boundPorSize; i++)
-        inletFlow.emplace_back(porFlowRate[i]);
+    for (int i = 0; i < boundPorIn.size(); i++)
+        if (boundPorIn[i])
+            inletFlow.emplace_back(porFlowRate[i]);
 }
 
 void EquationPNM::calcTotFlow(const std::vector<int> &boundPores) {
