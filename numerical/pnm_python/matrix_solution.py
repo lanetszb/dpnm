@@ -2,7 +2,6 @@ import sys
 import os
 import numpy as np
 
-
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
@@ -39,13 +38,19 @@ class Matrix_Solution:
         inlet_conns = []
         for i in range(len(conn_ind)):
             for j in range(len(inlet_pores)):
-                if inlet_pores[j] == conn_ind[i][0]:
+                if inlet_pores[j] == conn_ind[i][1] or inlet_pores[j] == \
+                        conn_ind[i][0]:
                     inlet_conns.append(network_data.conn_ind[i])
+                    break
 
         dp = []
 
         for idx, value in enumerate(inlet_conns):
             dp.append(pressure_list[value[0]] - pressure_list[value[1]])
+
+        print('ic', inlet_conns)
+        print('\n')
+        print('dp', dp)
 
         flow_rates = matrix_coeff[0:len(inlet_conns)] * dp
         flow_rates = np.array(flow_rates)
@@ -54,7 +59,6 @@ class Matrix_Solution:
 
 
 if __name__ == '__main__':
-
     t_start = perf_counter()
 
     props = Props(config_file=sys.argv[1])
@@ -83,7 +87,7 @@ if __name__ == '__main__':
     matrix_portrait.get_matrix_portrait()
 
     pressure = spsolve(matrix_portrait.A, matrix_solution.vector_B)
-    total_flow = matrix_solution.get_flow_rate(pressure)
+    total_flow = abs(matrix_solution.get_flow_rate(pressure))
 
     print(matrix_portrait.A)
     print("\n")
@@ -93,7 +97,6 @@ if __name__ == '__main__':
     x_max = max(matrix_portrait.network_data.pores['x_coord'])
     x_length = x_max - x_min
     area = x_length ** 2
-
 
     k = total_flow * matrix_portrait.props.liq_visc * x_length / (
             area * (pressure_in - pressure_out))
@@ -105,4 +108,4 @@ if __name__ == '__main__':
     print(k)
 
     t_stop = perf_counter()
-    print("Elapsed time in seconds:", t_stop-t_start)
+    print("Elapsed time in seconds:", t_stop - t_start)

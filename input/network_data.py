@@ -90,6 +90,7 @@ class Network_Data:
 
         s.boundary_pores = s.inlet_pores + s.outlet_pores
 
+# !Significantly slows down the whole pore processing
     def process_pore_conns(s):
 
         for i in range(len(s.pore_conns)):
@@ -159,5 +160,5 @@ if __name__ == '__main__':
 
     plot_network_conns(conn_ind, pore_coords, pore_list)
 
-    prop_plt = network_data.throat_radius
-    plot_network_stats(prop_plt)
+    property_to_plt = network_data.throat_radius
+    plot_network_stats(property_to_plt)

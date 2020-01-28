@@ -95,6 +95,8 @@ ppr = network_data_cpp.pore_per_row
 plx = network_data_cpp.pore_left_x
 prx = network_data_cpp.pore_right_x
 
+# =============================================================================
+
 hydr_cond = network_data_cpp.hydraulic_cond_coeff
 
 nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
@@ -116,7 +118,7 @@ data2 = diff_pnm.get_conc_av()
 y_values = {"Average Pressure (Pa)": data1, "Avg Concentration (kg/m3)": data2}
 
 plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
-#
+
 # =============================================================================
 # Figure 2 (Total Flow Rate)
 t = np.arange(0, props.time, props.time_step)
@@ -129,6 +131,7 @@ y_values = {"Average Pressure (Pa)": data1, "Outlet Flow Rate (m/sec)": data2,
 
 plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
 
+# =============================================================================
 # Figure 3 (Langmuir isotherm and density)
 p_av = diff_pnm.get_pressure_av()
 
