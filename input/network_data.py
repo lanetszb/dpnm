@@ -65,7 +65,6 @@ class Network_Data:
                              s.pores['z_coord'])]
         s.pore_number = len(s.pore_coords)
         s.pore_list = np.arange(len(s.pore_coords))
-        s.pore_conns = s.pores['conn_indices']
         s.pore_radius = s.pores['pore_diameter'] / 2
 
     # Identify boundary pores in any direction (input list of x, y or z coords)
@@ -90,14 +89,19 @@ class Network_Data:
 
         s.boundary_pores = s.inlet_pores + s.outlet_pores
 
-# !Significantly slows down the whole pore processing
+    # !Significantly slows down the whole pore processing
     def process_pore_conns(s):
 
-        for i in range(len(s.pore_conns)):
-            s.pore_conns[i] = s.pore_conns[i].split(',')
-        for i in range(len(s.pore_conns)):
-            for j in range(len(s.pore_conns[i])):
-                s.pore_conns[i][j] = int(s.pore_conns[i][j])
+        s.pore_conns = [[] for i in range(len(s.pore_list))]
+
+        for i in range(len(s.pore_list)):
+            for j in range(len(s.conn_ind)):
+                if i == s.conn_ind[j][0]:
+                    s.pore_conns[i].append(s.conn_ind[j][1])
+                if i == s.conn_ind[j][1]:
+                    s.pore_conns[i].append(s.conn_ind[j][0])
+                if j == s.conn_ind:
+                    break
 
     def get_all_conns(s):
         s.pore_list = s.pore_list.reshape(s.pore_number, 1)

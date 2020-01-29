@@ -68,6 +68,8 @@ class Network_Data_Cpp:
 
         s.conn_ind_in = list(s.throats['pore_i'])
         s.conn_ind_out = list(s.throats['pore_j'])
+        s.conn_ind = [[a, b] for a, b in zip(s.throats['pore_i'],
+                                             s.throats['pore_j'])]
 
         s.throat_number = len(s.conn_ind_in)
         s.throat_list = np.arange(s.throat_number).tolist()
@@ -108,30 +110,18 @@ class Network_Data_Cpp:
 
     def process_pore_conns(s):
 
-        pore_conns_row = s.pores['conn_indices']
-        s.pore_conns = []
-
-        for i in range(len(pore_conns_row)):
-            pore_conns_row[i] = pore_conns_row[i].split(',')
+        s.pore_conns = [[] for i in range(len(s.pore_list))]
 
         for i in range(len(s.pore_list)):
-            for j in range(s.conn_number[i]):
-                pore_conns_row[i][j] = int(pore_conns_row[i][j])
+            for j in range(len(s.conn_ind)):
+                if i == s.conn_ind[j][0]:
+                    s.pore_conns[i].append(s.conn_ind[j][1])
+                if i == s.conn_ind[j][1]:
+                    s.pore_conns[i].append(s.conn_ind[j][0])
+                if j == s.conn_ind:
+                    break
 
-        for i in range(len(pore_conns_row)):
-            pore_conns_row[i].sort()
-
-        for i in range(len(pore_conns_row)):
-            for j in range(s.conn_number[i]):
-                s.pore_conns.append(int(pore_conns_row[i][j]))
-
-    def process_pore_per_row(s):
-
-        s.pore_per_row = s.pores['conn_indices']
-
-        for i in range(len(s.pore_list)):
-            for j in range(s.conn_number[i]):
-                s.pore_per_row[i][j] = int(s.pore_per_row[i][j])
+        s.pore_per_row = s.pore_conns
 
         s.pore_per_row = [[a] + b for a, b in zip(s.pore_list,
                                                   s.pore_per_row)]
@@ -141,6 +131,8 @@ class Network_Data_Cpp:
 
         s.pore_per_row = [int(i) for i in s.pore_per_row]
 
+        s.pore_conns = [item for sublist in s.pore_conns for item in sublist]
+
 
 if __name__ == '__main__':
     network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
@@ -148,4 +140,3 @@ if __name__ == '__main__':
     network_data_cpp.process_throats()
     network_data_cpp.process_pores()
     network_data_cpp.process_pore_conns()
-    network_data_cpp.process_pore_per_row()
