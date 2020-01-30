@@ -2,7 +2,7 @@
 #define PNFLOW_CONVECTIVE_H
 
 #include <PropsDiffusion.h>
-#include <Local.h>
+#include <LocalDiffusion.h>
 
 class Convective {
 
@@ -31,7 +31,7 @@ public:
                                              const double &diffusivity);
 
     PropsDiffusion props;
-    Local local;
+    LocalDiffusion local;
     std::vector<double> beta;
 
     const std::vector<double> getBeta() const;

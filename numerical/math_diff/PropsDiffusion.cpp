@@ -9,11 +9,11 @@ std::vector<double> _langmuirCoeff) :
         timeStep(_propsVector[1]),
         length(_propsVector[2]),
         radius(_propsVector[3]),
-        effRadius(_propsVector[3] * 5),
-        gridBlockN(_propsVector[4]),
-        concIni(_propsVector[5]),
-        diffusivity(_propsVector[6]),
-        iterativeAccuracy(_propsVector[7]),
+        effRadius(_propsVector[4]),
+        gridBlockN(_propsVector[5]),
+        concIni(_propsVector[6]),
+        diffusivity(_propsVector[7]),
+        iterativeAccuracy(_propsVector[8]),
         propsVector(_propsVector),
         langmuirCoeff(_langmuirCoeff) {}
 

@@ -30,7 +30,7 @@ python_add_module(cfd
         numerical/math_pnm/NetworkData.cpp
         numerical/equation_diff/Equation.cpp
         numerical/math_diff/PropsDiffusion.cpp
-        numerical/math_diff/Local.cpp
+        numerical/math_diff/LocalDiffusion.cpp
         numerical/math_diff/Convective.cpp)
 
 target_compile_definitions(cfd PRIVATE BOOST_PYTHON_MAX_ARITY=22)

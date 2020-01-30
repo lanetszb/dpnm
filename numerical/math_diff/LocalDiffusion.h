@@ -1,16 +1,16 @@
-#ifndef PNFLOW_LOCAL_H
-#define PNFLOW_LOCAL_H
+#ifndef PNFLOW_LOCALDIFFUSION_H
+#define PNFLOW_LOCALDIFFUSION_H
 
 #include <PropsDiffusion.h>
 
-class Local {
+class LocalDiffusion {
 
 public:
 
-    explicit Local(const std::vector<double> &propsVector,
-                   const std::vector<double> &langmuirCoeff);
+    explicit LocalDiffusion(const std::vector<double> &propsVector,
+                            const std::vector<double> &langmuirCoeff);
 
-    virtual ~Local() = default;
+    virtual ~LocalDiffusion() = default;
 
     static int left(const int &index);
 
@@ -27,19 +27,18 @@ public:
     void calcRadiusCurr(const double &radius, const double &effRadius,
                         const int &gridBlockN);
 
-    const std::vector<double> getAlpha() const;
-
-    const std::vector<double> getRadCurr() const;
-
-    PropsDiffusion props;
+    PropsDiffusion propsDiffusion;
 
     double dRadius;
+
     std::vector<double> radiusCurr;
 
     std::vector<double> alpha;
 
+    const std::vector<double> getAlpha() const;
+
+    const std::vector<double> getRadCurr() const;
 
 };
-
 
 #endif

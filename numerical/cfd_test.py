@@ -8,7 +8,7 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
 from numerical import PropsDiffusion
-from numerical import LocalCpp
+from numerical import LocalDiffusion
 from numerical import ConvectiveCpp
 from numerical import EquationCpp
 
@@ -38,18 +38,19 @@ props_diff.print_langmuir_coeffs()
 #
 # # ++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-local_cpp = LocalCpp(props_diff_vector, props.langm_coeff)
-# convective_cpp = ConvectiveCpp(props_diff, props.langm_coeff)
+local_diff = LocalDiffusion(props_diff_vector, props_diff.langmuir_coeff)
+convective_cpp = ConvectiveCpp(props_diff_vector, props_diff.langmuir_coeff)
 # equation_cpp = EquationCpp(props_diff, props.langm_coeff)
 #
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-radius = 4.86487966261438e-06
-eff_radius = radius * 5
-thr_length = 0.9999723657e-4
-conc_wall = 1
+time_step = props_diff.time_step
+radius = props_diff.radius
+eff_radius = props_diff.eff_radius
+thr_length = props_diff.length
+conc_wall = props_diff.concIni
 #
-local_cpp.calculate_alpha(props_diff.time, radius, eff_radius, thr_length)
+local_diff.calculate_alpha(time_step, radius, eff_radius, thr_length)
 #
 # equation_cpp.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
 #

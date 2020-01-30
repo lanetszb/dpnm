@@ -5,7 +5,7 @@
 #include <Eigen/Sparse>
 
 #include <PropsDiffusion.h>
-#include <Local.h>
+#include <LocalDiffusion.h>
 #include <Convective.h>
 
 
@@ -52,7 +52,7 @@ public:
     const double getFlowRate() const;
 
     PropsDiffusion props;
-    Local local;
+    LocalDiffusion local;
     Convective convective;
 
     double &time;

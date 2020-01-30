@@ -3,7 +3,7 @@
 #include <string>
 
 #include <PropsDiffusion.h>
-#include <Local.h>
+#include <LocalDiffusion.h>
 #include <Convective.h>
 #include <Equation.h>
 #include <EquationPNM.h>
@@ -22,9 +22,9 @@ BOOST_PYTHON_MODULE (cfd) {
 
     p::class_<PropsDiffusion>("PropsDiffusion",
                               p::init<std::vector<double>,
-                             std::vector<double>>(
-                             p::args("props_array",
-                                     "langm_coeff")))
+                                      std::vector<double>>(
+                                      p::args("props_array",
+                                              "langm_coeff")))
             .def("__str__", __str__<PropsDiffusion>)
 
             .add_property("time",
@@ -65,25 +65,25 @@ BOOST_PYTHON_MODULE (cfd) {
                  &PropsDiffusion::printLangmuirCoeff);
 
 
-    p::class_<Local>("LocalCpp",
-                     p::init<std::vector<double>,
-                             std::vector<double>>(
-                             p::args("props_array",
-                                     "langmuir_coeff")))
+    p::class_<LocalDiffusion>("LocalDiffusion",
+                              p::init<std::vector<double>,
+                                      std::vector<double>>(
+                                      p::args("props_array",
+                                              "langmuir_coeff")))
 
             .def("calculate_alpha",
-                 &Local::calculateAlpha,
+                 &LocalDiffusion::calculateAlpha,
                  p::args("dt",
                          "radius",
                          "effRadius",
                          "throat_length"))
 
             .add_property("alpha",
-                          &Local::getAlpha)
+                          &LocalDiffusion::getAlpha)
 
             .add_property("radius_curr",
-                          &Local::getRadCurr);
-//
+                          &LocalDiffusion::getRadCurr);
+
 //
     p::class_<Convective>("ConvectiveCpp",
                           p::init<std::vector<double>,

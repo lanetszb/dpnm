@@ -43,8 +43,8 @@ void Equation::calculateMatrix() {
 
     for (int i = 1; i < dim - 1; ++i) {
         MatrixIterator it(matrix, i);
-        double &betaLeft = convective.beta[Local::left(i)];
-        double &betaRight = convective.beta[Local::right(i)];
+        double &betaLeft = convective.beta[LocalDiffusion::left(i)];
+        double &betaRight = convective.beta[LocalDiffusion::right(i)];
         double &alpha = local.alpha[i];
         it.valueRef() = -betaLeft;
         ++it;
@@ -54,7 +54,7 @@ void Equation::calculateMatrix() {
     }
 
     MatrixIterator it(matrix, dim - 1);
-    double &betaLeft = convective.beta[Local::left(dim - 1)];
+    double &betaLeft = convective.beta[LocalDiffusion::left(dim - 1)];
     double &alpha = local.alpha[dim - 1];
     it.valueRef() = -betaLeft;
     ++it;
