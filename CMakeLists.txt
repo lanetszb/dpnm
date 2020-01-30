@@ -29,7 +29,7 @@ python_add_module(cfd
         numerical/math_pnm/PropsPNM.cpp
         numerical/math_pnm/NetworkData.cpp
         numerical/equation_diff/Equation.cpp
-        numerical/math_diff/Props.cpp
+        numerical/math_diff/PropsDiffusion.cpp
         numerical/math_diff/Local.cpp
         numerical/math_diff/Convective.cpp)
 

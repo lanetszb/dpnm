@@ -34,6 +34,7 @@ class Props:
         s.time_step = float(get('Properties_diffusion', 'time_step'))
         s.length = float(get('Properties_diffusion', 'length'))
         s.radius = float(get('Properties_diffusion', 'radius'))
+        s.eff_radius = float(get('Properties_diffusion', 'effective_radius'))
         s.grid_block_n = float(get('Properties_diffusion', 'grid_block_n'))
         s.conc_ini = float(get('Properties_diffusion', 'conc_ini'))
         s.diffusivity = float(get('Properties_diffusion', 'diffusivity'))
@@ -60,6 +61,7 @@ class Props:
         props_list.append(s.time_step)
         props_list.append(s.length)
         props_list.append(s.radius)
+        props_list.append(s.eff_radius)
         props_list.append(s.grid_block_n)
         props_list.append(s.conc_ini)
         props_list.append(s.diffusivity)
@@ -80,5 +82,8 @@ class Props:
 
 if __name__ == '__main__':
     props = Props(config_file=sys.argv[1])
-    print(props.get_props_array())
+    print('PNM properties vector: ', props.get_props_array())
+    print('\n')
+    print('Diffusion properties vector: ', props.get_diff_props_array())
+    print('\n')
     print(props)

@@ -1,19 +1,19 @@
-#ifndef PNFLOW_PROPS_H
-#define PNFLOW_PROPS_H
+#ifndef PNFLOW_PROPSDIFFUSION_H
+#define PNFLOW_PROPSDIFFUSION_H
 
 #include <vector>
 #include <iostream>
 
-class Props {
+class PropsDiffusion {
 
 public:
 
-    explicit Props(const std::vector<double> &_propsVector, const
+    explicit PropsDiffusion(const std::vector<double> &_propsVector, const
     std::vector<double> _langmuirCoeff);
 
-    virtual ~Props() {}
+    virtual ~PropsDiffusion() {}
 
-    friend std::ostream &operator<<(std::ostream &stream, const Props &props);
+    friend std::ostream &operator<<(std::ostream &stream, const PropsDiffusion &props);
 
     double getTime() const;
 
@@ -58,8 +58,6 @@ public:
     void printPropsVector();
 
     void printLangmuirCoeff();
-
-    void calcRadiusCurr();
 
     double time;
     double timeStep;

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <Props.h>
+#include <PropsDiffusion.h>
 #include <Local.h>
 #include <Convective.h>
 #include <Equation.h>
@@ -20,49 +20,49 @@ BOOST_PYTHON_MODULE (cfd) {
 
     providePythonThings();
 
-    p::class_<Props>("PropsCpp",
-                     p::init<std::vector<double>,
+    p::class_<PropsDiffusion>("PropsDiffusion",
+                              p::init<std::vector<double>,
                              std::vector<double>>(
                              p::args("props_array",
                                      "langm_coeff")))
-            .def("__str__", __str__<Props>)
+            .def("__str__", __str__<PropsDiffusion>)
 
             .add_property("time",
-                          &Props::getTime,
-                          &Props::setTime)
+                          &PropsDiffusion::getTime,
+                          &PropsDiffusion::setTime)
             .add_property("time_step",
-                          &Props::getTimeStep,
-                          &Props::setTimeStep)
+                          &PropsDiffusion::getTimeStep,
+                          &PropsDiffusion::setTimeStep)
             .add_property("length",
-                          &Props::getLength,
-                          &Props::setLength)
+                          &PropsDiffusion::getLength,
+                          &PropsDiffusion::setLength)
             .add_property("radius",
-                          &Props::getRadius,
-                          &Props::setRadius)
+                          &PropsDiffusion::getRadius,
+                          &PropsDiffusion::setRadius)
             .add_property("eff_radius",
-                          &Props::getEffRadius,
-                          &Props::setEffRadius)
+                          &PropsDiffusion::getEffRadius,
+                          &PropsDiffusion::setEffRadius)
             .add_property("grid_block_n",
-                          &Props::getGridBlockN,
-                          &Props::setGridBlockN)
+                          &PropsDiffusion::getGridBlockN,
+                          &PropsDiffusion::setGridBlockN)
             .add_property("concIni",
-                          &Props::getConcentration,
-                          &Props::setConcentration)
+                          &PropsDiffusion::getConcentration,
+                          &PropsDiffusion::setConcentration)
             .add_property("diffusivity",
-                          &Props::getDiffusivity,
-                          &Props::setDiffusivity)
+                          &PropsDiffusion::getDiffusivity,
+                          &PropsDiffusion::setDiffusivity)
             .add_property("iterative_accuracy",
-                          &Props::getIterativeAccuracy,
-                          &Props::setIterativeAccuracy)
+                          &PropsDiffusion::getIterativeAccuracy,
+                          &PropsDiffusion::setIterativeAccuracy)
             .add_property("props_vector",
-                          &Props::getPropsVector)
+                          &PropsDiffusion::getPropsVector)
             .add_property("langmuir_coeff",
-                          &Props::getLangmuirCoeff)
+                          &PropsDiffusion::getLangmuirCoeff)
 
             .def("print_props_vector",
-                 &Props::printPropsVector)
-            .def("print_props_vector",
-                 &Props::printLangmuirCoeff);
+                 &PropsDiffusion::printPropsVector)
+            .def("print_langmuir_coeffs",
+                 &PropsDiffusion::printLangmuirCoeff);
 
 
     p::class_<Local>("LocalCpp",

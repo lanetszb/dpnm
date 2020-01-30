@@ -1,7 +1,7 @@
 #ifndef PNFLOW_CONVECTIVE_H
 #define PNFLOW_CONVECTIVE_H
 
-#include <Props.h>
+#include <PropsDiffusion.h>
 #include <Local.h>
 
 class Convective {
@@ -30,7 +30,7 @@ public:
     std::vector<double> calc_diffusivityList(const int &gridBlockN,
                                              const double &diffusivity);
 
-    Props props;
+    PropsDiffusion props;
     Local local;
     std::vector<double> beta;
 

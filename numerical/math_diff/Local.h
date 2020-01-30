@@ -1,7 +1,7 @@
 #ifndef PNFLOW_LOCAL_H
 #define PNFLOW_LOCAL_H
 
-#include <Props.h>
+#include <PropsDiffusion.h>
 
 class Local {
 
@@ -31,7 +31,7 @@ public:
 
     const std::vector<double> getRadCurr() const;
 
-    Props props;
+    PropsDiffusion props;
 
     double dRadius;
     std::vector<double> radiusCurr;
