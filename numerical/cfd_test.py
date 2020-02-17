@@ -9,8 +9,8 @@ sys.path.append(os.path.join(current_path, '../'))
 
 from numerical import PropsDiffusion
 from numerical import LocalDiffusion
-from numerical import ConvectiveCpp
-from numerical import EquationCpp
+from numerical import ConvectiveDiffusion
+from numerical import EquationDiffusion
 
 from numerical import PropsPNMCpp
 from numerical import NetworkDataCpp
@@ -38,9 +38,12 @@ props_diff.print_langmuir_coeffs()
 #
 # # ++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
+convective_diff = ConvectiveDiffusion(props_diff_vector,
+                                      props_diff.langmuir_coeff)
+
 local_diff = LocalDiffusion(props_diff_vector, props_diff.langmuir_coeff)
-convective_cpp = ConvectiveCpp(props_diff_vector, props_diff.langmuir_coeff)
-# equation_cpp = EquationCpp(props_diff, props.langm_coeff)
+
+equation_diff = EquationDiffusion(props_diff_vector, props.langm_coeff)
 #
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
@@ -48,25 +51,46 @@ time_step = props_diff.time_step
 radius = props_diff.radius
 eff_radius = props_diff.eff_radius
 thr_length = props_diff.length
-conc_wall = props_diff.concIni
+grid_block_n = props_diff.grid_block_n
+diffusivity = props_diff.diffusivity
+conc_wall = 0.3
+
 #
-local_diff.calculate_alpha(time_step, radius, eff_radius, thr_length)
+local_diff.calc_vol_cylinder(radius,
+                             eff_radius,
+                             grid_block_n,
+                             thr_length)
+
+volume_list = local_diff.vol_cylindr
+
+# local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
+
+
+# volume_list = local_diff.vol_cylindr
+convective_diff.calc_omega_cylindr(thr_length)
+omega_list = convective_diff.omega_cylindr
+
 #
-# equation_cpp.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
+local_diff.calculate_alpha(time_step, volume_list)
 #
-# conc = equation_cpp.getConc()
-# radius_curr = local_cpp.radius_curr
-# #
-# flow_rate = equation_cpp.getFlowRate()
+convective_diff.calculate_beta(radius, eff_radius, thr_length,
+                               diffusivity, grid_block_n, omega_list)
+
+equation_diff.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
+# # #
+conc = equation_diff.getConc()
+radius_curr = local_diff.radius_curr
 #
-# grid_centers = []
-# for i in range(len(radius_curr) - 1):
-#     grid_centers.append((radius_curr[i + 1] +
-#                          radius_curr[i]) / 2)
-#
-# plot_x_y(grid_centers, conc, x_name='Radius (m)',
-#          y_name='Concentration (kg/m3)',
-#          graph_name='Concentration distribution,' ' t= 1.1 (sec)')
+flow_rate = equation_diff.getFlowRate()
+
+grid_centers = []
+for i in range(len(radius_curr) - 1):
+    grid_centers.append((radius_curr[i + 1] +
+                         radius_curr[i]) / 2)
+
+plot_x_y(grid_centers, conc, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution,' ' t= 1.1 (sec)')
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
 # print("\n")

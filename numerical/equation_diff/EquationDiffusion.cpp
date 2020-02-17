@@ -1,7 +1,7 @@
-#include <Equation.h>
+#include <EquationDiffusion.h>
 
-Equation::Equation(const std::vector<double> &propsVector,
-                   const std::vector<double> &langmuirCoeff) :
+EquationDiffusion::EquationDiffusion(const std::vector<double> &propsVector,
+                                     const std::vector<double> &langmuirCoeff) :
         props(propsVector, langmuirCoeff),
         local(propsVector, langmuirCoeff),
         convective(propsVector, langmuirCoeff),
@@ -17,7 +17,7 @@ Equation::Equation(const std::vector<double> &propsVector,
 
     std::vector<Triplet> triplets;
     triplets.reserve(3 * dim - 4);
-    triplets.emplace_back(0, 0, 1);
+    triplets.emplace_back(0, 0);
     for (int i = 1; i < dim - 1; i++) {
         triplets.emplace_back(i, i - 1);
         triplets.emplace_back(i, i);
@@ -33,11 +33,9 @@ Equation::Equation(const std::vector<double> &propsVector,
         variable[i] = 0;
     }
 
-//    std::cout << matrix << std::endl;
-
 }
 
-void Equation::calculateMatrix() {
+void EquationDiffusion::calculateMatrix() {
 
     MatrixIterator(matrix, 0).valueRef() = local.alpha[0];
 
@@ -46,39 +44,39 @@ void Equation::calculateMatrix() {
         double &betaLeft = convective.beta[LocalDiffusion::left(i)];
         double &betaRight = convective.beta[LocalDiffusion::right(i)];
         double &alpha = local.alpha[i];
-        it.valueRef() = -betaLeft;
+        it.valueRef() = -1 * betaLeft;
         ++it;
         it.valueRef() = alpha + betaLeft + betaRight;
         ++it;
-        it.valueRef() = -betaRight;
+        it.valueRef() = -1 * betaRight;
     }
 
     MatrixIterator it(matrix, dim - 1);
     double &betaLeft = convective.beta[LocalDiffusion::left(dim - 1)];
     double &alpha = local.alpha[dim - 1];
-    it.valueRef() = -betaLeft;
+    it.valueRef() = -1 * betaLeft;
     ++it;
     it.valueRef() = alpha + betaLeft;
 }
 
-void Equation::calcConcIni(const double &concIni) {
+void EquationDiffusion::calcConcIni(const double &concIni) {
 
     conc.emplace_back(std::vector<double>(dim, concIni));
     conc.emplace_back(std::vector<double>(dim, concIni));
 }
 
-void Equation::calculateFreeVector(const double &conc_in) {
+void EquationDiffusion::calculateFreeVector(const double &conc_in) {
     freeVector[0] = local.alpha[0] * conc_in;
     for (int i = 1; i < dim; i++)
         freeVector[i] = local.alpha[i] * conc[iPrev][i];
 }
 
-void Equation::calculateGuessVector() {
+void EquationDiffusion::calculateGuessVector() {
     for (int i = 0; i < dim; i++)
         guessVector[i] = conc[iPrev][i];
 }
 
-void Equation::calculateConc() {
+void EquationDiffusion::calculateConc() {
 
     BiCGSTAB biCGSTAB;
 
@@ -91,36 +89,47 @@ void Equation::calculateConc() {
 
 }
 
-void Equation::calcFlowRate() {
+// Double check how the flowrate is obtained
+
+void EquationDiffusion::calcFlowRate() {
     flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) * convective.beta[1];
 }
 
-void Equation::cfdProcedureOneStep(const double &concThrWall,
-                                   const double &radius,
-                                   const double &effRadius,
-                                   const double &thrLength) {
+void EquationDiffusion::cfdProcedureOneStep(const double &concThrWall,
+                                            const double &radius,
+                                            const double &effRadius,
+                                            const double &thrLength) {
 
     std::swap(iCurr, iPrev);
-    local.calculateAlpha(props.timeStep,
-                         radius,
+
+    local.calcVolCylindr(radius,
                          effRadius,
+                         props.gridBlockN,
                          thrLength);
+
+    local.calculateAlpha(props.timeStep,
+                         local.volCylindr);
+
+    convective.calcOmegaCylindr(thrLength);
 
     convective.calculateBeta(radius,
                              effRadius,
                              thrLength,
                              props.diffusivity,
-                             props.gridBlockN);
+                             props.gridBlockN,
+                             convective.omegaCylindric);
+
     calculateGuessVector();
     calculateMatrix();
     calculateFreeVector(concThrWall);
     calculateConc();
     calcFlowRate();
-
 }
 
-void Equation::cfdProcedure(const double &concThrWall, const double &radius,
-                            const double &effRadius, const double &thrLength) {
+void EquationDiffusion::cfdProcedure(const double &concThrWall,
+                                     const double &radius,
+                                     const double &effRadius,
+                                     const double &thrLength) {
 
     calcConcIni(props.concIni);
 
@@ -129,11 +138,11 @@ void Equation::cfdProcedure(const double &concThrWall, const double &radius,
     }
 }
 
-const std::vector<double> Equation::getConc() const {
+const std::vector<double> EquationDiffusion::getConc() const {
     return conc[iCurr];
 }
 
-const double Equation::getFlowRate() const {
+const double EquationDiffusion::getFlowRate() const {
     return flowRate;
 }
 

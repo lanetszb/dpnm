@@ -28,10 +28,10 @@ python_add_module(cfd
         numerical/equation_pnm/EquationPNM.cpp
         numerical/math_pnm/PropsPNM.cpp
         numerical/math_pnm/NetworkData.cpp
-        numerical/equation_diff/Equation.cpp
+        numerical/equation_diff/EquationDiffusion.cpp
         numerical/math_diff/PropsDiffusion.cpp
         numerical/math_diff/LocalDiffusion.cpp
-        numerical/math_diff/Convective.cpp)
+        numerical/math_diff/ConvectiveDiffusion.cpp)
 
 target_compile_definitions(cfd PRIVATE BOOST_PYTHON_MAX_ARITY=22)
 

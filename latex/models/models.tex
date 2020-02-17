@@ -1,0 +1,286 @@
+\documentclass[a4paper,12pt]{extreport}
+
+\usepackage{extsizes}
+\usepackage{cmap} % для кодировки шрифтов в pdf
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage[usenames, dvipsnames]{color}
+\definecolor{fontColor}{RGB}{169, 183, 198}
+\definecolor{pageColor}{RGB}{43, 43, 43}
+
+\usepackage{mathtools}
+
+\makeatletter
+\let\mytagform@=\tagform@
+\def\tagform@#1{\maketag@@@{\color{fontColor}(#1)}}
+\makeatother
+
+%\renewcommand\theequation{{\color{fontColor}\arabic{equation_diff}}}
+
+
+
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{amssymb,amsfonts,amsmath,amsthm}
+\usepackage{mathtext}
+\usepackage{cite}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage[pdftex,unicode,colorlinks = true,linkcolor = white]{hyperref}
+\usepackage{indentfirst}
+\usepackage{placeins}
+\bibliographystyle{unsrt}
+\usepackage{makecell}
+\usepackage{ulem}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{multicol}
+
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\thepage}
+\fancyheadoffset{0mm}
+\fancyfootoffset{0mm}
+\setlength{\headheight}{17pt}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancypagestyle{plain}{
+\fancyhf{}
+\rhead{\thepage}}
+
+\usepackage{geometry}
+\geometry{left=1.5cm}
+\geometry{right=1.5cm}
+\geometry{top=2.4cm}
+\geometry{bottom=2.4cm}
+
+\author{Aleksandr Zhuravlyov}
+\title{Numerical model of steady state and transient flow}
+\date{\today}
+
+
+\usepackage {titlesec}
+\titleformat{\chapter}{\thispagestyle{myheadings}\centering\hyphenpenalty=10000\normalfont\huge\bfseries}{
+\thechapter. }{0pt}{\Huge}
+\makeatother
+
+
+\usepackage{nomencl}
+\makenomenclature    % Закомментируйте, если перечень не нужен
+%"/usr/texbin/makeindex" %.nlo -s nomencl.ist -o %.nls
+\renewcommand{\nomname}{Перечень условных обозначений}
+\renewcommand{\nompreamble}{\markboth{}{}}
+\newcommand*{\nom}[2]{#1~- #2\nomenclature{#1}{#2}}
+
+\setlength{\columnseprule}{0.4pt}
+\setlength{\columnsep}{50pt}
+\def\columnseprulecolor{\color{fontColor}}
+
+
+\begin{document}
+
+    \pagecolor{pageColor}
+    \color{fontColor}
+    %\maketitle
+    %\newpage
+    %\tableofcontents{\thispagestyle{empty}}
+    %\newpage
+
+    \section*{One phase pore network model}
+
+    \begin{eqnarray}
+        \begin{gathered}
+            \sum^{N_{i}}_{j=1, \; i\neq j} Q_{ij} = 0,
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            P^{n}_{i}\Big|_{inlet} = P^{n}_{in}, \;
+            P^{n}_{i}\Big|_{outlet} = P^{n}_{out},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            Q_{ij} = \alpha_{ij} \frac{P_{i} - P_{j}}{R^*_{ij}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \alpha_{ij} =\begin{cases}
+                             1: &\text{pseudo compressible},\\
+                             \frac{P_i + P_j}{2P_i}: &\text{ideal gas},
+            \end{cases}
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            R^*_{ij} = R_{i} + R_{ij} + R_{j},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            R_{n} =\frac{4 \mu}{\pi r_{n}^{3}}, \; R_{ij} =\frac{8 \mu L_{ij}}{\pi r_{ij}^{4}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            G_{in/out} = \sum_{i}^{in/out} \sum^{N_{i}}_{j=1, \; i\neq j} \frac{q_{ij}}{\bar{\rho}_{ij}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \bar{\rho}_{ij} = \frac{\rho_{i}+\rho_{j}}{2},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            Q_{in/out} = \frac{G_{in/out}}{\rho_{in/out}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            k = \beta \frac{Q_{in/out}}{A} \frac{\mu L}{P_{in} - P_{out}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \beta =\begin{cases}
+                       \frac{\rho_{in/out}}{\bar{\rho}}: &\text{pseudo compressible},\\
+                       \frac{2P_{in/out}}{P_{in} + P_{out}}: &\text{ideal gas},
+            \end{cases}
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \bar{\rho}=\frac{1}{P_{in}-P_{out}} \int\limits^{P_{in}}_{P_{out}}\rho \; dP.
+        \end{gathered}
+    \end{eqnarray}
+
+    \section*{FVM Diffusion transient flow}
+
+    \begin{eqnarray}
+        \label{eq:conductivity_integral}
+        \int \limits_{V} \frac{\partial C}{\partial t} d V - \oint \limits_{\Omega} D \vec{\nabla}C \; d\vec{\Omega} = 0,
+    \end{eqnarray}
+    \vspace{-0.5cm}
+    \begin{eqnarray}
+        \label{eq:conductivity_bound}
+        C\left(t\right) \Big|_{cleat} = C_c \left(t\right), \;
+        \vec{\nabla} C \Big|_{outer} = 0,
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \label{eq:conductivity_num}
+        \alpha_i \Delta^{t}_i - \beta_{i-}\Delta^{n+1}_{i-} - \beta_{i+}\Delta^{n+1}_{i+}= 0,
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \label{eq:conductivity_bound_num}
+        C_1^n = C_C^n, \; \Delta_{N+}^n = 0,
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \label{eq:alpha_beta}
+        \alpha_i = \frac{\Delta V_i}{\Delta t}, \;
+        \beta_{i\pm} = \frac{\overline{D}_{i\pm} \Delta \Omega_{i\pm}}{\Delta L_{i\pm}},
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \Delta \Omega_{i\pm} =\begin{cases}
+                                  h^2: & \text{cartesian},\\
+                                  2 \pi h r_{i\pm}: & \text{cylindrical},\\
+                                  4 \pi r^2_{i\pm}: & \text{spherical},
+        \end{cases}
+    \end{eqnarray}
+
+    \begin{eqnarray}
+        \label{eq:delta_num}
+        \Delta_{i\pm}^n = C_{i\pm1}^n - C_{i}^n, \;
+        \Delta_i^{t} = C_i^{n+1} - C_i^{n},
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \label{eq:Consumption_conductivity_integral}
+        \tilde{Q}^{n+1} = - \beta_{i+}\Delta^{n+1}_{i+}\Big|_{inlet}.
+    \end{eqnarray}
+
+    \section*{PN and Diffusion coupled}
+
+    \begin{eqnarray}
+        \begin{gathered}
+            \sum^{N_{i}}_{j=1, \; i\neq j} Q^{n+1}_{ij} = 0,
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            Q^{n+1}_{ij}\Big|_{inlet} = Q^{n+1}_{in}+\gamma^n_{ij} \tilde{Q}^{n+1}_{ij}, \;
+            P^{n}_{i}\Big|_{outlet} = P^{n}_{out},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            Q^{n+1}_{ij} = \alpha^n_{ij} \frac{P^{n+1}_{i} - P^{n+1}_{j}}{R^*_{ij}} + \gamma^n_{ij} \tilde{Q}^{n+1}_{ij},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \alpha^n_{ij} =\begin{cases}
+                               1: &\text{pseudo compressible},\\
+                               \frac{P^n_i + P^n_j}{2P^n_i}: &\text{ideal gas},
+            \end{cases}
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \gamma^n_{ij} =\begin{cases}
+                           1: & P^{n}_{i} < P^{n}_{j},\\
+                           \frac{1}{2} : & P^{n}_{i} = P^{n}_{j},\\
+                           0: & P^{n}_{i} > P^{n}_{j},
+        \end{cases}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \tilde{Q}_{ij}^{n+1} = \tilde{Q}_{ij}'^n \cdot \left(\bar{P}_{ij}^{n+1}-\bar{P}_{ij}^n\right)+\tilde{Q}_{ij}^n,
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \tilde{Q}_{ij}^{n} = \tilde{Q}_{ij}\left(\bar{P}_{ij}^n\right),
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \tilde{Q}_{ij}'^n = \frac{\tilde{Q}_{ij}\left(\bar{P}_{ij}^n+ \frac{1}{2}\Delta P\right)-
+            \tilde{Q}_{ij}\left(\bar{P}_{ij}^n-\frac{1}{2}\Delta P\right)}{{\Delta P}},
+        \end{gathered}
+    \end{eqnarray}
+    %
+    \begin{eqnarray}
+        \begin{gathered}
+            \bar{P}^{n}_{ij} = \frac{P^n_i+P^n_j}{2}.
+        \end{gathered}
+    \end{eqnarray}
+
+
+\end{document}

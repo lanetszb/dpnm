@@ -4,8 +4,8 @@
 
 #include <PropsDiffusion.h>
 #include <LocalDiffusion.h>
-#include <Convective.h>
-#include <Equation.h>
+#include <ConvectiveDiffusion.h>
+#include <EquationDiffusion.h>
 #include <EquationPNM.h>
 #include <PropsPNM.h>
 #include <NetworkData.h>
@@ -71,60 +71,95 @@ BOOST_PYTHON_MODULE (cfd) {
                                       p::args("props_array",
                                               "langmuir_coeff")))
 
+            .def("calc_vol_cylinder",
+                 &LocalDiffusion::calcVolCylindr,
+                 p::args("radius",
+                         "eff_radius",
+                         "grid_block_n",
+                         "throat_length"))
+
+            .def("calc_vol_cartesian",
+                 &LocalDiffusion::calcVolCartesian,
+                 p::args("frac_height",
+                         "matrix_width",
+                         "frac_length"))
+
             .def("calculate_alpha",
                  &LocalDiffusion::calculateAlpha,
                  p::args("dt",
-                         "radius",
-                         "effRadius",
-                         "throat_length"))
-
-            .add_property("alpha",
-                          &LocalDiffusion::getAlpha)
+                         "volume_list"))
 
             .add_property("radius_curr",
-                          &LocalDiffusion::getRadCurr);
+                          &LocalDiffusion::getRadCurr)
+
+            .add_property("vol_cylindr",
+                          &LocalDiffusion::getVolCylindr)
+
+            .add_property("vol_cartes",
+                          &LocalDiffusion::getVolCartes)
+
+            .add_property("alpha",
+                          &LocalDiffusion::getAlpha);
+
+
 
 //
-    p::class_<Convective>("ConvectiveCpp",
-                          p::init<std::vector<double>,
-                                  std::vector<double>>(
-                                  p::args("props_array",
-                                          "langmuir_coeff")))
-
+    p::class_<ConvectiveDiffusion>("ConvectiveDiffusion",
+                                   p::init<std::vector<double>,
+                                           std::vector<double>>(
+                                           p::args("props_array",
+                                                   "langmuir_coeff")))
 
             .def("calc_diffusivityList",
-                 &Convective::calc_diffusivityList,
+                 &ConvectiveDiffusion::calc_diffusivityList,
                  p::args("grid_block_n",
                          "concIni"))
 
-            .def("calculateBeta",
-                 &Convective::calculateBeta,
+            .def("calc_omega_cylindr",
+                 &ConvectiveDiffusion::calcOmegaCylindr,
+                 p::args("length"))
+
+            .def("calc_omega_cartes",
+                 &ConvectiveDiffusion::calcOmegaCartes,
+                 p::args("frac_height",
+                         "frac_length"))
+
+            .def("calculate_beta",
+                 &ConvectiveDiffusion::calculateBeta,
                  p::args("radius",
                          "effRadius",
                          "length",
-                         "diffusivity"))
+                         "diffusivity",
+                         "grid_block_n",
+                         "omega"))
 
             .def("get_beta",
-                 &Convective::getBeta);
+                 &ConvectiveDiffusion::getBeta)
+
+            .add_property("omega_cylindr",
+                          &ConvectiveDiffusion::getOmegaCylindr)
+
+            .add_property("omega_cartes",
+                          &ConvectiveDiffusion::getOmegaCartes);
 //
-    p::class_<Equation>("EquationCpp",
-                        p::init<std::vector<double>,
-                                std::vector<double>>(
-                                p::args("props_array",
-                                        "langmuir_coeff")))
+    p::class_<EquationDiffusion>("EquationDiffusion",
+                                 p::init<std::vector<double>,
+                                         std::vector<double>>(
+                                         p::args("props_array",
+                                                 "langmuir_coeff")))
 
             .def("cfdProcedure",
-                 &Equation::cfdProcedure,
+                 &EquationDiffusion::cfdProcedure,
                  p::args("conc_in",
                          "radius",
                          "effective_radius",
                          "thr_length"))
 
             .def("getConc",
-                 &Equation::getConc)
+                 &EquationDiffusion::getConc)
 
             .def("getFlowRate",
-                 &Equation::getFlowRate);
+                 &EquationDiffusion::getFlowRate);
 //
 //    // Wrapper for PNM
 //

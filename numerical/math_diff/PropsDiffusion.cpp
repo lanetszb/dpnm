@@ -123,3 +123,4 @@ double PropsDiffusion::getTimeStep() const {
 void PropsDiffusion::setTimeStep(double timeStep) {
     PropsDiffusion::timeStep = timeStep;
 }
+

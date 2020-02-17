@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <Equation.h>
+#include <EquationDiffusion.h>
 #include <EquationPNM.h>
 
 
@@ -35,7 +35,7 @@ public:
     virtual  ~DiffusionPNM() = default;
 
     EquationPNM equationPNM;
-    Equation equation;
+    EquationDiffusion equation;
 
     double calcSideLength(std::vector<double> &poreCoord);
 

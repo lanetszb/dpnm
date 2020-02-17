@@ -1,12 +1,12 @@
-#ifndef PNFLOW_EQUATION_H
-#define PNFLOW_EQUATION_H
+#ifndef PNFLOW_EQUATIONDIFFUSION_H
+#define PNFLOW_EQUATIONDIFFUSION_H
 
 #include <vector>
 #include <Eigen/Sparse>
 
 #include <PropsDiffusion.h>
 #include <LocalDiffusion.h>
-#include <Convective.h>
+#include <ConvectiveDiffusion.h>
 
 
 typedef Eigen::Triplet<double> Triplet;
@@ -16,14 +16,14 @@ typedef Eigen::VectorXd Vector;
 typedef Eigen::BiCGSTAB<Eigen::SparseMatrix<double>> BiCGSTAB;
 
 
-class Equation {
+class EquationDiffusion {
 
 public:
 
-    explicit Equation(const std::vector<double> &propsVector,
-                      const std::vector<double> &langmuirCoeff);
+    explicit EquationDiffusion(const std::vector<double> &propsVector,
+                               const std::vector<double> &langmuirCoeff);
 
-    virtual ~Equation() = default;
+    virtual ~EquationDiffusion() = default;
 
     void calculateMatrix();
 
@@ -53,7 +53,7 @@ public:
 
     PropsDiffusion props;
     LocalDiffusion local;
-    Convective convective;
+    ConvectiveDiffusion convective;
 
     double &time;
     int iCurr;

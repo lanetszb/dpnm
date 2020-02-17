@@ -51,6 +51,8 @@ public:
 
     void setIterativeAccuracy(double iterativeAccuracy);
 
+    double getGridBlockSize() const;
+
     std::vector<double> getLangmuirCoeff() const;
 
     std::vector<double> getPropsVector() const;
@@ -70,7 +72,6 @@ public:
     double iterativeAccuracy;
 
     std::vector<double> langmuirCoeff;
-
 
 private:
 
