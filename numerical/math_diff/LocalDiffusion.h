@@ -20,14 +20,11 @@ public:
                          const double &effRadius,
                          const int &gridBlockN);
 
-    void calcVolCartesian(const double &frac_height,
-                          const double &matrix_width,
-                          const double &frac_length);
+    void calcVolCartesian(const double &frac_height, const double &matrix_width,
+                          const double &frac_length, const double &frac_width);
 
-    void calcVolCylindr(const double &radius,
-                        const double &effRadius,
-                        const int &gridBlockN,
-                        const double &thrLength);
+    void calcVolCylindr(const double &radius, const double &effRadius,
+                        const int &gridBlockN, const double &thrLength);
 
     void calcRadiusCurr(const double &radius, const double &effRadius,
                         const int &gridBlockN);

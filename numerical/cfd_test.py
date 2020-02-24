@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -56,19 +57,24 @@ diffusivity = props_diff.diffusivity
 conc_wall = 0.3
 
 #
-local_diff.calc_vol_cylinder(radius,
-                             eff_radius,
-                             grid_block_n,
-                             thr_length)
+local_diff.calc_vol_cylinder(radius, eff_radius,
+                             grid_block_n, thr_length)
 
-volume_list = local_diff.vol_cylindr
+local_diff.calc_vol_cartesian(radius, eff_radius,
+                              thr_length, radius)
+
+# volume_list = local_diff.vol_cylindr
+volume_list = local_diff.vol_cartes
 
 # local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
 
 
-# volume_list = local_diff.vol_cylindr
 convective_diff.calc_omega_cylindr(thr_length)
-omega_list = convective_diff.omega_cylindr
+
+convective_diff.calc_omega_cartes(radius, thr_length)
+
+# omega_list = convective_diff.omega_cylindr
+omega_list = convective_diff.omega_cartes
 
 #
 local_diff.calculate_alpha(time_step, volume_list)
@@ -76,8 +82,11 @@ local_diff.calculate_alpha(time_step, volume_list)
 convective_diff.calculate_beta(radius, eff_radius, thr_length,
                                diffusivity, grid_block_n, omega_list)
 
-equation_diff.cfdProcedure(conc_wall, radius, eff_radius, thr_length)
-# # #
+equation_diff.cfd_procedure(1, conc_wall, radius,
+                            eff_radius, thr_length,
+                            volume_list, omega_list)
+
+# # # #
 conc = equation_diff.getConc()
 radius_curr = local_diff.radius_curr
 #
@@ -92,6 +101,33 @@ plot_x_y(grid_centers, conc, x_name='Radius (m)',
          y_name='Concentration (kg/m3)',
          graph_name='Concentration distribution,' ' t= 1.1 (sec)')
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# Diffusion Analytical Solution
+conc_analyt = []
+
+L = eff_radius - radius
+
+dX = L / grid_block_n
+
+conc_ini = 0.3
+conc_out = 1.5
+D = props_diff.diffusivity
+t = props_diff.time
+dt = props_diff.time_step
+
+for i in range(grid_block_n):
+    conc_it = conc_out + (conc_ini - conc_out) * math.erf(
+        i * dX / 2 / math.sqrt(D * t))
+    conc_analyt.append(conc_it)
+
+conc_analyt.reverse()
+
+plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution,' ' t= 1.1 (sec)')
+
+# ===================================================================
+
 #
 # print("\n")
 # #

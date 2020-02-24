@@ -33,15 +33,33 @@ public:
 
     void calculateConc();
 
-    void cfdProcedure(const double &concThrWall, const double &radius,
-                      const double &effRadius, const double &thrLength);
+    void calcConcIni(const double &concIni);
 
-    void cfdProcedureOneStep(const double &concThrWall, const double &radius,
-                      const double &effRadius, const double &thrLength);
+    void forceDirichletBound(const double &concIni);
+
+    void cfdProcedureOneStep(const double &concThrWall,
+                             const double &radius,
+                             const double &effRadius,
+                             const double &thrLength,
+                             const std::vector<double> &volumes,
+                             const std::vector<double> &surfaces);
+
+    void cfdProcedure(const bool &boundCond,
+                      const double &concThrWall,
+                      const double &radius,
+                      const double &effRadius,
+                      const double &thrLength,
+                      const std::vector<double> &volumes,
+                      const std::vector<double> &surfaces);
+
+    void cfdProcDirichlet(const double &concThrWall,
+                          const double &radius,
+                          const double &effRadius,
+                          const double &thrLength,
+                          const std::vector<double> &volumes,
+                          const std::vector<double> &surfaces);
 
     void calcFlowRate();
-
-    void calcConcIni(const double &concIni);
 
     int &dim;
 

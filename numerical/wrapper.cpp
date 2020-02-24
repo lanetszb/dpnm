@@ -82,7 +82,8 @@ BOOST_PYTHON_MODULE (cfd) {
                  &LocalDiffusion::calcVolCartesian,
                  p::args("frac_height",
                          "matrix_width",
-                         "frac_length"))
+                         "frac_length",
+                         "frac_width"))
 
             .def("calculate_alpha",
                  &LocalDiffusion::calculateAlpha,
@@ -148,12 +149,15 @@ BOOST_PYTHON_MODULE (cfd) {
                                          p::args("props_array",
                                                  "langmuir_coeff")))
 
-            .def("cfdProcedure",
+            .def("cfd_procedure",
                  &EquationDiffusion::cfdProcedure,
-                 p::args("conc_in",
+                 p::args("boundCond",
+                         "conc_in",
                          "radius",
                          "effective_radius",
-                         "thr_length"))
+                         "thr_length",
+                         "volumes",
+                         "surfaces"))
 
             .def("getConc",
                  &EquationDiffusion::getConc)

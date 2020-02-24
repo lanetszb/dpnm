@@ -37,10 +37,11 @@ void LocalDiffusion::calcRadiusCurr(const double &radius,
 
 void LocalDiffusion::calcVolCartesian(const double &frac_height,
                                       const double &matrix_width,
-                                      const double &frac_length) {
+                                      const double &frac_length,
+                                      const double &frac_width) {
 
     for (int i = 0; i < alpha.size(); i++)
-        volCartes[i] = frac_length * frac_height * matrix_width /
+        volCartes[i] = frac_length * frac_height * (matrix_width - frac_width) /
                        propsDiffusion.gridBlockN;
 }
 

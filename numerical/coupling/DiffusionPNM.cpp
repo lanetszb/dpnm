@@ -160,10 +160,11 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
             equation.conc[1][j] = matrixConc[i][j];
         }
 
-        equation.cfdProcedureOneStep(throatConc[i],
-                                     equationPNM.networkData.throatRadius[i],
-                                     effRadius[i],
-                                     equationPNM.networkData.throatLength[i]);
+//        equation.cfdProcedureOneStep(throatConc[i],
+//                                     equationPNM.networkData.throatRadius[i],
+//                                     effRadius[i],
+//                                     equationPNM.networkData.throatLength[i],
+//                                     <#initializer#>, <#initializer#>);
 
         for (int j = 0; j < equation.props.gridBlockN; j++) {
             matrixConc[i][j] = equation.conc[equation.iCurr][j];
@@ -185,10 +186,10 @@ void DiffusionPNM::updateConc() {
             equation.conc[1][j] = matrixConc[i][j];
         }
 
-        equation.cfdProcedure(throatConc[i],
-                              equationPNM.networkData.throatRadius[i],
-                              effRadius[i],
-                              equationPNM.networkData.throatLength[i]);
+//        equation.cfdProcedure(throatConc[i],
+//                              equationPNM.networkData.throatRadius[i],
+//                              effRadius[i],
+//                              equationPNM.networkData.throatLength[i]);
 
         for (int j = 0; j < equation.props.gridBlockN; j++) {
             matrixConc[i][j] = equation.conc[equation.iCurr][j];
