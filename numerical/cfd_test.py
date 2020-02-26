@@ -86,10 +86,9 @@ equation_diff.cfd_procedure(1, conc_wall, radius,
                             eff_radius, thr_length,
                             volume_list, omega_list)
 
-# # # #
 conc = equation_diff.getConc()
 radius_curr = local_diff.radius_curr
-#
+
 flow_rate = equation_diff.getFlowRate()
 
 grid_centers = []
@@ -97,10 +96,6 @@ for i in range(len(radius_curr) - 1):
     grid_centers.append((radius_curr[i + 1] +
                          radius_curr[i]) / 2)
 
-plot_x_y(grid_centers, conc, x_name='Radius (m)',
-         y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution,' ' t= 1.1 (sec)')
-# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Diffusion Analytical Solution
 conc_analyt = []
@@ -124,9 +119,16 @@ conc_analyt.reverse()
 
 plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
          y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution,' ' t= 1.1 (sec)')
+         graph_name='Concentration distribution,' ' t= 1.1 (sec)',
+         line_type='-')
 
 # ===================================================================
+
+plot_x_y(grid_centers, conc, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution,' ' t= 1.1 (sec)',
+         line_type='o')
+# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #
 # print("\n")
