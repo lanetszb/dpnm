@@ -8,8 +8,7 @@ class ConvectiveDiffusion {
 
 public:
 
-    explicit ConvectiveDiffusion(const std::vector<double> &propsVector,
-                                 const std::vector<double> &langmuirCoeff);
+    explicit ConvectiveDiffusion(const std::vector<double> &propsVector);
 
     virtual ~ConvectiveDiffusion() = default;
 

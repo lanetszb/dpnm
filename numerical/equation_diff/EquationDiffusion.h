@@ -20,8 +20,7 @@ class EquationDiffusion {
 
 public:
 
-    explicit EquationDiffusion(const std::vector<double> &propsVector,
-                               const std::vector<double> &langmuirCoeff);
+    explicit EquationDiffusion(const std::vector<double> &propsVector);
 
     virtual ~EquationDiffusion() = default;
 

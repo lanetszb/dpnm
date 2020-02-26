@@ -2,8 +2,7 @@
 #include <vector>
 
 
-PropsDiffusion::PropsDiffusion(const std::vector<double> &_propsVector, const
-std::vector<double> _langmuirCoeff) :
+PropsDiffusion::PropsDiffusion(const std::vector<double> &_propsVector) :
 
         time(_propsVector[0]),
         timeStep(_propsVector[1]),
@@ -14,8 +13,7 @@ std::vector<double> _langmuirCoeff) :
         concIni(_propsVector[6]),
         diffusivity(_propsVector[7]),
         iterativeAccuracy(_propsVector[8]),
-        propsVector(_propsVector),
-        langmuirCoeff(_langmuirCoeff) {}
+        propsVector(_propsVector) {}
 
 
 std::ostream &
@@ -36,10 +34,6 @@ operator<<(std::ostream &stream, const PropsDiffusion &propsDiffusion) {
 
 std::vector<double> PropsDiffusion::getPropsVector() const {
     return propsVector;
-}
-
-std::vector<double> PropsDiffusion::getLangmuirCoeff() const {
-    return langmuirCoeff;
 }
 
 double PropsDiffusion::getLength() const {
@@ -92,11 +86,6 @@ void PropsDiffusion::setIterativeAccuracy(double iterativeAccuracy) {
 
 void PropsDiffusion::printPropsVector() {
     for (auto &element : propsVector)
-        std::cout << element << std::endl;
-}
-
-void PropsDiffusion::printLangmuirCoeff() {
-    for (auto &element : langmuirCoeff)
         std::cout << element << std::endl;
 }
 

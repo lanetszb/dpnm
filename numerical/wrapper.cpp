@@ -21,10 +21,8 @@ BOOST_PYTHON_MODULE (cfd) {
     providePythonThings();
 
     p::class_<PropsDiffusion>("PropsDiffusion",
-                              p::init<std::vector<double>,
-                                      std::vector<double>>(
-                                      p::args("props_array",
-                                              "langm_coeff")))
+                              p::init<std::vector<double>>(
+                                      p::args("props_array")))
             .def("__str__", __str__<PropsDiffusion>)
 
             .add_property("time",
@@ -56,20 +54,14 @@ BOOST_PYTHON_MODULE (cfd) {
                           &PropsDiffusion::setIterativeAccuracy)
             .add_property("props_vector",
                           &PropsDiffusion::getPropsVector)
-            .add_property("langmuir_coeff",
-                          &PropsDiffusion::getLangmuirCoeff)
 
             .def("print_props_vector",
-                 &PropsDiffusion::printPropsVector)
-            .def("print_langmuir_coeffs",
-                 &PropsDiffusion::printLangmuirCoeff);
+                 &PropsDiffusion::printPropsVector);
 
 
     p::class_<LocalDiffusion>("LocalDiffusion",
-                              p::init<std::vector<double>,
-                                      std::vector<double>>(
-                                      p::args("props_array",
-                                              "langmuir_coeff")))
+                              p::init<std::vector<double>>(
+                                      p::args("props_array")))
 
             .def("calc_vol_cylinder",
                  &LocalDiffusion::calcVolCylindr,
@@ -106,10 +98,8 @@ BOOST_PYTHON_MODULE (cfd) {
 
 //
     p::class_<ConvectiveDiffusion>("ConvectiveDiffusion",
-                                   p::init<std::vector<double>,
-                                           std::vector<double>>(
-                                           p::args("props_array",
-                                                   "langmuir_coeff")))
+                                   p::init<std::vector<double>>(
+                                           p::args("props_array")))
 
             .def("calc_diffusivityList",
                  &ConvectiveDiffusion::calc_diffusivityList,
@@ -144,10 +134,8 @@ BOOST_PYTHON_MODULE (cfd) {
                           &ConvectiveDiffusion::getOmegaCartes);
 //
     p::class_<EquationDiffusion>("EquationDiffusion",
-                                 p::init<std::vector<double>,
-                                         std::vector<double>>(
-                                         p::args("props_array",
-                                                 "langmuir_coeff")))
+                                 p::init<std::vector<double>>(
+                                         p::args("props_array")))
 
             .def("cfd_procedure",
                  &EquationDiffusion::cfdProcedure,
@@ -280,66 +268,67 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "pore_right_x",
                                            "hydr_cond")));
 //            .def("__str__", __str__<EquationPNM>);
-
-    p::class_<DiffusionPNM>("DiffusionPNM",
-                            p::init<std::vector<double>,
-                                    std::vector<int>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<int>,
-                                    std::vector<int>,
-                                    std::vector<int>,
-                                    std::vector<int>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<bool>,
-                                    std::vector<bool>,
-                                    std::vector<double>>(
-                                    p::args("props_vector",
-                                            "throat_list",
-                                            "throat_radius",
-                                            "throat_length",
-                                            "conn_ind_in",
-                                            "conn_ind_out",
-                                            "pore_coord_x",
-                                            "pore_coord_y",
-                                            "pore_coord_z",
-                                            "pore_radius",
-                                            "pore_list",
-                                            "pore_conns",
-                                            "conn_number",
-                                            "pore_per_row",
-                                            "props_diffusion",
-                                            "langmuir_coeff",
-                                            "pore_left_x",
-                                            "pore_right_x",
-                                            "hydr_cond")))
-
-            .def("get_pressure_av",
-                 &DiffusionPNM::getPressureAverage)
-
-            .def("get_conc_av",
-                 &DiffusionPNM::getConcAverage)
-
-            .def("get_flow_pores_out",
-                 &DiffusionPNM::getTotalFlowPoresOut)
-
-            .def("get_flow_pores_in",
-                 &DiffusionPNM::getTotalFlowPoresIn)
-
-            .def("get_flow_diff",
-                 &DiffusionPNM::getTotalFlowDiff)
-
-            .def("get_pressure_by_pore",
-                 &DiffusionPNM::getPorePressure);
-
 }
+
+//    p::class_<DiffusionPNM>("DiffusionPNM",
+//                            p::init<std::vector<double>,
+//                                    std::vector<int>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<int>,
+//                                    std::vector<int>,
+//                                    std::vector<int>,
+//                                    std::vector<int>,
+//                                    std::vector<double>,
+//                                    std::vector<double>,
+//                                    std::vector<bool>,
+//                                    std::vector<bool>,
+//                                    std::vector<double>>(
+//                                    p::args("props_vector",
+//                                            "throat_list",
+//                                            "throat_radius",
+//                                            "throat_length",
+//                                            "conn_ind_in",
+//                                            "conn_ind_out",
+//                                            "pore_coord_x",
+//                                            "pore_coord_y",
+//                                            "pore_coord_z",
+//                                            "pore_radius",
+//                                            "pore_list",
+//                                            "pore_conns",
+//                                            "conn_number",
+//                                            "pore_per_row",
+//                                            "props_diffusion",
+//                                            "langmuir_coeff",
+//                                            "pore_left_x",
+//                                            "pore_right_x",
+//                                            "hydr_cond")))
+//
+//            .def("get_pressure_av",
+//                 &DiffusionPNM::getPressureAverage)
+//
+//            .def("get_conc_av",
+//                 &DiffusionPNM::getConcAverage)
+//
+//            .def("get_flow_pores_out",
+//                 &DiffusionPNM::getTotalFlowPoresOut)
+//
+//            .def("get_flow_pores_in",
+//                 &DiffusionPNM::getTotalFlowPoresIn)
+//
+//            .def("get_flow_diff",
+//                 &DiffusionPNM::getTotalFlowDiff)
+//
+//            .def("get_pressure_by_pore",
+//                 &DiffusionPNM::getPorePressure);
+//
+//}
 
 
 

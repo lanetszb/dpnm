@@ -8,8 +8,7 @@ class PropsDiffusion {
 
 public:
 
-    explicit PropsDiffusion(const std::vector<double> &_propsVector, const
-    std::vector<double> _langmuirCoeff);
+    explicit PropsDiffusion(const std::vector<double> &_propsVector);
 
     virtual ~PropsDiffusion() {}
 
@@ -70,8 +69,6 @@ public:
     double concIni;
     double diffusivity;
     double iterativeAccuracy;
-
-    std::vector<double> langmuirCoeff;
 
 private:
 

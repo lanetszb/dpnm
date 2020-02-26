@@ -1,11 +1,10 @@
 #include <ConvectiveDiffusion.h>
 #include <cmath>
 
-ConvectiveDiffusion::ConvectiveDiffusion(const std::vector<double> &propsVector,
-                                         const std::vector<double> &langmuirCoeff)
+ConvectiveDiffusion::ConvectiveDiffusion(const std::vector<double> &propsVector)
         :
-        propsDiffusion(propsVector, langmuirCoeff),
-        localDiffusion(propsVector, langmuirCoeff),
+        propsDiffusion(propsVector),
+        localDiffusion(propsVector),
         beta(propsDiffusion.gridBlockN + 1, 0),
         omegaCylindric(propsDiffusion.gridBlockN + 1, 0),
         omegaCartesian(propsDiffusion.gridBlockN + 1, 0) {}

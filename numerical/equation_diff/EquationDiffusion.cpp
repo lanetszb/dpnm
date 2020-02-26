@@ -1,10 +1,9 @@
 #include <EquationDiffusion.h>
 
-EquationDiffusion::EquationDiffusion(const std::vector<double> &propsVector,
-                                     const std::vector<double> &langmuirCoeff) :
-        props(propsVector, langmuirCoeff),
-        local(propsVector, langmuirCoeff),
-        convective(propsVector, langmuirCoeff),
+EquationDiffusion::EquationDiffusion(const std::vector<double> &propsVector) :
+        props(propsVector),
+        local(propsVector),
+        convective(propsVector),
         dim(props.gridBlockN),
         conc(std::vector<std::vector<double>>()),
         time(props.time),
@@ -176,6 +175,7 @@ void EquationDiffusion::cfdProcedure(const bool &boundCond,
             cfdProcedureOneStep(concThrWall, radius, effRadius, thrLength,
                                 volumes, surfaces);
         }
+
     } else
 
         for (double t = props.timeStep; t <= props.time; t += props.timeStep) {

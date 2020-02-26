@@ -16,7 +16,7 @@ from numerical import EquationDiffusion
 from numerical import PropsPNMCpp
 from numerical import NetworkDataCpp
 from numerical import EquationPNM
-from numerical import DiffusionPNM
+# from numerical import DiffusionPNM
 
 from input import Props
 from input import Network_Data_Cpp
@@ -28,23 +28,20 @@ props = Props(config_file=sys.argv[1])
 
 props_diff_vector = props.get_diff_props_array()
 
-props_diff = PropsDiffusion(props_diff_vector, props.langm_coeff)
+props_diff = PropsDiffusion(props_diff_vector)
 print(props_diff, '\n')
 
 props_diff.print_props_vector()
 print('\n')
 
-props_diff.print_langmuir_coeffs()
-
 #
 # # ++++++++++++++++++++++++++++++++++++++++++++++++++++
 #
-convective_diff = ConvectiveDiffusion(props_diff_vector,
-                                      props_diff.langmuir_coeff)
+convective_diff = ConvectiveDiffusion(props_diff_vector)
 
-local_diff = LocalDiffusion(props_diff_vector, props_diff.langmuir_coeff)
+local_diff = LocalDiffusion(props_diff_vector)
 
-equation_diff = EquationDiffusion(props_diff_vector, props.langm_coeff)
+equation_diff = EquationDiffusion(props_diff_vector)
 #
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #

@@ -7,8 +7,7 @@ class LocalDiffusion {
 
 public:
 
-    explicit LocalDiffusion(const std::vector<double> &propsVector,
-                            const std::vector<double> &langmuirCoeff);
+    explicit LocalDiffusion(const std::vector<double> &propsVector);
 
     virtual ~LocalDiffusion() = default;
 

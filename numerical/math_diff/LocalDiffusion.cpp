@@ -1,9 +1,8 @@
 #include <LocalDiffusion.h>
 #include <cmath>
 
-LocalDiffusion::LocalDiffusion(const std::vector<double> &propsVector,
-                               const std::vector<double> &langmuirCoeff) :
-        propsDiffusion(propsVector, langmuirCoeff),
+LocalDiffusion::LocalDiffusion(const std::vector<double> &propsVector) :
+        propsDiffusion(propsVector),
         dRadius(0),
         alpha(propsDiffusion.gridBlockN, 0),
         radiusCurr(propsDiffusion.gridBlockN + 1, 0),
