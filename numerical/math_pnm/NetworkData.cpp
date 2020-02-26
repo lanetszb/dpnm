@@ -1,45 +1,44 @@
 #include <NetworkData.h>
 
-NetworkData::NetworkData(const std::vector<int> &_throat_list,
-                         const std::vector<double> &_throat_radius,
-                         const std::vector<double> &_throat_length,
-                         const std::vector<double> &_conn_ind_in,
-                         const std::vector<double> &_conn_ind_out,
+NetworkData::NetworkData(const std::vector<int> &_throatList,
+                         const std::vector<double> &_throatRadius,
+                         const std::vector<double> &_throatLength,
+                         const std::vector<double> &_connIndIn,
+                         const std::vector<double> &_connIndOut,
+                         const std::vector<double> &_poreCoordX,
+                         const std::vector<double> &_poreCoordY,
+                         const std::vector<double> &_poreCoordZ,
+                         const std::vector<double> &_poreRadius,
+                         const std::vector<int> &_poreList,
+                         const std::vector<int> &_poreConns,
+                         const std::vector<int> &_connNumber,
+                         const std::vector<int> &_porePerRow,
+                         const std::vector<bool> &_poreLeftX,
+                         const std::vector<bool> &_poreRightX,
+                         const std::vector<double> &_hydraulicCond) :
 
-                         const std::vector<double> &_pore_coord_x,
-                         const std::vector<double> &_pore_coord_y,
-                         const std::vector<double> &_pore_coord_z,
-                         const std::vector<double> &_pore_radius,
-                         const std::vector<int> &_pore_list,
-                         const std::vector<int> &_pore_conns,
-                         const std::vector<int> &_conn_number,
-                         const std::vector<int> &_pore_per_row,
-                         const std::vector<bool> &_pore_left_x,
-                         const std::vector<bool> &_pore_right_x,
-                         const std::vector<double> &_hydraulic_cond) :
-
-        throatList(_throat_list),
-        throatRadius(_throat_radius),
-        throatLength(_throat_length),
-        connIndIn(_conn_ind_in),
-        connIndOut(_conn_ind_out),
+        throatList(_throatList),
+        throatRadius(_throatRadius),
+        throatLength(_throatLength),
+        connIndIn(_connIndIn),
+        connIndOut(_connIndOut),
         throatN(throatList.size()),
 
-        poreCoordX(_pore_coord_x),
-        poreCoordY(_pore_coord_y),
-        poreCoordZ(_pore_coord_z),
+        poreCoordX(_poreCoordX),
+        poreCoordY(_poreCoordY),
+        poreCoordZ(_poreCoordZ),
 
-        poreRadius(_pore_radius),
-        poreList(_pore_list),
+        poreRadius(_poreRadius),
+        poreList(_poreList),
         poreN(poreList.size()),
 
-        poreConns(_pore_conns),
-        connNumber(_conn_number),
-        porPerRow(_pore_per_row),
+        poreConns(_poreConns),
+        connNumber(_connNumber),
+        porPerRow(_porePerRow),
 
-        poreLeftX(_pore_left_x),
-        poreRightX(_pore_right_x),
-        hydraulicCond(_hydraulic_cond) {}
+        poreLeftX(_poreLeftX),
+        poreRightX(_poreRightX),
+        hydraulicCond(_hydraulicCond) {}
 
 std::ostream &operator<<(std::ostream &stream, const NetworkData &networkData) {
 

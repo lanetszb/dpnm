@@ -9,23 +9,22 @@ class NetworkData {
 
 public :
 
-    explicit NetworkData(const std::vector<int> &_throat_list,
-                         const std::vector<double> &_throat_radius,
-                         const std::vector<double> &_throat_length,
-                         const std::vector<double> &_conn_ind_in,
-                         const std::vector<double> &_conn_ind_out,
-
-                         const std::vector<double> &_pore_coord_x,
-                         const std::vector<double> &_pore_coord_y,
-                         const std::vector<double> &_pore_coord_z,
-                         const std::vector<double> &_pore_radius,
-                         const std::vector<int> &_pore_list,
-                         const std::vector<int> &_pore_conns,
-                         const std::vector<int> &_conn_number,
-                         const std::vector<int> &_pore_per_row,
-                         const std::vector<bool> &_pore_left_x,
-                         const std::vector<bool> &_pore_right_x,
-                         const std::vector<double> &_hydraulic_cond);
+    explicit NetworkData(const std::vector<int> &_throatList,
+                         const std::vector<double> &_throatRadius,
+                         const std::vector<double> &_throatLength,
+                         const std::vector<double> &_connIndIn,
+                         const std::vector<double> &_connIndOut,
+                         const std::vector<double> &_poreCoordX,
+                         const std::vector<double> &_poreCoordY,
+                         const std::vector<double> &_poreCoordZ,
+                         const std::vector<double> &_poreRadius,
+                         const std::vector<int> &_poreList,
+                         const std::vector<int> &_poreConns,
+                         const std::vector<int> &_connNumber,
+                         const std::vector<int> &_porePerRow,
+                         const std::vector<bool> &_poreLeftX,
+                         const std::vector<bool> &_poreRightX,
+                         const std::vector<double> &_hydraulicCond);
 
     virtual ~NetworkData() {}
 

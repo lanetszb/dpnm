@@ -134,39 +134,39 @@ props_pnm = props.get_props_array()
 props_pnm_cpp = PropsPNMCpp(props_pnm)
 print(props_pnm_cpp)
 #
-# network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
-# network_data_cpp.process_throats()
-# network_data_cpp.process_pores()
-# network_data_cpp.process_pore_conns()
+network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
+network_data_cpp.process_throats()
+network_data_cpp.process_pores()
+network_data_cpp.process_pore_conns()
 # network_data_cpp.process_pore_per_row()
-#
-# thrList = network_data_cpp.throat_list
-# tr = network_data_cpp.throat_radius
-# tl = network_data_cpp.throat_length
-#
-# conn_in = network_data_cpp.conn_ind_in
-# conn_out = network_data_cpp.conn_ind_out
-#
-# pc_x = network_data_cpp.pore_coords_x
-# pc_y = network_data_cpp.pore_coords_y
-# pc_z = network_data_cpp.pore_coords_z
-#
-# pr = network_data_cpp.pore_radius
-#
-# pl = network_data_cpp.pore_list
-# p_conn = network_data_cpp.pore_conns
-# conn_numb = network_data_cpp.conn_number
-# ppr = network_data_cpp.pore_per_row
-#
-# plx = network_data_cpp.pore_left_x
-# prx = network_data_cpp.pore_right_x
-#
-# # =============================================================================
-#
-# hydr_cond = network_data_cpp.hydraulic_cond_coeff
-#
-# nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
-#                         pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
+
+thrList = network_data_cpp.throat_list
+tr = network_data_cpp.throat_radius
+tl = network_data_cpp.throat_length
+
+conn_in = network_data_cpp.conn_ind_in
+conn_out = network_data_cpp.conn_ind_out
+
+pc_x = network_data_cpp.pore_coords_x
+pc_y = network_data_cpp.pore_coords_y
+pc_z = network_data_cpp.pore_coords_z
+
+pr = network_data_cpp.pore_radius
+
+pl = network_data_cpp.pore_list
+p_conn = network_data_cpp.pore_conns
+conn_numb = network_data_cpp.conn_number
+ppr = network_data_cpp.pore_per_row
+
+plx = network_data_cpp.pore_left_x
+prx = network_data_cpp.pore_right_x
+
+# =============================================================================
+
+hydr_cond = network_data_cpp.hydraulic_cond_coeff
+
+nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
+                        pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
 #
 # eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
 #                      pc_z, pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
