@@ -114,25 +114,25 @@ for i in range(grid_block_n):
 
 conc_analyt.reverse()
 
-plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
-         y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution,' ' t= 1.1 (sec)',
-         line_type='-')
+# plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
+#          y_name='Concentration (kg/m3)',
+#          graph_name='Concentration distribution',
+#          line_type='-')
 
 # ===================================================================
 
-plot_x_y(grid_centers, conc, x_name='Radius (m)',
-         y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution,' ' t= 1.1 (sec)',
-         line_type='o')
+# plot_x_y(grid_centers, conc, x_name='Radius (m)',
+#          y_name='Concentration (kg/m3)',
+#          graph_name='Concentration distribution',
+#          line_type='o')
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #
 # print("\n")
 # #
-# props_pnm = props.get_props_array()
-# props_pnm_cpp = PropsPNMCpp(props_pnm)
-# print(props_pnm_cpp)
+props_pnm = props.get_props_array()
+props_pnm_cpp = PropsPNMCpp(props_pnm)
+print(props_pnm_cpp)
 #
 # network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
 # network_data_cpp.process_throats()

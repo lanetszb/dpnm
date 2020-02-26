@@ -9,7 +9,7 @@ def plot_x_y(x_values, y_values, x_name, y_name, graph_name, line_type):
     plt.xlabel(x_name, fontsize=16)
     plt.ylabel(y_name, fontsize=16)
 
-    plt.plot(x_values, y_values, line_type)
+    plt.plot(x_values, y_values, line_type, 'r')
     plt.ylim(min(y_values), max(y_values) + 0.1 * max(y_values))
     plt.show()
 

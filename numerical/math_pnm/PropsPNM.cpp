@@ -14,14 +14,14 @@ PropsPNM::PropsPNM(const std::vector<double> &_propsVector) :
         propsVector(_propsVector) {}
 
 std::ostream &operator<<(std::ostream &stream, const PropsPNM &propsPNM) {
-    stream << "a_gas_dens " << propsPNM.aGasDens << std::endl;
-    stream << "b_gas_dens " << propsPNM.bGasDens << std::endl;
-    stream << "gas_visc " << propsPNM.gasVisc << std::endl;
-    stream << "liq_dens " << propsPNM.liqDens << std::endl;
-    stream << "liq_visc " << propsPNM.liqVisc << std::endl;
-    stream << "press_in " << propsPNM.pressIn << std::endl;
-    stream << "press_out " << propsPNM.pressOut << std::endl;
-    stream << "it_accuracy " << propsPNM.itAccuracy << std::endl;
+    stream << "aGasDens " << propsPNM.aGasDens << std::endl;
+    stream << "bGasDens " << propsPNM.bGasDens << std::endl;
+    stream << "gasVisc " << propsPNM.gasVisc << std::endl;
+    stream << "liqDens " << propsPNM.liqDens << std::endl;
+    stream << "liqVisc " << propsPNM.liqVisc << std::endl;
+    stream << "pressIn " << propsPNM.pressIn << std::endl;
+    stream << "pressOut " << propsPNM.pressOut << std::endl;
+    stream << "itAccuracy " << propsPNM.itAccuracy << std::endl;
 
     return stream;
 }
