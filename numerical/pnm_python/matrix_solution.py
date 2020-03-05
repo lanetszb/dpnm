@@ -80,8 +80,8 @@ if __name__ == '__main__':
 
     matrix_solution = Matrix_Solution(matrix_portrait, network_data)
 
-    pressure_in = 300000
-    pressure_out = 200000
+    pressure_in = 202650
+    pressure_out = 101325
 
     matrix_solution.get_vector_B(pressure_in, pressure_out)
     matrix_portrait.get_matrix_portrait()

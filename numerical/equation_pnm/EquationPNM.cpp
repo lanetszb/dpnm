@@ -2,29 +2,29 @@
 #include <math.h>
 
 EquationPNM::EquationPNM(const std::vector<double> &propsVector,
-                         const std::vector<int> &throat_list,
-                         const std::vector<double> &throat_radius,
-                         const std::vector<double> &throat_length,
-                         const std::vector<double> &conn_ind_in,
-                         const std::vector<double> &conn_ind_out,
-                         const std::vector<double> &pore_coord_x,
-                         const std::vector<double> &pore_coord_y,
-                         const std::vector<double> &pore_coord_z,
-                         const std::vector<double> &pore_radius,
-                         const std::vector<int> &pore_list,
-                         const std::vector<int> &pore_conns,
-                         const std::vector<int> &conn_number,
-                         const std::vector<int> &pore_per_row,
-                         const std::vector<bool> &pore_left_x,
-                         const std::vector<bool> &pore_right_x,
-                         const std::vector<double> &hydraulic_cond) :
+                         const std::vector<int> &throatList,
+                         const std::vector<double> &throatRadius,
+                         const std::vector<double> &throatLength,
+                         const std::vector<double> &connIndIn,
+                         const std::vector<double> &connIndOut,
+                         const std::vector<double> &poreCoordX,
+                         const std::vector<double> &poreCoordY,
+                         const std::vector<double> &poreCoordZ,
+                         const std::vector<double> &poreRadius,
+                         const std::vector<int> &poreList,
+                         const std::vector<int> &poreConns,
+                         const std::vector<int> &connNumber,
+                         const std::vector<int> &porePerRow,
+                         const std::vector<bool> &poreLeftX,
+                         const std::vector<bool> &poreRightX,
+                         const std::vector<double> &hydraulicCond) :
 
         propsPNM(propsVector),
-        networkData(throat_list, throat_radius, throat_length,
-                    conn_ind_in, conn_ind_out, pore_coord_x, pore_coord_y,
-                    pore_coord_z, pore_radius, pore_list, pore_conns,
-                    conn_number, pore_per_row, pore_left_x, pore_right_x,
-                    hydraulic_cond),
+        networkData(throatList, throatRadius, throatLength,
+                    connIndIn, connIndOut, poreCoordX, poreCoordY,
+                    poreCoordZ, poreRadius, poreList, poreConns,
+                    connNumber, porePerRow, poreLeftX, poreRightX,
+                    hydraulicCond),
         dim(networkData.poreN),
         pIn(propsPNM.pressIn),
         pOut(propsPNM.pressOut),
@@ -44,24 +44,30 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         porFlowRate(dim, 0) {
 
 
-//    setInitialCond();
-//
-//    std::vector<int> boundPoresInput;
-//
-//    for (int i = 0; i < networkData.poreN; i++)
-//        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
-//            boundPoresInput.emplace_back(i);
-//
-//    cfdProcedure(1, boundPoresInput, pIn, pOut);
-//
-//    std::cout << "completed" << std::endl;
-//
-//    calcTotFlow(networkData.boundaryPores);
-//
-//    for (int i = 0; i < networkData.poreN; i++)
-//        std::cout << pressure[i] << std::endl;
+    setInitialCond();
+
+    std::vector<int> boundPoresInput;
+
+    for (int i = 0; i < networkData.poreN; i++)
+        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
+            boundPoresInput.emplace_back(i);
+
+    cfdProcedure(1, boundPoresInput, pIn, pOut);
+
+    std::cout << "completed" << std::endl;
+
+    calcTotFlow(networkData.boundaryPores);
+
+    for (int i = 0; i < networkData.poreN; i++)
+        std::cout << pressure[i] << std::endl;
 //
 
+    std::cout << std::endl;
+
+    calcInletFlow(poreLeftX);
+
+    for (int i = 0; i < inletFlow.size(); i++)
+        std::cout << inletFlow[i] << std::endl;
 }
 
 

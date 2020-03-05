@@ -114,22 +114,22 @@ for i in range(grid_block_n):
 
 conc_analyt.reverse()
 
-# plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
-#          y_name='Concentration (kg/m3)',
-#          graph_name='Concentration distribution',
-#          line_type='-')
+plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution',
+         line_type='-')
 
 # ===================================================================
 
-# plot_x_y(grid_centers, conc, x_name='Radius (m)',
-#          y_name='Concentration (kg/m3)',
-#          graph_name='Concentration distribution',
-#          line_type='o')
-# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+plot_x_y(grid_centers, conc, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution',
+         line_type='--')
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #
-# print("\n")
-# #
+print("\n")
+#
 props_pnm = props.get_props_array()
 props_pnm_cpp = PropsPNMCpp(props_pnm)
 print(props_pnm_cpp)
@@ -138,7 +138,7 @@ network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
 network_data_cpp.process_throats()
 network_data_cpp.process_pores()
 network_data_cpp.process_pore_conns()
-# network_data_cpp.process_pore_per_row()
+
 
 thrList = network_data_cpp.throat_list
 tr = network_data_cpp.throat_radius
@@ -168,13 +168,13 @@ hydr_cond = network_data_cpp.hydraulic_cond_coeff
 nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
                         pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
 #
-# eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
-#                      pc_z, pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
-#
+eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
+                     pc_z, pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
+
 # diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
 #                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
 #                         ppr, props_diff, props.langm_coeff, plx, prx, hydr_cond)
-#
+
 # # =============================================================================
 # # Figure 1 (Avg Pore Pressure and Avg Concentration)
 # t = np.arange(0, props.time, props.time_step)
