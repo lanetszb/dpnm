@@ -55,19 +55,6 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
     cfdProcedure(1, boundPoresInput, pIn, pOut);
 
     std::cout << "completed" << std::endl;
-
-    calcTotFlow(networkData.boundaryPores);
-
-    for (int i = 0; i < networkData.poreN; i++)
-        std::cout << pressure[i] << std::endl;
-//
-
-    std::cout << std::endl;
-
-    calcInletFlow(poreLeftX);
-
-    for (int i = 0; i < inletFlow.size(); i++)
-        std::cout << inletFlow[i] << std::endl;
 }
 
 
@@ -410,4 +397,12 @@ void EquationPNM::calcTotFlow(const std::vector<int> &boundPores) {
             if (boundPores[i] == networkData.poreList[j]) {
                 totFlowRate += porFlowRate[j];
             }
+}
+
+const std::vector<double> EquationPNM::getPressure() const {
+    return pressure;
+}
+
+double EquationPNM::getTotFlowRate() const {
+    return totFlowRate;
 }

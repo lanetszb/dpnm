@@ -74,7 +74,8 @@ class Network_Data_Cpp:
         s.throat_number = len(s.conn_ind_in)
         s.throat_list = np.arange(s.throat_number).tolist()
 
-        s.throat_radius = list(s.throats['throat_diameter'] / 2)
+        s.throat_radius = list(s.throats['throat_height'] / 2)
+        s.throat_width = list(s.throats['throat_width'])
         s.throat_length = list(s.throats['throat_length'])
 
         # hydraulic coeffs

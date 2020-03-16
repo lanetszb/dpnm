@@ -266,7 +266,12 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "pore_per_row",
                                            "pore_left_x",
                                            "pore_right_x",
-                                           "hydr_cond")));
+                                           "hydr_cond")))
+            .add_property("tot_flow_rate",
+                          &EquationPNM::getTotFlowRate)
+
+            .add_property("pressure",
+                          &EquationPNM::getPressure);
 //            .def("__str__", __str__<EquationPNM>);
 }
 

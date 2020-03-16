@@ -118,6 +118,10 @@ public:
 
     std::vector<double> inletFlow;
 
+    const std::vector<double> getPressure() const;
+
+    double getTotFlowRate() const;
+
 };
 
 
