@@ -180,10 +180,11 @@ BOOST_PYTHON_MODULE (cfd) {
 
             .def("print_props_vector",
                  &PropsPNM::printPropsVector);
-//
-//
+
+
     p::class_<NetworkData>("NetworkDataCpp",
                            p::init<std::vector<int>,
+                                   std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
@@ -200,8 +201,9 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<bool>,
                                    std::vector<double>>(
                                    p::args("throat_list",
-                                           "throat_radius",
+                                           "throat_height",
                                            "throat_length",
+                                           "throat_width",
                                            "conn_ind_in",
                                            "conn_ind_out",
                                            "pore_coord_x",
@@ -242,6 +244,7 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<double>,
                                    std::vector<double>,
                                    std::vector<double>,
+                                   std::vector<double>,
                                    std::vector<int>,
                                    std::vector<int>,
                                    std::vector<int>,
@@ -249,11 +252,11 @@ BOOST_PYTHON_MODULE (cfd) {
                                    std::vector<bool>,
                                    std::vector<bool>,
                                    std::vector<double>>(
-                                   p::args(
-                                           "props_array",
+                                   p::args("props_array",
                                            "throat_list",
-                                           "throat_radius",
+                                           "throat_height",
                                            "throat_length",
+                                           "throat_width",
                                            "conn_ind_in",
                                            "conn_ind_out",
                                            "pore_coord_x",

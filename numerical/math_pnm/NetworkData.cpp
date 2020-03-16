@@ -1,8 +1,9 @@
 #include <NetworkData.h>
 
 NetworkData::NetworkData(const std::vector<int> &_throatList,
-                         const std::vector<double> &_throatRadius,
+                         const std::vector<double> &_throatHeight,
                          const std::vector<double> &_throatLength,
+                         const std::vector<double> &_throatWidth,
                          const std::vector<double> &_connIndIn,
                          const std::vector<double> &_connIndOut,
                          const std::vector<double> &_poreCoordX,
@@ -18,8 +19,9 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
                          const std::vector<double> &_hydraulicCond) :
 
         throatList(_throatList),
-        throatRadius(_throatRadius),
+        throatRadius(_throatHeight),
         throatLength(_throatLength),
+        throatWidth(_throatWidth),
         connIndIn(_connIndIn),
         connIndOut(_connIndOut),
         throatN(throatList.size()),

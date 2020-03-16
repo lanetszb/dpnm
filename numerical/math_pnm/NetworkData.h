@@ -10,8 +10,9 @@ class NetworkData {
 public :
 
     explicit NetworkData(const std::vector<int> &_throatList,
-                         const std::vector<double> &_throatRadius,
+                         const std::vector<double> &_throatHeight,
                          const std::vector<double> &_throatLength,
+                         const std::vector<double> &_throatWidth,
                          const std::vector<double> &_connIndIn,
                          const std::vector<double> &_connIndOut,
                          const std::vector<double> &_poreCoordX,
@@ -48,6 +49,7 @@ public :
 
     std::vector<double> throatRadius;
     std::vector<double> throatLength;
+    std::vector<double> throatWidth;
     std::vector<int> throatList;
     int throatN;
 

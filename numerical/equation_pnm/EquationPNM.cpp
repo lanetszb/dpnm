@@ -3,8 +3,9 @@
 
 EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<int> &throatList,
-                         const std::vector<double> &throatRadius,
+                         const std::vector<double> &throatHeight,
                          const std::vector<double> &throatLength,
+                         const std::vector<double> &throatWidth,
                          const std::vector<double> &connIndIn,
                          const std::vector<double> &connIndOut,
                          const std::vector<double> &poreCoordX,
@@ -20,7 +21,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<double> &hydraulicCond) :
 
         propsPNM(propsVector),
-        networkData(throatList, throatRadius, throatLength,
+        networkData(throatList, throatHeight, throatLength, throatWidth,
                     connIndIn, connIndOut, poreCoordX, poreCoordY,
                     poreCoordZ, poreRadius, poreList, poreConns,
                     connNumber, porePerRow, poreLeftX, poreRightX,
@@ -99,28 +100,28 @@ void EquationPNM::calcMatCoeff() {
 
     for (int i = 0; i < networkData.throatN; i++) {
 
-        auto tR = networkData.throatRadius[i];
-        auto tL = networkData.throatLength[i];
-        auto liqVisc = propsPNM.liqVisc;
-
-        auto rI = networkData.poreRadius[throatConns[i].first];
-        auto rJ = networkData.poreRadius[throatConns[i].second];
+//        auto tR = networkData.throatRadius[i];
+//        auto tL = networkData.throatLength[i];
+//        auto liqVisc = propsPNM.liqVisc;
+//
+//        auto rI = networkData.poreRadius[throatConns[i].first];
+//        auto rJ = networkData.poreRadius[throatConns[i].second];
 
         // auto cond = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
         // 3D
         // auto gIJ = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
         // auto gI = (M_PI * rI * rI * rI) / (8 * liqVisc);
         // auto gJ = (M_PI * rJ * rJ * rJ) / (8 * liqVisc);
-        double dz = 1.E-6;
+        // double dz = 1.E-6;
         // 2D
         // auto gIJ = (dz * 2 * tR * tR * tR) / (3 * liqVisc * tL);
         // auto gI = (dz * 2 * rI * rI) / (3 * liqVisc);
         // auto gJ = (dz * 2 * rJ * rJ) / (3 * liqVisc);
 
         // 2D reversed y and z (Parallel Plates)
-        auto gIJ = (tR * 2 * dz * dz * dz) / (3. * liqVisc * tL);
-        auto gI = (1. / 2. * rI * 2 * dz * dz * dz) / (3. * liqVisc * rI);
-        auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
+        // auto gIJ = (tR * 2 * dz * dz * dz) / (3. * liqVisc * tL);
+        // auto gI = (1. / 2. * rI * 2 * dz * dz * dz) / (3. * liqVisc * rI);
+        // auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
 
         // 2D reversed y and z (Parallel Plates)
         // auto gIJ = (tR * dz * dz * dz) / (6. * liqVisc * tL);
@@ -133,8 +134,10 @@ void EquationPNM::calcMatCoeff() {
         // auto gJ = (1. / 2. * rJ * 2 * dz * dz * dz) / (3. * liqVisc * rJ);
 
 
-        connCoeff[i] = 1 / (1 / gI + 1 / gIJ + 1 / gJ);
-        // connCoeff[i] = networkData.hydraulicCond[i];
+        // connCoeff[i] = 1 / (1 / gI + 1 / gIJ + 1 / gJ);
+
+        // Take autmatic conductance from the input file
+        connCoeff[i] = networkData.hydraulicCond[i];
     }
 
     for (int i = 0; i < porConns.size(); i++)

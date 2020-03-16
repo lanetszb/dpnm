@@ -93,7 +93,6 @@ for i in range(len(radius_curr) - 1):
     grid_centers.append((radius_curr[i + 1] +
                          radius_curr[i]) / 2)
 
-
 # Diffusion Analytical Solution
 conc_analyt = []
 
@@ -114,18 +113,18 @@ for i in range(grid_block_n):
 
 conc_analyt.reverse()
 
-plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
-         y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution',
-         line_type='-')
-
-# ===================================================================
-
-plot_x_y(grid_centers, conc, x_name='Radius (m)',
-         y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution',
-         line_type='--')
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
+#          y_name='Concentration (kg/m3)',
+#          graph_name='Concentration distribution',
+#          line_type='-')
+#
+# # ===================================================================
+#
+# plot_x_y(grid_centers, conc, x_name='Radius (m)',
+#          y_name='Concentration (kg/m3)',
+#          graph_name='Concentration distribution',
+#          line_type='--')
+# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #
 print("\n")
@@ -139,10 +138,10 @@ network_data_cpp.process_throats()
 network_data_cpp.process_pores()
 network_data_cpp.process_pore_conns()
 
-
 thrList = network_data_cpp.throat_list
-tr = network_data_cpp.throat_radius
+th = network_data_cpp.throat_radius
 tl = network_data_cpp.throat_length
+tw = network_data_cpp.throat_width
 
 conn_in = network_data_cpp.conn_ind_in
 conn_out = network_data_cpp.conn_ind_out
@@ -161,15 +160,26 @@ ppr = network_data_cpp.pore_per_row
 plx = network_data_cpp.pore_left_x
 prx = network_data_cpp.pore_right_x
 
+p_back_y = network_data_cpp.pore_back_y
+p_front_y = network_data_cpp.pore_front_y
+
+p_bot_z = network_data_cpp.pore_bot_z
+p_top_z = network_data_cpp.pore_top_z
+
+pore_left = p_top_z
+pore_right = p_bot_z
+
 # =============================================================================
 
 hydr_cond = network_data_cpp.hydraulic_cond_coeff
 
-nd_cpp = NetworkDataCpp(thrList, tr, tl, conn_in, conn_out, pc_x, pc_y, pc_z,
-                        pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
+nd_cpp = NetworkDataCpp(thrList, th, tl, tw, conn_in, conn_out, pc_x, pc_y,
+                        pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
+                        pore_right, hydr_cond)
 #
-eq_pnm = EquationPNM(props_pnm, thrList, tr, tl, conn_in, conn_out, pc_x, pc_y,
-                     pc_z, pr, pl, p_conn, conn_numb, ppr, plx, prx, hydr_cond)
+eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
+                     pc_y, pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
+                     pore_right, hydr_cond)
 
 # diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
 #                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
