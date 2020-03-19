@@ -126,6 +126,7 @@ class Network_Data_Cpp:
 
         s.pore_per_row = [[a] + b for a, b in zip(s.pore_list,
                                                   s.pore_per_row)]
+
         s.pore_per_row = np.array(
             [elem for single_list in s.pore_per_row for elem in
              single_list])

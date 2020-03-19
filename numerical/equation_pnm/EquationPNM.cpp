@@ -56,6 +56,11 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
     cfdProcedure(1, boundPoresInput, pIn, pOut);
 
     std::cout << "completed" << std::endl;
+
+    std::cout << matrix << std::endl;
+
+    for (int i = 0; i < networkData.poreN; i++)
+        std::cout << pressure[i] << std::endl;
 }
 
 
@@ -100,12 +105,18 @@ void EquationPNM::calcMatCoeff() {
 
     for (int i = 0; i < networkData.throatN; i++) {
 
-//        auto tR = networkData.throatRadius[i];
-//        auto tL = networkData.throatLength[i];
-//        auto liqVisc = propsPNM.liqVisc;
+        auto tR = networkData.throatRadius[i];
+        auto tH = tR;
+        auto tW = networkData.throatWidth[i];
+        auto tL = networkData.throatLength[i];
+
+        auto liqVisc = propsPNM.liqVisc;
 //
-//        auto rI = networkData.poreRadius[throatConns[i].first];
-//        auto rJ = networkData.poreRadius[throatConns[i].second];
+        auto rI = networkData.poreRadius[throatConns[i].first];
+        auto rJ = networkData.poreRadius[throatConns[i].second];
+
+        // Fracture conductance (equal to Yu)
+        connCoeff[i] = tH * tH * tW / 12 / liqVisc / tL;
 
         // auto cond = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
         // 3D
@@ -163,6 +174,7 @@ void EquationPNM::calculateMatrix(const int &boundCond,
     for (int i = 0; i < networkData.connNumber.size(); i++) {
 
         triplets.emplace_back(i, i, centralCoeff[i]);
+
         for (int j = 0; j < networkData.connNumber[i]; j++) {
 
             if ((i != boundPores[bound_it] and boundCond == 0) or
@@ -175,7 +187,7 @@ void EquationPNM::calculateMatrix(const int &boundCond,
                 pore_iterator++;
 
             } else {
-                triplets.emplace_back(i, i, 1);
+                triplets.emplace_back(i, i, -1 * centralCoeff[i] + 1);
                 pore_iterator += networkData.connNumber[i];
                 bound_it++;
                 break;
@@ -289,7 +301,7 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     calcMatCoeff();
 
-//    getPorConnsIsOutByPressure();
+    // getPorConnsIsOutByPressure();
 
     std::vector<double> diffCoeff(networkData.throatN, 0);
 

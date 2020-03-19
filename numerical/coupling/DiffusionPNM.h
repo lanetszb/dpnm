@@ -13,29 +13,30 @@ public:
 
     explicit DiffusionPNM(
             const std::vector<double> &propsPNM,
-            const std::vector<int> &throat_list,
-            const std::vector<double> &throat_radius,
-            const std::vector<double> &throat_length,
-            const std::vector<double> &conn_ind_in,
-            const std::vector<double> &conn_ind_out,
-            const std::vector<double> &pore_coord_x,
-            const std::vector<double> &pore_coord_y,
-            const std::vector<double> &pore_coord_z,
-            const std::vector<double> &pore_radius,
-            const std::vector<int> &pore_list,
-            const std::vector<int> &pore_conns,
-            const std::vector<int> &conn_number,
-            const std::vector<int> &pore_per_row,
             const std::vector<double> &propsDiffusion,
-            const std::vector<double> &langmuirCoeff,
-            const std::vector<bool> &pore_left_x,
-            const std::vector<bool> &pore_right_x,
-            const std::vector<double> &hydraulic_cond);
+            const std::vector<int> &throatList,
+            const std::vector<double> &throatHeight,
+            const std::vector<double> &throatLength,
+            const std::vector<double> &throatWidth,
+            const std::vector<double> &connIndIn,
+            const std::vector<double> &connIndOut,
+            const std::vector<double> &poreCoordX,
+            const std::vector<double> &poreCoordY,
+            const std::vector<double> &poreCoordZ,
+            const std::vector<double> &poreRadius,
+            const std::vector<int> &poreList,
+            const std::vector<int> &poreConns,
+            const std::vector<int> &connNumber,
+            const std::vector<int> &porePerRow,
+            const std::vector<bool> &poreLeftX,
+            const std::vector<bool> &poreRightX,
+            const std::vector<double> &hydraulicCond,
+            const std::vector<double> &langmuirCoeff);
 
     virtual  ~DiffusionPNM() = default;
 
     EquationPNM equationPNM;
-    EquationDiffusion equation;
+    EquationDiffusion equationDiffusion;
 
     double calcSideLength(std::vector<double> &poreCoord);
 
@@ -81,6 +82,8 @@ public:
 
     const std::vector<double> getPorePressure() const;
 
+
+    std::vector<double> langmuirCoeff;
 
     double rockVolume;
     double langmConc;

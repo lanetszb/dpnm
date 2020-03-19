@@ -68,9 +68,9 @@ public:
 
     const double getFlowRate() const;
 
-    PropsDiffusion props;
-    LocalDiffusion local;
-    ConvectiveDiffusion convective;
+    PropsDiffusion propsDiffusion;
+    LocalDiffusion localDiffusion;
+    ConvectiveDiffusion convectiveDiffusion;
 
     double &time;
     int iCurr;

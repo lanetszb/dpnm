@@ -120,10 +120,10 @@ conc_analyt.reverse()
 #
 # # ===================================================================
 #
-# plot_x_y(grid_centers, conc, x_name='Radius (m)',
-#          y_name='Concentration (kg/m3)',
-#          graph_name='Concentration distribution',
-#          line_type='--')
+plot_x_y(grid_centers, conc, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution',
+         line_type='--')
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #
@@ -140,6 +140,7 @@ network_data_cpp.process_pore_conns()
 
 thrList = network_data_cpp.throat_list
 th = network_data_cpp.throat_radius
+th = np.array(th) * 2
 tl = network_data_cpp.throat_length
 tw = network_data_cpp.throat_width
 
@@ -166,8 +167,10 @@ p_front_y = network_data_cpp.pore_front_y
 p_bot_z = network_data_cpp.pore_bot_z
 p_top_z = network_data_cpp.pore_top_z
 
-pore_left = p_top_z
-pore_right = p_bot_z
+pore_left = p_bot_z
+pore_right = p_top_z
+
+langm_coeffs = props.langm_coeff
 
 # =============================================================================
 

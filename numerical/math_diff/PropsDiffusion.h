@@ -52,13 +52,9 @@ public:
 
     double getGridBlockSize() const;
 
-    std::vector<double> getLangmuirCoeff() const;
-
     std::vector<double> getPropsVector() const;
 
     void printPropsVector();
-
-    void printLangmuirCoeff();
 
     double time;
     double timeStep;
