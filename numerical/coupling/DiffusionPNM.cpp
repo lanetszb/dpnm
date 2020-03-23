@@ -125,13 +125,32 @@ void DiffusionPNM::calcRockVolume() {
 //
 void DiffusionPNM::calcEffRadius() {
 
+    auto throatN = equationPNM.networkData.throatN;
+
     for (int i = 0; i < effRadius.size(); i++)
-        effRadius[i] = rockVolume / equationPNM.networkData.throatN;
+        effRadius[i] = rockVolume / throatN;
 }
+
+void DiffusionPNM::calcMatrixWidth() {
+
+    auto throatN = equationPNM.networkData.throatN;
+
+    calcEffRadius();
+
+    for (int i = 0; i < throatN; i++) {
+
+        auto fracHeight = equationPNM.networkData.throatRadius[i];
+        auto fracLength = equationPNM.networkData.throatLength[i];
+        auto fracWidth = equationPNM.networkData.throatWidth[i];
+
+        matrixWidth[i] = effRadius[i] / fracLength / fracHeight + fracWidth;
+    }
+}
+
 //
 double DiffusionPNM::calcLangmConc(double pressure) {
 
-    std::vector<double> & coeff = langmuirCoeff;
+    std::vector<double> &coeff = langmuirCoeff;
 
     langmConc = 0;
     for (int i = 0; i < coeff.size(); i++)
@@ -139,6 +158,7 @@ double DiffusionPNM::calcLangmConc(double pressure) {
 
     return langmConc;
 }
+
 //
 void DiffusionPNM::calcThroatAvPress() {
 
@@ -166,7 +186,7 @@ void DiffusionPNM::calcThroatConc(const double &dP) {
 //            equationDiffusion.conc[0][j] = matrixConc[i][j];
 //            equationDiffusion.conc[1][j] = matrixConc[i][j];
 //        }
-////
+//
 //        equationDiffusion.cfdProcedureOneStep(throatConc[i],
 //                                    equationPNM.networkData.throatRadius[i],
 //                                   effRadius[i],

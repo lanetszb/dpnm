@@ -44,6 +44,8 @@ public:
 
     void calcEffRadius();
 
+    void calcMatrixWidth();
+
     double calcLangmConc(double pressure);
 
     void calcThroatConc(const double &dP);
@@ -89,7 +91,11 @@ public:
     double langmConc;
     double conc_ini;
 
+
+
     std::vector<double> effRadius;
+    std::vector<double> matrixWidth;
+
     std::vector<double> throatAvPress;
     std::vector<double> throatConc;
 
