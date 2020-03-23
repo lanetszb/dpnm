@@ -129,42 +129,45 @@ void DiffusionPNM::calcEffRadius() {
         effRadius[i] = rockVolume / equationPNM.networkData.throatN;
 }
 //
-//double DiffusionPNM::calcLangmConc(double pressure) {
+double DiffusionPNM::calcLangmConc(double pressure) {
+
+    std::vector<double> & coeff = langmuirCoeff;
+
+    langmConc = 0;
+    for (int i = 0; i < coeff.size(); i++)
+        langmConc += coeff[i] * pow(pressure, i);
+
+    return langmConc;
+}
 //
-//    std::vector<double> & coeff = equation.propsDiffusion.langmuirCoeff;
-//
-//    langmConc = 0;
-//    for (int i = 0; i < coeff.size(); i++)
-//        langmConc += coeff[i] * pow(pressure, i);
-//
-//    return langmConc;
-//}
-//
-//void DiffusionPNM::calcThroatAvPress() {
-//
-//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-//        throatAvPress[i] =
-//                (equationPNM.pressure[equationPNM.throatConns[i].first]
-//                 + equationPNM.pressure[equationPNM.throatConns[i].second]) / 2;
-//
-//}
-//
-//void DiffusionPNM::calcThroatConc(const double &dP) {
-//
-//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-//        throatConc[i] = calcLangmConc(throatAvPress[i] + dP);
-//}
+void DiffusionPNM::calcThroatAvPress() {
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        throatAvPress[i] =
+                (equationPNM.pressure[equationPNM.throatConns[i].first]
+                 + equationPNM.pressure[equationPNM.throatConns[i].second]) / 2;
+
+}
+
+
+void DiffusionPNM::calcThroatConc(const double &dP) {
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        throatConc[i] = calcLangmConc(throatAvPress[i] + dP);
+}
 //
 //void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
 //
 //    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
 //
-//        for (int j = 0; j < equation.propsDiffusion.gridBlockN; j++) {
-//            equation.conc[0][j] = matrixConc[i][j];
-//            equation.conc[1][j] = matrixConc[i][j];
-//        }
+//        auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
 //
-//       equation.cfdProcedureOneStep(throatConc[i],
+//        for (int j = 0; j < gridBlockN; j++) {
+//            equationDiffusion.conc[0][j] = matrixConc[i][j];
+//            equationDiffusion.conc[1][j] = matrixConc[i][j];
+//        }
+////
+//        equationDiffusion.cfdProcedureOneStep(throatConc[i],
 //                                    equationPNM.networkData.throatRadius[i],
 //                                   effRadius[i],
 //                                   equationPNM.networkData.throatLength[i],

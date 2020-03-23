@@ -45,22 +45,22 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         porFlowRate(dim, 0) {
 
 
-    setInitialCond();
-
-    std::vector<int> boundPoresInput;
-
-    for (int i = 0; i < networkData.poreN; i++)
-        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
-            boundPoresInput.emplace_back(i);
-
-    cfdProcedure(1, boundPoresInput, pIn, pOut);
-
-    std::cout << "completed" << std::endl;
-
-    std::cout << matrix << std::endl;
-
-    for (int i = 0; i < networkData.poreN; i++)
-        std::cout << pressure[i] << std::endl;
+//    setInitialCond();
+//
+//    std::vector<int> boundPoresInput;
+//
+//    for (int i = 0; i < networkData.poreN; i++)
+//        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
+//            boundPoresInput.emplace_back(i);
+//
+//    cfdProcedure(1, boundPoresInput, pIn, pOut);
+//
+//    std::cout << "completed" << std::endl;
+//
+//    std::cout << matrix << std::endl;
+//
+//    for (int i = 0; i < networkData.poreN; i++)
+//        std::cout << pressure[i] << std::endl;
 }
 
 
