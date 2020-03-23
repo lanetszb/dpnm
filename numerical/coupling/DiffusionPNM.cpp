@@ -204,27 +204,36 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
         for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++)
             matrixConc[i][j] = equationDiffusion.conc[equationDiffusion.iPrev][j];
     }
-//}
-//
-//void DiffusionPNM::updateConc() {
-//
-//    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-//
-//        for (int j = 0; j < equation.propsDiffusion.gridBlockN; j++) {
-//            equation.conc[0][j] = matrixConc[i][j];
-//            equation.conc[1][j] = matrixConc[i][j];
-//        }
-//
-//      equation.cfdProcedure(throatConc[i],
-//                            equationPNM.networkData.throatRadius[i],
-//                            effRadius[i],
-//                           equationPNM.networkData.throatLength[i]);
-//
-//        for (int j = 0; j < equation.propsDiffusion.gridBlockN; j++) {
-//            matrixConc[i][j] = equation.conc[equation.iCurr][j];
-//        }
-//    }
-//}
+}
+
+void DiffusionPNM::updateConc() {
+
+    auto throatN = equationPNM.networkData.throatN;
+    int boundCond = 0;
+
+    for (int i = 0; i < throatN; i++) {
+
+        auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
+
+        for (int j = 0; j < gridBlockN; j++) {
+            equationDiffusion.conc[0][j] = matrixConc[i][j];
+            equationDiffusion.conc[1][j] = matrixConc[i][j];
+        }
+
+        equationDiffusion.cfdProcedure(
+                boundCond,
+                throatConc[i],
+                equationPNM.networkData.throatRadius[i],
+                matrixWidth[i],
+                equationPNM.networkData.throatLength[i],
+                equationDiffusion.localDiffusion.volCartes,
+                equationDiffusion.convectiveDiffusion.omegaCartesian);
+
+        for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
+            matrixConc[i][j] = equationDiffusion.conc[equationDiffusion.iCurr][j];
+        }
+    }
+}
 //
 //void DiffusionPNM::calcDiffFlowDeriv() {
 //

@@ -90,6 +90,7 @@ public:
     double rockVolume;
     double langmConc;
     double conc_ini;
+    double density_const;
 
 
 
