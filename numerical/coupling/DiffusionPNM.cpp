@@ -111,6 +111,19 @@ double DiffusionPNM::calcSideLength(std::vector<double> &poreCoord) {
     return *max - *min;
 }
 
+double DiffusionPNM::calcDensConst() {
+
+    auto aGasDens = equationPNM.propsPNM.aGasDens;
+    auto bGasDens = equationPNM.propsPNM.bGasDens;
+
+    auto pressIn = equationPNM.propsPNM.pressIn;
+    auto pressOut = equationPNM.propsPNM.pressOut;
+
+    auto pressureAv = (pressIn + pressOut) / 2;
+
+    return aGasDens * pressureAv + bGasDens;
+}
+
 //
 //
 void DiffusionPNM::calcRockVolume() {
@@ -199,7 +212,9 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
             matrixConc[i][j] = equationDiffusion.conc[equationDiffusion.iCurr][j];
         }
 
-        diffFlowVector[i] = equationDiffusion.flowRate / 1.653;
+        densityConst = calcDensConst();
+
+        diffFlowVector[i] = equationDiffusion.flowRate / densityConst;
 
         for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++)
             matrixConc[i][j] = equationDiffusion.conc[equationDiffusion.iPrev][j];
@@ -234,12 +249,13 @@ void DiffusionPNM::updateConc() {
         }
     }
 }
+
 //
-//void DiffusionPNM::calcDiffFlowDeriv() {
-//
-//    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-//        flowDerivDiff[i] = ((diffFlowPlus[i] - diffFlowMinus[i]) / dP);
-//}
+void DiffusionPNM::calcDiffFlowDeriv() {
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        flowDerivDiff[i] = ((diffFlowPlus[i] - diffFlowMinus[i]) / dP);
+}
 //
 //void DiffusionPNM::calcMatCoeffDiff() {
 //

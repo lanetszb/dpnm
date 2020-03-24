@@ -40,6 +40,8 @@ public:
 
     double calcSideLength(std::vector<double> &poreCoord);
 
+    double calcDensConst();
+
     void calcRockVolume();
 
     void calcEffRadius();
@@ -90,8 +92,7 @@ public:
     double rockVolume;
     double langmConc;
     double conc_ini;
-    double density_const;
-
+    double densityConst;
 
 
     std::vector<double> effRadius;
