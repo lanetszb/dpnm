@@ -16,7 +16,7 @@ from numerical import EquationDiffusion
 from numerical import PropsPNMCpp
 from numerical import NetworkDataCpp
 from numerical import EquationPNM
-# from numerical import DiffusionPNM
+from numerical import DiffusionPNM
 
 from input import Props
 from input import Network_Data_Cpp
@@ -184,9 +184,10 @@ eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
                      pc_y, pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
                      pore_right, hydr_cond)
 
-# diff_pnm = DiffusionPNM(props_pnm, thrList, tr, tl, conn_in,
-#                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
-#                         ppr, props_diff, props.langm_coeff, plx, prx, hydr_cond)
+diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw, conn_in,
+                        conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
+                        ppr, pore_left, pore_right, hydr_cond,
+                        props.langm_coeff)
 
 # # =============================================================================
 # # Figure 1 (Avg Pore Pressure and Avg Concentration)

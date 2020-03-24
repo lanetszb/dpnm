@@ -299,11 +299,11 @@ BOOST_PYTHON_MODULE (cfd) {
                                     std::vector<double>,
                                     std::vector<double>>(
                                     p::args("props_PNM",
-                                            "props_diffusion"
+                                            "props_diffusion",
                                             "throat_list",
-                                            "throat_height"
+                                            "throat_height",
                                             "throat_length",
-                                            "throat_width"
+                                            "throat_width",
                                             "conn_ind_in",
                                             "conn_ind_out",
                                             "pore_coord_x",
@@ -317,31 +317,27 @@ BOOST_PYTHON_MODULE (cfd) {
                                             "pore_left_x",
                                             "pore_right_x",
                                             "hydr_cond",
-                                            "langmuir_coeff")));
+                                            "langmuir_coeff")))
+
+            .def("get_pressure_av",
+                 &DiffusionPNM::getPressureAverage)
+
+            .def("get_conc_av",
+                 &DiffusionPNM::getConcAverage)
+
+            .def("get_flow_pores_out",
+                 &DiffusionPNM::getTotalFlowPoresOut)
+
+            .def("get_flow_pores_in",
+                 &DiffusionPNM::getTotalFlowPoresIn)
+
+            .def("get_flow_diff",
+                 &DiffusionPNM::getTotalFlowDiff)
+
+            .def("get_pressure_by_pore",
+                 &DiffusionPNM::getPorePressure);
 
 }
-
-
-//
-//            .def("get_pressure_av",
-//                 &DiffusionPNM::getPressureAverage)
-//
-//            .def("get_conc_av",
-//                 &DiffusionPNM::getConcAverage)
-//
-//            .def("get_flow_pores_out",
-//                 &DiffusionPNM::getTotalFlowPoresOut)
-//
-//            .def("get_flow_pores_in",
-//                 &DiffusionPNM::getTotalFlowPoresIn)
-//
-//            .def("get_flow_diff",
-//                 &DiffusionPNM::getTotalFlowDiff)
-//
-//            .def("get_pressure_by_pore",
-//                 &DiffusionPNM::getPorePressure);
-//
-//}
 
 
 
