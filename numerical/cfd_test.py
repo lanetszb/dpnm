@@ -35,83 +35,83 @@ props_diff.print_props_vector()
 print('\n')
 
 #
-# # ++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# convective_diff = ConvectiveDiffusion(props_diff_vector)
 #
-convective_diff = ConvectiveDiffusion(props_diff_vector)
-
-local_diff = LocalDiffusion(props_diff_vector)
-
-equation_diff = EquationDiffusion(props_diff_vector)
+# local_diff = LocalDiffusion(props_diff_vector)
 #
-# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# equation_diff = EquationDiffusion(props_diff_vector)
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# time_step = props_diff.time_step
+# radius = props_diff.radius
+# eff_radius = props_diff.eff_radius
+# thr_length = props_diff.length
+# grid_block_n = props_diff.grid_block_n
+# diffusivity = props_diff.diffusivity
+# conc_wall = 0.3
 #
-time_step = props_diff.time_step
-radius = props_diff.radius
-eff_radius = props_diff.eff_radius
-thr_length = props_diff.length
-grid_block_n = props_diff.grid_block_n
-diffusivity = props_diff.diffusivity
-conc_wall = 0.3
-
+# #
+# local_diff.calc_vol_cylinder(radius, eff_radius,
+#                              grid_block_n, thr_length)
 #
-local_diff.calc_vol_cylinder(radius, eff_radius,
-                             grid_block_n, thr_length)
-
-local_diff.calc_vol_cartesian(radius, eff_radius,
-                              thr_length, radius)
-
-# volume_list = local_diff.vol_cylindr
-volume_list = local_diff.vol_cartes
-
-# local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
-
-
-convective_diff.calc_omega_cylindr(thr_length)
-
-convective_diff.calc_omega_cartes(radius, thr_length)
-
-# omega_list = convective_diff.omega_cylindr
-omega_list = convective_diff.omega_cartes
-
+# local_diff.calc_vol_cartesian(radius, eff_radius,
+#                               thr_length, radius)
 #
-local_diff.calculate_alpha(time_step, volume_list)
+# # volume_list = local_diff.vol_cylindr
+# volume_list = local_diff.vol_cartes
 #
-convective_diff.calculate_beta(radius, eff_radius, thr_length,
-                               diffusivity, grid_block_n, omega_list)
-
-equation_diff.cfd_procedure(1, conc_wall, radius,
-                            eff_radius, thr_length,
-                            volume_list, omega_list)
-
-conc = equation_diff.getConc()
-radius_curr = local_diff.radius_curr
-
-flow_rate = equation_diff.getFlowRate()
-
-grid_centers = []
-for i in range(len(radius_curr) - 1):
-    grid_centers.append((radius_curr[i + 1] +
-                         radius_curr[i]) / 2)
-
-# Diffusion Analytical Solution
-conc_analyt = []
-
-L = eff_radius - radius
-
-dX = L / grid_block_n
-
-conc_ini = 0.3
-conc_out = 1.5
-D = props_diff.diffusivity
-t = props_diff.time
-dt = props_diff.time_step
-
-for i in range(grid_block_n):
-    conc_it = conc_out + (conc_ini - conc_out) * math.erf(
-        i * dX / 2 / math.sqrt(D * t))
-    conc_analyt.append(conc_it)
-
-conc_analyt.reverse()
+# # local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
+#
+#
+# convective_diff.calc_omega_cylindr(thr_length)
+#
+# convective_diff.calc_omega_cartes(radius, thr_length)
+#
+# # omega_list = convective_diff.omega_cylindr
+# omega_list = convective_diff.omega_cartes
+#
+# #
+# local_diff.calculate_alpha(time_step, volume_list)
+# #
+# convective_diff.calculate_beta(radius, eff_radius, thr_length,
+#                                diffusivity, grid_block_n, omega_list)
+#
+# equation_diff.cfd_procedure(0, conc_wall, radius,
+#                             eff_radius, thr_length,
+#                             volume_list, omega_list)
+# #
+# conc = equation_diff.getConc()
+# radius_curr = local_diff.radius_curr
+#
+# flow_rate = equation_diff.getFlowRate()
+#
+# grid_centers = []
+# for i in range(len(radius_curr) - 1):
+#     grid_centers.append((radius_curr[i + 1] +
+#                          radius_curr[i]) / 2)
+#
+# # Diffusion Analytical Solution
+# conc_analyt = []
+#
+# L = eff_radius - radius
+#
+# dX = L / grid_block_n
+#
+# conc_ini = 0.3
+# conc_out = 1.5
+# D = props_diff.diffusivity
+# t = props_diff.time
+# dt = props_diff.time_step
+#
+# for i in range(grid_block_n):
+#     conc_it = conc_out + (conc_ini - conc_out) * math.erf(
+#         i * dX / 2 / math.sqrt(D * t))
+#     conc_analyt.append(conc_it)
+#
+# conc_analyt.reverse()
 
 # plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
 #          y_name='Concentration (kg/m3)',
@@ -120,19 +120,19 @@ conc_analyt.reverse()
 #
 # # ===================================================================
 #
-plot_x_y(grid_centers, conc, x_name='Radius (m)',
-         y_name='Concentration (kg/m3)',
-         graph_name='Concentration distribution',
-         line_type='--')
+# plot_x_y(grid_centers, conc, x_name='Radius (m)',
+#          y_name='Concentration (kg/m3)',
+#          graph_name='Concentration distribution',
+#          line_type='--')
 # # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #
 print("\n")
-#
+
 props_pnm = props.get_props_array()
 props_pnm_cpp = PropsPNMCpp(props_pnm)
 print(props_pnm_cpp)
-#
+
 network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
 network_data_cpp.process_throats()
 network_data_cpp.process_pores()
@@ -171,9 +171,9 @@ pore_left = p_bot_z
 pore_right = p_top_z
 
 langm_coeffs = props.langm_coeff
-
-# =============================================================================
-
+#
+# # =============================================================================
+#
 hydr_cond = network_data_cpp.hydraulic_cond_coeff
 
 nd_cpp = NetworkDataCpp(thrList, th, tl, tw, conn_in, conn_out, pc_x, pc_y,
@@ -187,7 +187,7 @@ eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
 diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw, conn_in,
                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
                         ppr, pore_left, pore_right, hydr_cond,
-                        props.langm_coeff)
+                        langm_coeffs)
 
 # # =============================================================================
 # # Figure 1 (Avg Pore Pressure and Avg Concentration)

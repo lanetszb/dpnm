@@ -212,27 +212,16 @@ void EquationPNM::calculateFreeVector(const int &boundCond,
         for (int i = 0; i < networkData.poreN; i++)
             if (networkData.poreLeftX[i])
                 freeVector[i] = pIn;
-//        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
-//            freeVector[i] = pIn;
 
     } else {
         for (int i = 0; i < networkData.poreN; i++)
             if (networkData.poreLeftX[i])
                 freeVector[i] = porFlowRate[i];
-
-//        for (int i = 0; i < networkData.boundaryPoresIn.size(); i++)
-//            freeVector[i] = inletFlow[i];
     }
+
     for (int i = 0; i < networkData.poreN; i++)
         if (networkData.poreRightX[i])
             freeVector[i] = pOut;
-
-
-//    int boundPoreSize = networkData.poreN - 1 -
-//                        networkData.boundaryPoresOut.size();
-//
-//    for (int i = networkData.poreN - 1; i > boundPoreSize; i--)
-//        freeVector[i] = pOut;
 }
 
 void EquationPNM::calculateGuessPress(const double &pIn,
