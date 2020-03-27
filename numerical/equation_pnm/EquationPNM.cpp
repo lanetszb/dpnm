@@ -77,11 +77,13 @@ void EquationPNM::calcPorConns() {
     // Ugly construction, has to be rewritten later, but works well for now
 
     int pore_iterator = 0;
-    for (int i = 0; i < networkData.poreN; i++)
-        for (int j = 0; j < networkData.connNumber[i]; j++) {
-            porConns[i].emplace_back(networkData.poreConns[pore_iterator]);
-            pore_iterator++;
-        }
+    for (int i = 0; i < networkData.poreN; i++) {
+      porConns[i].clear();
+      for (int j = 0; j < networkData.connNumber[i]; j++) {
+        porConns[i].emplace_back(networkData.poreConns[pore_iterator]);
+        pore_iterator++;
+      }
+    }
 
     for (int i = 0; i < porConns.size(); i++)
         for (int j = 0; j < porConns[i].size(); j++)
