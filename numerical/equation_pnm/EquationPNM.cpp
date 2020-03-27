@@ -105,18 +105,18 @@ void EquationPNM::calcMatCoeff() {
 
     for (int i = 0; i < networkData.throatN; i++) {
 
-        auto tR = networkData.throatRadius[i];
-        auto tH = tR;
-        auto tW = networkData.throatWidth[i];
-        auto tL = networkData.throatLength[i];
-
-        auto liqVisc = propsPNM.liqVisc;
-//
-        auto rI = networkData.poreRadius[throatConns[i].first];
-        auto rJ = networkData.poreRadius[throatConns[i].second];
+        // auto tR = networkData.throatRadius[i];
+        // auto tH = tR;
+        // auto tW = networkData.throatWidth[i];
+        // auto tL = networkData.throatLength[i];
+        // 
+        // auto liqVisc = propsPNM.liqVisc;
+        // 
+        // auto rI = networkData.poreRadius[throatConns[i].first];
+        // auto rJ = networkData.poreRadius[throatConns[i].second];
 
         // Fracture conductance (equal to Yu)
-        connCoeff[i] = tH * tH * tW / 12 / liqVisc / tL;
+        // connCoeff[i] = tH * tH * tW / 12 / liqVisc / tL;
 
         // auto cond = (M_PI * tR * tR * tR * tR) / (8 * liqVisc * tL);
         // 3D
@@ -182,7 +182,7 @@ void EquationPNM::calculateMatrix(const int &boundCond,
 
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
                                       -1 * connCoeff[porConns[i][j]]
-                                      - 1 * inOutCoeff[i][j] *
+                                      + inOutCoeff[i][j] *
                                         diffCoeff[porConns[i][j]]);
                 pore_iterator++;
 
