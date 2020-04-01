@@ -191,25 +191,25 @@ diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw, conn_
 
 # # =============================================================================
 # # Figure 1 (Avg Pore Pressure and Avg Concentration)
-# t = np.arange(0, props.time, props.time_step)
-# data1 = diff_pnm.get_pressure_av()
-# data2 = diff_pnm.get_conc_av()
-#
-# y_values = {"Average Pressure (Pa)": data1, "Avg Concentration (kg/m3)": data2}
-#
-# plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
-#
+t = np.arange(0, props.time, props.time_step)
+data1 = diff_pnm.get_pressure_av()
+data2 = diff_pnm.get_conc_av()
+
+y_values = {"Average Pressure (Pa)": data1, "Avg Concentration (kg/m3)": data2}
+
+plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
+
 # # =============================================================================
 # # Figure 2 (Total Flow Rate)
-# t = np.arange(0, props.time, props.time_step)
-# data1 = diff_pnm.get_pressure_av()
-# data2 = diff_pnm.get_flow_pores_out()
-# data3 = diff_pnm.get_flow_pores_in()
-#
-# y_values = {"Average Pressure (Pa)": data1, "Outlet Flow Rate (m/sec)": data2,
-#             "Inlet Flow Rate (m/sec)": data3}
-#
-# plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
+t = np.arange(0, props.time, props.time_step)
+data1 = diff_pnm.get_pressure_av()
+data2 = diff_pnm.get_flow_pores_out()
+data3 = diff_pnm.get_flow_pores_in()
+
+y_values = {"Average Pressure (Pa)": data1, "Outlet Flow Rate (m/sec)": data2,
+            "Inlet Flow Rate (m/sec)": data3}
+
+plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
 #
 # # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)

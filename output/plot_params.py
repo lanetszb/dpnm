@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_x_y(x_values, y_values, x_name, y_name, graph_name, line_type):
