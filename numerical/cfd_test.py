@@ -51,43 +51,49 @@ print('\n')
 # thr_length = props_diff.length
 # grid_block_n = props_diff.grid_block_n
 # diffusivity = props_diff.diffusivity
-# conc_wall = 0.3
-#
+# conc_wall = 0.85
 # #
+# # #
 # local_diff.calc_vol_cylinder(radius, eff_radius,
 #                              grid_block_n, thr_length)
-#
-# local_diff.calc_vol_cartesian(radius, eff_radius,
-#                               thr_length, radius)
-#
-# # volume_list = local_diff.vol_cylindr
-# volume_list = local_diff.vol_cartes
-#
-# # local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
-#
-#
-# convective_diff.calc_omega_cylindr(thr_length)
-#
-# convective_diff.calc_omega_cartes(radius, thr_length)
-#
-# # omega_list = convective_diff.omega_cylindr
-# omega_list = convective_diff.omega_cartes
-#
 # #
+# local_diff.calc_vol_cartesian(radius, eff_radius,
+#                              thr_length, radius)
+# #
+# # # volume_list = local_diff.vol_cylindr
+# volume_list = local_diff.vol_cartes
+# #
+# # local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
+# #
+# #
+# # convective_diff.calc_omega_cylindr(thr_length)
+# #
+# convective_diff.calc_omega_cartes(radius, thr_length)
+# #
+# # # omega_list = convective_diff.omega_cylindr
+# omega_list = convective_diff.omega_cartes
+# #
+# # #
 # local_diff.calculate_alpha(time_step, volume_list)
 # #
 # convective_diff.calculate_beta(radius, eff_radius, thr_length,
 #                                diffusivity, grid_block_n, omega_list)
 #
-# equation_diff.cfd_procedure(0, conc_wall, radius,
+# equation_diff.cfd_procedure_one_step(conc_wall, radius,
 #                             eff_radius, thr_length,
 #                             volume_list, omega_list)
 # #
+# # equation_diff.cfd_procedure(0, conc_wall, radius,
+# #                             eff_radius, thr_length,
+# #                             volume_list, omega_list)
+# # #
 # conc = equation_diff.getConc()
+#
+#
 # radius_curr = local_diff.radius_curr
 #
 # flow_rate = equation_diff.getFlowRate()
-#
+# #
 # grid_centers = []
 # for i in range(len(radius_curr) - 1):
 #     grid_centers.append((radius_curr[i + 1] +
@@ -188,9 +194,9 @@ diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw, conn_
                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
                         ppr, pore_left, pore_right, hydr_cond,
                         langm_coeffs)
-
-# # =============================================================================
-# # Figure 1 (Avg Pore Pressure and Avg Concentration)
+#
+# # # =============================================================================
+# # # Figure 1 (Avg Pore Pressure and Avg Concentration)
 t = np.arange(0, props.time, props.time_step)
 data1 = diff_pnm.get_pressure_av()
 data2 = diff_pnm.get_conc_av()
@@ -198,10 +204,10 @@ data2 = diff_pnm.get_conc_av()
 y_values = {"Average Pressure (Pa)": data1, "Avg Concentration (kg/m3)": data2}
 
 plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
-
-# # =============================================================================
-# # Figure 2 (Total Flow Rate)
-t = np.arange(0, props.time, props.time_step)
+#
+# # # =============================================================================
+# # # Figure 2 (Total Flow Rate)
+# t = np.arange(0, props.time, props.time_step)
 data1 = diff_pnm.get_pressure_av()
 data2 = diff_pnm.get_flow_pores_out()
 data3 = diff_pnm.get_flow_pores_in()

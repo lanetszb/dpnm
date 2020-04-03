@@ -52,7 +52,7 @@ class Network_Data:
         s.conn_ind = [[a, b] for a, b in zip(s.throats['pore_i'],
                                              s.throats['pore_j'])]
 
-        s.throat_radius = s.throats['throat_diameter'] / 2
+        s.throat_radius = s.throats['throat_height'] / 2
         s.throat_length = s.throats['throat_length']
 
     # Process pore data, create a list of pore coordinates

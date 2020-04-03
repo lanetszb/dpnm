@@ -137,6 +137,15 @@ BOOST_PYTHON_MODULE (cfd) {
                                  p::init<std::vector<double>>(
                                          p::args("props_array")))
 
+            .def("cfd_procedure_one_step",
+                 &EquationDiffusion::cfdProcedureOneStep,
+                 p::args("conc_in",
+                         "radius",
+                         "effective_radius",
+                         "thr_length",
+                         "volumes",
+                         "surfaces"))
+
             .def("cfd_procedure",
                  &EquationDiffusion::cfdProcedure,
                  p::args("boundCond",

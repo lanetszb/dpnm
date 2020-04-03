@@ -101,7 +101,8 @@ void EquationDiffusion::calculateConc() {
 }
 
 void EquationDiffusion::calcFlowRate() {
-    flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) * convectiveDiffusion.beta[1];
+    flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) *
+               convectiveDiffusion.beta[1];
 }
 
 void EquationDiffusion::cfdProcedureOneStep(const double &concThrWall,
@@ -110,6 +111,8 @@ void EquationDiffusion::cfdProcedureOneStep(const double &concThrWall,
                                             const double &thrLength,
                                             const std::vector<double> &volumes,
                                             const std::vector<double> &surfaces) {
+    // TODO: is not working independently as ConcIni shall be calculated. Might be good to think how to deal with it
+    // calcConcIni(propsDiffusion.concIni);
 
     std::swap(iCurr, iPrev);
 
@@ -171,14 +174,16 @@ void EquationDiffusion::cfdProcedure(const bool &boundCond,
 
     if (boundCond == 0) {
 
-        for (double t = propsDiffusion.timeStep; t <= propsDiffusion.time; t += propsDiffusion.timeStep) {
+        for (double t = propsDiffusion.timeStep;
+             t <= propsDiffusion.time; t += propsDiffusion.timeStep) {
             cfdProcedureOneStep(concThrWall, radius, effRadius, thrLength,
                                 volumes, surfaces);
         }
 
     } else
 
-        for (double t = propsDiffusion.timeStep; t <= propsDiffusion.time; t += propsDiffusion.timeStep) {
+        for (double t = propsDiffusion.timeStep;
+             t <= propsDiffusion.time; t += propsDiffusion.timeStep) {
             cfdProcDirichlet(concThrWall, radius, effRadius, thrLength,
                              volumes, surfaces);
         }
