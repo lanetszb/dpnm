@@ -45,7 +45,7 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
         flowDerivDiff(equationPNM.networkData.throatN, 0),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
-        conc_ini(2.0),
+        conc_ini(1.5),
         dP(0) {
 
 //
@@ -160,8 +160,9 @@ void DiffusionPNM::calcRockVolume() {
     auto lengthY = calcSideLength(equationPNM.networkData.poreCoordY);
     auto lengthZ = calcSideLength(equationPNM.networkData.poreCoordZ);
 
-    rockVolume = (lengthX * lengthY * lengthZ) * 1000;
-    // rockVolume =  0.018 *  0.018 *  0.018;
+    // TODO: to make the option of imporing real rock volume like is done below
+    // rockVolume = (lengthX * lengthY * lengthZ);
+    rockVolume =  0.018 *  0.018 *  0.018;
 
     // std::cout << "rockVolume= " << rockVolume << std::endl;
 }
@@ -223,17 +224,17 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
 
         auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
 
-        auto fracHeight = equationPNM.networkData.throatRadius[i];
-        auto fracLength = equationPNM.networkData.throatLength[i];
-        auto fracWidth = equationPNM.networkData.throatWidth[i];
+         auto fracHeight = equationPNM.networkData.throatRadius[i];
+         auto fracLength = equationPNM.networkData.throatLength[i];
+         auto fracWidth = equationPNM.networkData.throatWidth[i];
 
-        equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
-                                                              fracLength);
+         equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
+                                                               fracLength);
 
-        equationDiffusion.localDiffusion.calcVolCartesian(fracHeight,
-                                                          matrixWidth[i],
-                                                          fracLength,
-                                                          fracWidth);
+         equationDiffusion.localDiffusion.calcVolCartesian(fracHeight,
+                                                           matrixWidth[i],
+                                                           fracLength,
+                                                           fracWidth);
 
         for (int j = 0; j < gridBlockN; j++) {
             equationDiffusion.conc[0][j] = matrixConc[i][j];
@@ -243,7 +244,7 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
         equationDiffusion.cfdProcedureOneStep(
                 throatConc[i],
                 equationPNM.networkData.throatRadius[i],
-                effRadius[i],
+                matrixWidth[i],
                 equationPNM.networkData.throatLength[i],
                 equationDiffusion.localDiffusion.volCartes,
                 equationDiffusion.convectiveDiffusion.omegaCartesian);
@@ -258,15 +259,15 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
             matrixConc[i][j] = equationDiffusion.conc[equationDiffusion.iPrev][j];
     }
 
-    // for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-    //     // std::cout << i << std::endl;
-    //     for (int j = 0;
-    //          j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
-    //         std::cout << matrixConc[i][j] << ' ';
-    //     }
-    //     std::cout << std::endl;
-    // }
-    // std::cout << std::endl;
+     // for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+     //     // std::cout << i << std::endl;
+     //     for (int j = 0;
+     //          j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
+     //         std::cout << matrixConc[i][j] << ' ';
+     //     }
+     //     std::cout << std::endl;
+     // }
+     // std::cout << std::endl;
 }
 
 void DiffusionPNM::updateConc() {
@@ -283,22 +284,22 @@ void DiffusionPNM::updateConc() {
         }
 
 
-        auto fracHeight = equationPNM.networkData.throatRadius[i];
-        auto fracLength = equationPNM.networkData.throatLength[i];
-        auto fracWidth = equationPNM.networkData.throatWidth[i];
+         auto fracHeight = equationPNM.networkData.throatRadius[i];
+         auto fracLength = equationPNM.networkData.throatLength[i];
+         auto fracWidth = equationPNM.networkData.throatWidth[i];
 
-        equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
-                                                              fracLength);
+         equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
+                                                               fracLength);
 
-        equationDiffusion.localDiffusion.calcVolCartesian(fracHeight,
-                                                          matrixWidth[i],
-                                                          fracLength,
-                                                          fracWidth);
+         equationDiffusion.localDiffusion.calcVolCartesian(fracHeight,
+                                                           matrixWidth[i],
+                                                           fracLength,
+                                                           fracWidth);
 
         equationDiffusion.cfdProcedureOneStep(
                 throatConc[i],
                 equationPNM.networkData.throatRadius[i],
-                effRadius[i],
+                matrixWidth[i],
                 equationPNM.networkData.throatLength[i],
                 equationDiffusion.localDiffusion.volCartes,
                 equationDiffusion.convectiveDiffusion.omegaCartesian);
@@ -429,6 +430,8 @@ void DiffusionPNM::calcCoupledFreeVector() {
 
 //
 void DiffusionPNM::setInitialCond() {
+
+    auto throatN = equationPNM.networkData.throatN;
 
     densityConst = calcDensConst();
 

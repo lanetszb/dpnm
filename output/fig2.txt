@@ -1,0 +1,71 @@
+\begin{tikzpicture}[gnuplot]
+%% generated with GNUPLOT 5.2p8 (Lua 5.3; terminal rev. Nov 2018, script rev. 108)
+%% Sat Apr  4 17:26:18 2020
+\path (0.000,0.000) rectangle (9.000,6.000);
+\gpcolor{color=gp lt color border}
+\gpsetlinetype{gp lt border}
+\gpsetdashtype{gp dt solid}
+\gpsetlinewidth{1.00}
+\draw[gp path] (1.872,0.985)--(2.052,0.985);
+\node[gp node right] at (1.688,0.985) {$300000$};
+\draw[gp path] (1.872,1.657)--(2.052,1.657);
+\node[gp node right] at (1.688,1.657) {$300000$};
+\draw[gp path] (1.872,2.330)--(2.052,2.330);
+\node[gp node right] at (1.688,2.330) {$300000$};
+\draw[gp path] (1.872,3.002)--(2.052,3.002);
+\node[gp node right] at (1.688,3.002) {$300000$};
+\draw[gp path] (1.872,3.674)--(2.052,3.674);
+\node[gp node right] at (1.688,3.674) {$300000$};
+\draw[gp path] (1.872,4.346)--(2.052,4.346);
+\node[gp node right] at (1.688,4.346) {$300000$};
+\draw[gp path] (1.872,5.019)--(2.052,5.019);
+\node[gp node right] at (1.688,5.019) {$300000$};
+\draw[gp path] (1.872,5.691)--(2.052,5.691);
+\node[gp node right] at (1.688,5.691) {$300000$};
+\draw[gp path] (1.872,0.985)--(1.872,1.165);
+\node[gp node center] at (1.872,0.707) {$0$};
+\draw[gp path] (2.905,0.985)--(2.905,1.165);
+\node[gp node center] at (2.905,0.707) {$3$};
+\draw[gp path] (3.937,0.985)--(3.937,1.165);
+\node[gp node center] at (3.937,0.707) {$6$};
+\draw[gp path] (4.970,0.985)--(4.970,1.165);
+\node[gp node center] at (4.970,0.707) {$9$};
+\draw[gp path] (6.002,0.985)--(6.002,1.165);
+\node[gp node center] at (6.002,0.707) {$12$};
+\draw[gp path] (7.035,0.985)--(7.035,1.165);
+\node[gp node center] at (7.035,0.707) {$15$};
+\draw[gp path] (7.035,0.985)--(6.855,0.985);
+\node[gp node left] at (7.219,0.985) {$1.45$};
+\draw[gp path] (7.035,1.926)--(6.855,1.926);
+\node[gp node left] at (7.219,1.926) {$1.46$};
+\draw[gp path] (7.035,2.867)--(6.855,2.867);
+\node[gp node left] at (7.219,2.867) {$1.47$};
+\draw[gp path] (7.035,3.809)--(6.855,3.809);
+\node[gp node left] at (7.219,3.809) {$1.48$};
+\draw[gp path] (7.035,4.750)--(6.855,4.750);
+\node[gp node left] at (7.219,4.750) {$1.49$};
+\draw[gp path] (7.035,5.691)--(6.855,5.691);
+\node[gp node left] at (7.219,5.691) {$1.5$};
+\draw[gp path] (1.872,5.691)--(1.872,0.985)--(7.035,0.985)--(7.035,5.691)--cycle;
+\node[gp node center,rotate=-270] at (0.604,3.338) {Average pore pressure, $p$ ($10^{-3} Pa$)};
+\node[gp node center,rotate=-270] at (8.532,3.338) {Average matrix concentration, $C_{m}$ ($10^{3} \; kg/m^3$)};
+\node[gp node center] at (4.453,0.215) {Time, $t$ ($s$)};
+\node[gp node right] at (5.567,5.357) {Average pore pressure};
+\gpcolor{rgb color={0.580,0.000,0.827}}
+\draw[gp path] (5.751,5.357)--(6.667,5.357);
+\draw[gp path] (1.872,1.089)--(2.216,5.523)--(2.560,5.370)--(2.905,5.240)--(3.249,5.128)%
+  --(3.593,5.032)--(3.937,4.948)--(4.281,4.874)--(4.626,4.808)--(4.970,4.750)--(5.314,4.698)%
+  --(5.658,4.651)--(6.002,4.608)--(6.347,4.569);
+\gpcolor{color=gp lt color border}
+\node[gp node right] at (5.567,5.049) {Average matrix concentration};
+\gpcolor{rgb color={0.337,0.706,0.914}}
+\draw[gp path] (5.751,5.049)--(6.667,5.049);
+\draw[gp path] (1.872,5.691)--(2.216,2.932)--(2.560,2.840)--(2.905,2.753)--(3.249,2.672)%
+  --(3.593,2.595)--(3.937,2.522)--(4.281,2.453)--(4.626,2.386)--(4.970,2.323)--(5.314,2.261)%
+  --(5.658,2.202)--(6.002,2.145)--(6.347,2.090);
+\gpcolor{color=gp lt color border}
+\draw[gp path] (1.872,5.691)--(1.872,0.985)--(7.035,0.985)--(7.035,5.691)--cycle;
+%% coordinates of the plot area
+\gpdefrectangularnode{gp plot 1}{\pgfpoint{1.872cm}{0.985cm}}{\pgfpoint{7.035cm}{5.691cm}}
+\end{tikzpicture}
+%% gnuplot variables

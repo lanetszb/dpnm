@@ -190,32 +190,50 @@ eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
                      pc_y, pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
                      pore_right, hydr_cond)
 
-diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw, conn_in,
+diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw,
+                        conn_in,
                         conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
                         ppr, pore_left, pore_right, hydr_cond,
                         langm_coeffs)
 #
 # # # =============================================================================
 # # # Figure 1 (Avg Pore Pressure and Avg Concentration)
-t = np.arange(0, props.time, props.time_step)
-data1 = diff_pnm.get_pressure_av()
-data2 = diff_pnm.get_conc_av()
+time = np.arange(0, props.time, props.time_step)
+pore_press_av = diff_pnm.get_pressure_av()
+mat_conc_av = diff_pnm.get_conc_av()
 
-y_values = {"Average Pressure (Pa)": data1, "Avg Concentration (kg/m3)": data2}
+y_values = {"Average Pressure (Pa)": pore_press_av,
+            "Avg Concentration (kg/m3)": mat_conc_av}
 
-plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
+plot_x_ymult(time, y_values, 1, 'time (sec)', 'FLow Params vs Time')
+
+df_fig1 = pd.DataFrame({"time": time,
+                        "Avg_pore_press": pore_press_av,
+                        "Avg_mat_conc": mat_conc_av})
+
+df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
+               header=True)
 #
 # # # =============================================================================
 # # # Figure 2 (Total Flow Rate)
 # t = np.arange(0, props.time, props.time_step)
-data1 = diff_pnm.get_pressure_av()
-data2 = diff_pnm.get_flow_pores_out()
-data3 = diff_pnm.get_flow_pores_in()
+flow_rate_in = diff_pnm.get_flow_pores_in()
+flow_rate_out = diff_pnm.get_flow_pores_out()
 
-y_values = {"Average Pressure (Pa)": data1, "Outlet Flow Rate (m/sec)": data2,
-            "Inlet Flow Rate (m/sec)": data3}
+df_fig2 = pd.DataFrame(
+    {"time": time,
+     "Avg_pore_press": pore_press_av,
+     "flow_rate_in": flow_rate_in,
+     "flow_rate_out": flow_rate_out})
 
-plot_x_ymult(t.tolist(), y_values, 1, 'time (sec)', 'FLow Params vs Time')
+df_fig2.to_csv(r'../output/fig_press_flowrates.txt', sep=' ', index=False,
+               header=True)
+
+y_values = {"Average Pressure (Pa)": pore_press_av,
+            "Outlet Flow Rate (m/sec)": flow_rate_out,
+            "Inlet Flow Rate (m/sec)": flow_rate_in}
+
+plot_x_ymult(time, y_values, 1, 'time (sec)', 'FLow Params vs Time')
 #
 # # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
