@@ -1,11 +1,11 @@
-# set term png  
-# set output "fig_press_flowrates.png"
-set term tikz latex size 9,6
-set output 'fig3.txt'
+set term png  
+set output "press_flowrates.png"
+# set term tikz latex size 9,6
+# set output 'fig4_press_flowrates.txt'
 
-set xlabel "Time, $t$ ($s$)"
-set ylabel "Average pore pressure, $p$ ($10^{-3} Pa$)" offset 1.7,0,0
-set y2label "Flow rate, $Q$ ($10^{3} \\; m^3/sec$)" offset +1.3,0,0
+set xlabel "$t$, $sec$"
+set ylabel "Average $p$, $10^{-3} Pa$" offset 0.0,0,0
+set y2label "$Q$, $10^{6} \\; m^3/sec$" offset 0.0,0,0
 set autoscale
 # set yrange [299000:299300]
 # set ytics 0.5 offset .9,0,0
@@ -18,6 +18,6 @@ set xtics nomirror
 set ytics nomirror
 set y2tics
 
-plot 'fig_press_flowrates.txt' using 1:2 with l lc 1 title 'Average pore pressure', \
-'' using 1:3 with l lc 3 axes x1y2  title 'Inlet flow rate', \
-'' using 1:4 with l lc 4 axes x1y2  title 'Outlet flow rate'
+plot 'fig_press_flowrates.txt' using 1:($2/1000.0) with l lc 1 title 'Average P', \
+'' using 1:($3*10**6) with l lc 3 axes x1y2  title 'Inlet Q', \
+'' using 1:($4*10**6) with l lc 4 axes x1y2  title 'Outlet Q'

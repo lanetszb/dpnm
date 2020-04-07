@@ -101,8 +101,7 @@ void EquationDiffusion::calculateConc() {
 }
 
 void EquationDiffusion::calcFlowRate() {
-    flowRate = -1 * (conc[iCurr][0] - conc[iCurr][1]) *
-               convectiveDiffusion.beta[1];
+    flowRate = -convectiveDiffusion.beta[1] * (conc[iCurr][0] - conc[iCurr][1]);
 }
 
 void EquationDiffusion::cfdProcedureOneStep(const double &concThrWall,

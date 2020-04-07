@@ -86,6 +86,8 @@ public:
 
     const std::vector<double> getPorePressure() const;
 
+    const std::vector<double> getInletPressure() const;
+
 
     std::vector<double> langmuirCoeff;
 
@@ -115,6 +117,7 @@ public:
     std::vector<double> centralCoeffDiff;
 
     std::vector<double> pressureAverage;
+    std::vector<double> pressIn;
     std::vector<double> concAverage;
 
     std::vector<double> totalFlowPoresOut;

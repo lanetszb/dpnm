@@ -3,8 +3,8 @@
 
 set term tikz latex size 9,6
 set output 'fig4.txt'
-set xlabel "Pressure, $P$ ($Pa$)"
-set ylabel "Concentration, $C$ ($kg/m^3$)" offset 0.01,0,0
+set xlabel "$P$, $Pa$"
+set ylabel "$C$, $kg/m^3$" offset 0.01,0,0
 
 
 a = 5.07024e-01
@@ -17,9 +17,11 @@ set xrange[0:300000]
 
 f(x) = a*x**0 + b*x**1 + c*x**2 + d*x**3 + e*x**4
 
+set ytics 0.1
+
 unset grid
 set xtics nomirror
 set ytics nomirror
 
 
-plot f(x) title 'Langmuir isotherm ' with lines linestyle 1
+plot f(x) with lines lw 2 lc rgb "black" notitle
