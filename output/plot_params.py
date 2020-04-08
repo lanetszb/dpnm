@@ -20,7 +20,7 @@ def plot_x_y(x_values, y_values, x_name, y_name, graph_name, line_type):
 
 
 def plot_x_ymult(x_values, y_values, y_primary_len, x_name, y1_name, y2_name,
-                 graph_name):
+                 graph_name, y1_lim=[], y2_lim=[]):
     fig, ax1 = plt.subplots()
     # plt.suptitle(graph_name, y=1.0, fontsize=17)
     plt.suptitle(graph_name, y=1.0)
@@ -38,6 +38,8 @@ def plot_x_ymult(x_values, y_values, y_primary_len, x_name, y1_name, y2_name,
         ax1.tick_params(axis='y', labelcolor=color)
 
     ax1.set_ylabel(y1_name)
+    if y1_lim:
+        ax1.set_ylim(y1_lim)
 
     ax2 = ax1.twinx()
 
@@ -54,6 +56,8 @@ def plot_x_ymult(x_values, y_values, y_primary_len, x_name, y1_name, y2_name,
 
     ax2.tick_params(axis='y', labelcolor=color)
     ax2.set_ylabel(y2_name)
+    if y2_lim:
+        ax2.set_ylim(y2_lim)
     # fig.legend(loc="upper center", fontsize='x-large')
     ax1.legend(loc='upper right')
     ax2.legend(loc='upper center')

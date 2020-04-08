@@ -76,7 +76,7 @@ public:
 
     const std::vector<double> getPressureAverage() const;
 
-    const std::vector<double> getConcAverage() const;
+    const std::vector<double> getMatrixVolTotal() const;
 
     const std::vector<double> getTotalFlowPoresOut() const;
 
@@ -105,9 +105,9 @@ public:
 
     std::vector<std::vector<double>> matrixConc;
 
-    std::vector<double> diffFlow;
-    std::vector<double> diffFlowPlus;
-    std::vector<double> diffFlowMinus;
+    std::vector<double> diffFlowInst;
+    std::vector<double> diffFlowInstPlus;
+    std::vector<double> diffFlowInstMinus;
 
     double dP;
 
@@ -118,7 +118,7 @@ public:
 
     std::vector<double> pressureAverage;
     std::vector<double> pressIn;
-    std::vector<double> concAverage;
+    std::vector<double> matrixVolTotal;
 
     std::vector<double> totalFlowPoresOut;
     std::vector<double> totalFlowPoresIn;

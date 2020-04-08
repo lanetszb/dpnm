@@ -199,20 +199,24 @@ diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw,
 # # # =============================================================================
 # # # Figure 1 (Avg Pore Pressure and Avg Concentration)
 time = np.arange(0, props.time, props.time_step)
+# TODO: fix the issue with time step
+time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
 pore_press_av = diff_pnm.get_pressure_av()
-mat_conc_av = diff_pnm.get_conc_av()
+matrix_volume_total = diff_pnm.get_matrix_vol_total()
 inlet_pressure = diff_pnm.get_inlet_pressure()
 
-y_values = {"C_av": mat_conc_av,
+y_values = {"Vol_total": matrix_volume_total,
             "P_av": pore_press_av,
             "P_in": inlet_pressure}
 
-plot_x_ymult(time, y_values, 1, 'time (sec)', 'C (kg/m3)', 'P (Pa)',
-             'Model Params vs Time')
+plot_x_ymult(time, y_values, 1, 'time (sec)', 'Vol ($m^3$)', 'P (Pa)',
+             'Model Params vs Time', [], [])
+# plot_x_ymult(time, y_values, 1, 'time (sec)', 'C (kg/m3)', 'P (Pa)',
+#              'Model Params vs Time')
 
 df_fig1 = pd.DataFrame({"time": time,
                         "Avg_pore_press": pore_press_av,
-                        "Avg_mat_conc": mat_conc_av})
+                        "Matrix_vol_total": matrix_volume_total})
 
 df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
                header=True)
@@ -224,20 +228,39 @@ flow_rate_in = diff_pnm.get_flow_pores_in()
 flow_rate_out = diff_pnm.get_flow_pores_out()
 flow_rate_diff = diff_pnm.get_flow_diff()
 
+flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
+flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)
+
 df_fig2 = pd.DataFrame(
     {"time": time,
-     "Avg_pore_press": pore_press_av,
+     "avg_pore_press": pore_press_av,
      "flow_rate_in": flow_rate_in,
-     "flow_rate_out": flow_rate_out})
+     "flow_rate_out": flow_rate_out,
+     "mat_gas_release": flow_rate_diff})
 
 df_fig2.to_csv(r'../output/fig_press_flowrates.txt', sep=' ', index=False,
                header=True)
 
 y_values = {"P_av": pore_press_av,
             "Q_out": flow_rate_out,
-            "Mat_release": flow_rate_diff}
+            "Gas_release": flow_rate_diff}
 
-plot_x_ymult(time, y_values, 1, 'time (sec)', 'P (Pa)', 'Q (m3/sec)', 'FLow Params vs Time')
+# plot_x_ymult(time, y_values, 1, 'time (sec)', 'P (Pa)', 'Q (m3/sec)',
+#              'FLow Params vs Time', [299900, 300220], [0.0, 0.000003])
+# plot_x_ymult(time, y_values, 1, 'time (sec)', 'P (Pa)', 'Q (m3/sec)',
+#              'FLow Params vs Time')
+
+# y_values = {"P_av": pore_press_av,
+#             "Q_out_ac": flow_rate_out_cum,
+#             "Gas_release_ac": flow_rate_diff_cum}
+
+y_values = {"Q_out": flow_rate_out,
+            "Gas_release": flow_rate_diff,
+            "Q_out_ac": flow_rate_out_cum,
+            "Gas_release_ac": flow_rate_diff_cum}
+
+plot_x_ymult(time, y_values, 2, 'time (sec)', 'Q ($m^3/sec$)', 'Q ($m^3$)',
+             'FLow Params vs Time', [], [])
 #
 # # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
