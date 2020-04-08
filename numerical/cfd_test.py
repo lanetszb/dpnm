@@ -202,21 +202,21 @@ time = np.arange(0, props.time, props.time_step)
 # TODO: fix the issue with time step
 time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
 pore_press_av = diff_pnm.get_pressure_av()
-matrix_volume_total = diff_pnm.get_matrix_vol_total()
+matrix_mass_total = diff_pnm.get_matrix_mass_total()
 inlet_pressure = diff_pnm.get_inlet_pressure()
 
-y_values = {"Vol_total": matrix_volume_total,
+y_values = {"Vol_total": matrix_mass_total,
             "P_av": pore_press_av,
             "P_in": inlet_pressure}
 
-plot_x_ymult(time, y_values, 1, 'time (sec)', 'Vol ($m^3$)', 'P (Pa)',
+plot_x_ymult(time, y_values, 1, 'time (sec)', 'Mass ($kg$)', 'P (Pa)',
              'Model Params vs Time', [], [])
 # plot_x_ymult(time, y_values, 1, 'time (sec)', 'C (kg/m3)', 'P (Pa)',
 #              'Model Params vs Time')
 
 df_fig1 = pd.DataFrame({"time": time,
                         "Avg_pore_press": pore_press_av,
-                        "Matrix_vol_total": matrix_volume_total})
+                        "Matrix_vol_total": matrix_mass_total})
 
 df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
                header=True)
@@ -254,12 +254,12 @@ y_values = {"P_av": pore_press_av,
 #             "Q_out_ac": flow_rate_out_cum,
 #             "Gas_release_ac": flow_rate_diff_cum}
 
-y_values = {"Q_out": flow_rate_out,
-            "Gas_release": flow_rate_diff,
-            "Q_out_ac": flow_rate_out_cum,
-            "Gas_release_ac": flow_rate_diff_cum}
+y_values = {"Q_out_ac": flow_rate_out_cum,
+            "Gas_release_ac": flow_rate_diff_cum,
+            "Q_out": flow_rate_out,
+            "Gas_release": flow_rate_diff}
 
-plot_x_ymult(time, y_values, 2, 'time (sec)', 'Q ($m^3/sec$)', 'Q ($m^3$)',
+plot_x_ymult(time, y_values, 2, 'time (sec)', 'Mass ($kg$)', 'Q ($kg/sec$)',
              'FLow Params vs Time', [], [])
 #
 # # =============================================================================
