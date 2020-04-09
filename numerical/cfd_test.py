@@ -191,8 +191,7 @@ eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
                      pore_right, hydr_cond)
 
 diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw,
-                        conn_in,
-                        conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
+                        conn_in, conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
                         ppr, pore_left, pore_right, hydr_cond,
                         langm_coeffs)
 #

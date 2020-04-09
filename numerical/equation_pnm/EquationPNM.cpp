@@ -184,7 +184,7 @@ void EquationPNM::calculateMatrix(const int &boundCond,
 
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
                                       -1 * connCoeff[porConns[i][j]]
-                                      + inOutCoeff[i][j] *
+                                      + 0 * inOutCoeff[i][j] *
                                         diffCoeff[porConns[i][j]]);
                 pore_iterator++;
 
