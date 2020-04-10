@@ -23,6 +23,9 @@ from input import Network_Data_Cpp
 
 from output import plot_x_y
 from output import plot_x_ymult
+from matplotlib import rc
+
+rc('text', usetex=True)
 
 props = Props(config_file=sys.argv[1])
 
@@ -205,14 +208,19 @@ pore_press_av = diff_pnm.get_pressure_av()
 matrix_mass_total = diff_pnm.get_matrix_mass_total()
 inlet_pressure = diff_pnm.get_inlet_pressure()
 
-y_values = {"Mass_total": matrix_mass_total,
-            "P_av": pore_press_av,
-            "P_in": inlet_pressure}
+y_values = {'$M_{matrix}$  ': matrix_mass_total,
+            '$P_{av}$': pore_press_av,
+            '$P_{in}$': inlet_pressure}
 
-plot_x_ymult(time, y_values, 1, 'time (sec)', 'Mass ($kg$)', 'P (Pa)',
-             'Model Params vs Time', [0, 20.e-7], [])
-# plot_x_ymult(time, y_values, 1, 'time (sec)', 'C (kg/m3)', 'P (Pa)',
-#              'Model Params vs Time')
+fig_width = 4.5
+y_scale = 1.3
+fig, axs = plt.subplots(2, sharex='all', sharey='col',
+                        figsize=(fig_width, fig_width * y_scale),
+                        tight_layout=True)
+# plt.suptitle('Model Params vs Time', y=1.0)
+
+plot_x_ymult(axs[0], time, y_values, 1, '$time, sec$', '$Mass, kg$',
+             '$P, Pa$', [], [])
 
 df_fig1 = pd.DataFrame({"time": time,
                         "Avg_pore_press": pore_press_av,
@@ -223,7 +231,6 @@ df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
 #
 # # # =============================================================================
 # # # Figure 2 (Total Flow Rate)
-t = np.arange(0, props.time, props.time_step)
 flow_rate_in = diff_pnm.get_flow_pores_in()
 flow_rate_out = diff_pnm.get_flow_pores_out()
 flow_rate_diff = diff_pnm.get_flow_diff()
@@ -241,26 +248,16 @@ df_fig2 = pd.DataFrame(
 df_fig2.to_csv(r'../output/fig_press_flowrates.txt', sep=' ', index=False,
                header=True)
 
-y_values = {"P_av": pore_press_av,
-            "Q_out": flow_rate_out,
-            "Gas_release": flow_rate_diff}
+y_values = {'$N_{out}$': flow_rate_out_cum,
+            '$N_{release}$': flow_rate_diff_cum,
+            '$Q_{out}$': flow_rate_out,
+            '$Q_{release}$': flow_rate_diff}
 
-# plot_x_ymult(time, y_values, 1, 'time (sec)', 'P (Pa)', 'Q (m3/sec)',
-#              'FLow Params vs Time', [299900, 300220], [0.0, 0.000003])
-# plot_x_ymult(time, y_values, 1, 'time (sec)', 'P (Pa)', 'Q (m3/sec)',
-#              'FLow Params vs Time')
+plot_x_ymult(axs[1], time, y_values, 2, '$time, sec$', '$Mass, kg$',
+             '$Q, kg/sec$', [], [])
 
-# y_values = {"P_av": pore_press_av,
-#             "Q_out_ac": flow_rate_out_cum,
-#             "Gas_release_ac": flow_rate_diff_cum}
-
-y_values = {"Q_out_ac": flow_rate_out_cum,
-            "Gas_release_ac": flow_rate_diff_cum,
-            "Q_out": flow_rate_out,
-            "Gas_release": flow_rate_diff}
-
-plot_x_ymult(time, y_values, 2, 'time (sec)', 'Mass ($kg$)', 'Q ($kg/sec$)',
-             'FLow Params vs Time', [0, 20.e-7], [])
+plt.savefig('../output/flow_params.eps', format="eps", bbox_inches='tight')
+plt.show()
 #
 # # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
