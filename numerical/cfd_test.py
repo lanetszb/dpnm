@@ -191,7 +191,8 @@ eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
                      pore_right, hydr_cond)
 
 diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw,
-                        conn_in, conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn, conn_numb,
+                        conn_in, conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn,
+                        conn_numb,
                         ppr, pore_left, pore_right, hydr_cond,
                         langm_coeffs)
 #
@@ -204,12 +205,12 @@ pore_press_av = diff_pnm.get_pressure_av()
 matrix_mass_total = diff_pnm.get_matrix_mass_total()
 inlet_pressure = diff_pnm.get_inlet_pressure()
 
-y_values = {"Vol_total": matrix_mass_total,
+y_values = {"Mass_total": matrix_mass_total,
             "P_av": pore_press_av,
             "P_in": inlet_pressure}
 
 plot_x_ymult(time, y_values, 1, 'time (sec)', 'Mass ($kg$)', 'P (Pa)',
-             'Model Params vs Time', [], [])
+             'Model Params vs Time', [0, 20.e-7], [])
 # plot_x_ymult(time, y_values, 1, 'time (sec)', 'C (kg/m3)', 'P (Pa)',
 #              'Model Params vs Time')
 
@@ -259,7 +260,7 @@ y_values = {"Q_out_ac": flow_rate_out_cum,
             "Gas_release": flow_rate_diff}
 
 plot_x_ymult(time, y_values, 2, 'time (sec)', 'Mass ($kg$)', 'Q ($kg/sec$)',
-             'FLow Params vs Time', [], [])
+             'FLow Params vs Time', [0, 20.e-7], [])
 #
 # # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
