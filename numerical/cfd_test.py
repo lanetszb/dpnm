@@ -256,7 +256,7 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
 plot_x_ymult(axs[1], time, y_values, 2, '$time, sec$', '$Mass, kg$',
              '$Q, kg/sec$', [], [])
 
-plt.savefig('../output/flow_params.eps', format="eps", bbox_inches='tight')
+# plt.savefig('../output/flow_params.eps', format="eps", bbox_inches='tight')
 plt.show()
 #
 # # =============================================================================

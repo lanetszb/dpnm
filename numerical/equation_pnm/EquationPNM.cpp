@@ -389,6 +389,7 @@ void EquationPNM::calcPorFlowRate() {
 
 void EquationPNM::calcInletFlow(const std::vector<bool> &boundPorIn) {
 
+    inletFlow.clear();
     for (int i = 0; i < boundPorIn.size(); i++)
         if (boundPorIn[i])
             inletFlow.emplace_back(porFlowRate[i]);
