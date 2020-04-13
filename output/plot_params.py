@@ -28,10 +28,12 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
     ax.set_ylabel(list(y_values.keys())[0], color=color)
     for idx, value in enumerate((list(y_values.keys())[:y_primary_len])):
         label = list(y_values.keys())[idx]
+        # ax.plot(x_values, y_values[value], color=colors[idx], label=label)
         ax.plot(x_values, y_values[value], color=colors[idx], label=label,
                 marker='o', markersize=2)
         ax.tick_params(axis='y', labelcolor=color)
 
+    ax.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
     ax.set_ylabel(y1_name)
     if y1_lim:
         ax.set_ylim(y1_lim)
@@ -43,6 +45,8 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
 
     for idx, value in enumerate((list(y_values.keys())[y_primary_len:])):
         label = list(y_values.keys())[y_primary_len + idx]
+        # ax2.plot(x_values, y_values[value], color=colors[y_primary_len + idx],
+        #          label=label)
         ax2.plot(x_values, y_values[value], color=colors[y_primary_len + idx],
                  label=label, marker='o', markersize=2)
         ax2.tick_params(axis='y', labelcolor=color)

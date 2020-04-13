@@ -45,7 +45,7 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
         flowDerivDiff(equationPNM.networkData.throatN, 0),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
-        conc_ini(10.0),
+        conc_ini(0.77),
         dP(0) {
 
     equationPNM.setInitialCond();
@@ -85,7 +85,7 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
             boundPoresRight.emplace_back(i);
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        equationPNM.porFlowRate[i] = 1.e-6;
+        equationPNM.porFlowRate[i] = 1.e-12;
 
     equationPNM.cfdProcedure(0,
                              boundPoresRight,
@@ -194,7 +194,7 @@ double DiffusionPNM::calcDensConst() {
 
     auto pressureAv = (pressIn + pressOut) / 2;
 
-    return 1.;
+    return 1.986;
     // return aGasDens * pressureAv + bGasDens;
 }
 
@@ -206,7 +206,7 @@ void DiffusionPNM::calcRockVolume() {
 
     // TODO: to make the option of imporing real rock volume like is done below
     // rockVolume = (lengthX * lengthY * lengthZ);
-    rockVolume = 0.018 * 0.018 * 0.018 * 0.01;
+    rockVolume = 0.018 * 0.018 * 0.018 * 0.1;
 
     // std::cout << "rockVolume= " << rockVolume << std::endl;
 }
@@ -493,7 +493,8 @@ void DiffusionPNM::calcCoupledFreeVector() {
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         // TODO: understand plus or minus sign
         if (!equationPNM.networkData.poreRightX[i])
-            equationPNM.freeVector[i] += porFlowDiff[i] + porFlowDiffDer[i];
+            equationPNM.freeVector[i] += porFlowDiff[i];
+            // equationPNM.freeVector[i] += porFlowDiff[i] + porFlowDiffDer[i];
     // equationPNM.freeVector[i] += -1 * (porFlowDiff[i] - porFlowDiffDer[i]);
 }
 

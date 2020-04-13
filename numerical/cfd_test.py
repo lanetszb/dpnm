@@ -214,9 +214,13 @@ y_values = {'$M_{matrix}$  ': matrix_mass_total,
 
 fig_width = 4.5
 y_scale = 1.3
-fig, axs = plt.subplots(2, sharex='all', sharey='col',
+
+fig, axs = plt.subplots(2, sharex='all',
                         figsize=(fig_width, fig_width * y_scale),
                         tight_layout=True)
+# fig, axs = plt.subplots(2, sharex='all', sharey='col',
+#                         figsize=(fig_width, fig_width * y_scale),
+#                         tight_layout=True)
 # plt.suptitle('Model Params vs Time', y=1.0)
 
 plot_x_ymult(axs[0], time, y_values, 1, '$time, sec$', '$Mass, kg$',
@@ -234,6 +238,7 @@ df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
 flow_rate_in = diff_pnm.get_flow_pores_in()
 flow_rate_out = diff_pnm.get_flow_pores_out()
 flow_rate_diff = diff_pnm.get_flow_diff()
+flow_rate_out = flow_rate_diff + flow_rate_in
 
 flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
 flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)
@@ -256,7 +261,7 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
 plot_x_ymult(axs[1], time, y_values, 2, '$time, sec$', '$Mass, kg$',
              '$Q, kg/sec$', [], [])
 
-# plt.savefig('../output/flow_params.eps', format="eps", bbox_inches='tight')
+plt.savefig('../output/flow_params_inflow.eps', format="eps", bbox_inches='tight')
 plt.show()
 #
 # # =============================================================================
