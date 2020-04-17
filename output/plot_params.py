@@ -20,8 +20,8 @@ def plot_x_y(x_values, y_values, x_name, y_name, graph_name, line_type):
 
 
 def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
-                 y2_name, y1_lim=[], y2_lim=[]):
-    colors = ['r', 'g', 'b', 'c']
+                 y2_name, colors, marker_size, line_style,  y1_lim=[], y2_lim=[]):
+    colors = colors
     color = 'black'
 
     ax.set_xlabel(x_name)
@@ -30,7 +30,7 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
         label = list(y_values.keys())[idx]
         # ax.plot(x_values, y_values[value], color=colors[idx], label=label)
         ax.plot(x_values, y_values[value], color=colors[idx], label=label,
-                marker='o', markersize=2)
+                marker='o', markersize=marker_size, linestyle=line_style)
         ax.tick_params(axis='y', labelcolor=color)
 
     ax.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
@@ -48,7 +48,7 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
         # ax2.plot(x_values, y_values[value], color=colors[y_primary_len + idx],
         #          label=label)
         ax2.plot(x_values, y_values[value], color=colors[y_primary_len + idx],
-                 label=label, marker='o', markersize=2)
+                 label=label, marker='o', markersize=marker_size)
         ax2.tick_params(axis='y', labelcolor=color)
 
     ax2.tick_params(axis='y', labelcolor=color)

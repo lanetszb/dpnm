@@ -218,13 +218,15 @@ y_scale = 1.3
 fig, axs = plt.subplots(2, sharex='all',
                         figsize=(fig_width, fig_width * y_scale),
                         tight_layout=True)
+
+colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
 # fig, axs = plt.subplots(2, sharex='all', sharey='col',
 #                         figsize=(fig_width, fig_width * y_scale),
 #                         tight_layout=True)
 # plt.suptitle('Model Params vs Time', y=1.0)
 
 plot_x_ymult(axs[0], time, y_values, 1, '$time, sec$', '$Mass, kg$',
-             '$P, Pa$', [], [])
+             '$P, Pa$', colors, 0, 'solid', [], [])
 
 df_fig1 = pd.DataFrame({"time": time,
                         "Avg_pore_press": pore_press_av,
@@ -259,9 +261,10 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
             '$Q_{release}$': flow_rate_diff}
 
 plot_x_ymult(axs[1], time, y_values, 2, '$time, sec$', '$Mass, kg$',
-             '$Q, kg/sec$', [], [])
+             '$Q, kg/sec$', colors, 2, 'solid', [], [])
 
-plt.savefig('../output/flow_params_inflow.eps', format="eps", bbox_inches='tight')
+plt.savefig('../output/flow_params_inflow.eps', format="eps",
+            bbox_inches='tight')
 plt.show()
 #
 # # =============================================================================
