@@ -2,3 +2,5 @@
 *.csv
 *.eps
 __pycache__
+.idea/
+cmake-build-debug/
