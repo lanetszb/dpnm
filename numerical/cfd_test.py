@@ -40,232 +40,243 @@ print('\n')
 #
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# convective_diff = ConvectiveDiffusion(props_diff_vector)
-#
-# local_diff = LocalDiffusion(props_diff_vector)
-#
-# equation_diff = EquationDiffusion(props_diff_vector)
+convective_diff = ConvectiveDiffusion(props_diff_vector)
+
+local_diff = LocalDiffusion(props_diff_vector)
+
+equation_diff = EquationDiffusion(props_diff_vector)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# time_step = props_diff.time_step
-# radius = props_diff.radius
-# eff_radius = props_diff.eff_radius
-# thr_length = props_diff.length
-# grid_block_n = props_diff.grid_block_n
-# diffusivity = props_diff.diffusivity
-# conc_wall = 0.85
-# #
-# # #
-# local_diff.calc_vol_cylinder(radius, eff_radius,
-#                              grid_block_n, thr_length)
-# #
-# local_diff.calc_vol_cartesian(radius, eff_radius,
-#                              thr_length, radius)
-# #
-# # # volume_list = local_diff.vol_cylindr
-# volume_list = local_diff.vol_cartes
-# #
-# # local_diff.calc_vol_cartesian(radius, eff_radius, thr_length)
-# #
-# #
-# # convective_diff.calc_omega_cylindr(thr_length)
-# #
-# convective_diff.calc_omega_cartes(radius, thr_length)
-# #
-# # # omega_list = convective_diff.omega_cylindr
-# omega_list = convective_diff.omega_cartes
-# #
-# # #
-# local_diff.calculate_alpha(time_step, volume_list)
-# #
-# convective_diff.calculate_beta(radius, eff_radius, thr_length,
-#                                diffusivity, grid_block_n, omega_list)
+time_step = props_diff.time_step
+radius = props_diff.radius
+eff_radius = props_diff.eff_radius
+thr_length = props_diff.length
+grid_block_n = props_diff.grid_block_n
+diffusivity = props_diff.diffusivity
+conc_wall = 2.0
 #
+# #
+local_diff.calc_vol_cylinder(radius, eff_radius,
+                             grid_block_n, thr_length)
+#
+local_diff.calc_vol_cartesian(radius, eff_radius,
+                              thr_length, radius)
+#
+# # volume_list = local_diff.vol_cylindr
+volume_list = local_diff.vol_cartes
+#
+local_diff.calc_vol_cartesian(radius, eff_radius, thr_length, eff_radius / 10)
+#
+#
+# convective_diff.calc_omega_cylindr(thr_length)
+#
+convective_diff.calc_omega_cartes(radius, thr_length)
+#
+# # omega_list = convective_diff.omega_cylindr
+omega_list = convective_diff.omega_cartes
+#
+# #
+local_diff.calculate_alpha(time_step, volume_list)
+#
+convective_diff.calculate_beta(radius, eff_radius, thr_length,
+                               diffusivity, grid_block_n, omega_list)
+
 # equation_diff.cfd_procedure_one_step(conc_wall, radius,
 #                             eff_radius, thr_length,
 #                             volume_list, omega_list)
+#
+equation_diff.cfd_procedure(1, conc_wall, radius,
+                            eff_radius, thr_length,
+                            volume_list, omega_list)
 # #
-# # equation_diff.cfd_procedure(0, conc_wall, radius,
-# #                             eff_radius, thr_length,
-# #                             volume_list, omega_list)
-# # #
-# conc = equation_diff.getConc()
+conc = equation_diff.getConc()
+
+radius_curr = local_diff.radius_curr
+
+flow_rate = equation_diff.getFlowRate()
 #
-#
-# radius_curr = local_diff.radius_curr
-#
-# flow_rate = equation_diff.getFlowRate()
-# #
-# grid_centers = []
-# for i in range(len(radius_curr) - 1):
-#     grid_centers.append((radius_curr[i + 1] +
-#                          radius_curr[i]) / 2)
-#
-# # Diffusion Analytical Solution
-# conc_analyt = []
-#
-# L = eff_radius - radius
-#
+grid_centers = []
+for i in range(len(radius_curr) - 1):
+    grid_centers.append((radius_curr[i + 1] +
+                         radius_curr[i]) / 2)
+
+# Diffusion Analytical Solution
+conc_analyt = []
+
+L = eff_radius - radius
+
+grid_block_n_analyt = 300
+dX = L / grid_block_n_analyt
+
 # dX = L / grid_block_n
+# dX = L / 100
+
+grid_centers_analyt = []
+for i in range(grid_block_n_analyt+1):
+    grid_centers_analyt.append(radius + i * dX)
+    # grid_centers_analyt.append(radius + i * dX + dX / 2)
+
+conc_ini = 2.0
+conc_out = 10.0
+D = props_diff.diffusivity
+t = props_diff.time
+dt = props_diff.time_step
+
+for i in range(grid_block_n_analyt+1):
+    conc_it = conc_out + (conc_ini - conc_out) * math.erf(
+        i * dX / 2 / math.sqrt(D * t))
+    conc_analyt.append(conc_it)
+
+conc_analyt.reverse()
+
+plot_x_y(grid_centers_analyt, conc_analyt, x_name='Radius (m)',
+                                y_name='Concentration (kg/m3)',
+                                graph_name='Concentration distribution',
+                                line_type='-')
+
+# ===================================================================
+
+plot_x_y(grid_centers, conc, x_name='Radius (m)',
+         y_name='Concentration (kg/m3)',
+         graph_name='Concentration distribution',
+         line_type='--',
+         lw=0.3, marker='s', markersize=4)
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 #
-# conc_ini = 0.3
-# conc_out = 1.5
-# D = props_diff.diffusivity
-# t = props_diff.time
-# dt = props_diff.time_step
+# print("\n")
 #
-# for i in range(grid_block_n):
-#     conc_it = conc_out + (conc_ini - conc_out) * math.erf(
-#         i * dX / 2 / math.sqrt(D * t))
-#     conc_analyt.append(conc_it)
+# props_pnm = props.get_props_array()
+# props_pnm_cpp = PropsPNMCpp(props_pnm)
+# print(props_pnm_cpp)
 #
-# conc_analyt.reverse()
-
-# plot_x_y(grid_centers, conc_analyt, x_name='Radius (m)',
-#          y_name='Concentration (kg/m3)',
-#          graph_name='Concentration distribution',
-#          line_type='-')
+# network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
+# network_data_cpp.process_throats()
+# network_data_cpp.process_pores()
+# network_data_cpp.process_pore_conns()
 #
-# # ===================================================================
+# thrList = network_data_cpp.throat_list
+# th = network_data_cpp.throat_radius
+# th = np.array(th) * 2
+# tl = network_data_cpp.throat_length
+# tw = network_data_cpp.throat_width
 #
-# plot_x_y(grid_centers, conc, x_name='Radius (m)',
-#          y_name='Concentration (kg/m3)',
-#          graph_name='Concentration distribution',
-#          line_type='--')
-# # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+# conn_in = network_data_cpp.conn_ind_in
+# conn_out = network_data_cpp.conn_ind_out
 #
-print("\n")
-
-props_pnm = props.get_props_array()
-props_pnm_cpp = PropsPNMCpp(props_pnm)
-print(props_pnm_cpp)
-
-network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
-network_data_cpp.process_throats()
-network_data_cpp.process_pores()
-network_data_cpp.process_pore_conns()
-
-thrList = network_data_cpp.throat_list
-th = network_data_cpp.throat_radius
-th = np.array(th) * 2
-tl = network_data_cpp.throat_length
-tw = network_data_cpp.throat_width
-
-conn_in = network_data_cpp.conn_ind_in
-conn_out = network_data_cpp.conn_ind_out
-
-pc_x = network_data_cpp.pore_coords_x
-pc_y = network_data_cpp.pore_coords_y
-pc_z = network_data_cpp.pore_coords_z
-
-pr = network_data_cpp.pore_radius
-
-pl = network_data_cpp.pore_list
-p_conn = network_data_cpp.pore_conns
-conn_numb = network_data_cpp.conn_number
-ppr = network_data_cpp.pore_per_row
-
-plx = network_data_cpp.pore_left_x
-prx = network_data_cpp.pore_right_x
-
-p_back_y = network_data_cpp.pore_back_y
-p_front_y = network_data_cpp.pore_front_y
-
-p_bot_z = network_data_cpp.pore_bot_z
-p_top_z = network_data_cpp.pore_top_z
-
-pore_left = p_bot_z
-pore_right = p_top_z
-
-langm_coeffs = props.langm_coeff
+# pc_x = network_data_cpp.pore_coords_x
+# pc_y = network_data_cpp.pore_coords_y
+# pc_z = network_data_cpp.pore_coords_z
 #
-# # =============================================================================
+# pr = network_data_cpp.pore_radius
 #
-hydr_cond = network_data_cpp.hydraulic_cond_coeff
-
-nd_cpp = NetworkDataCpp(thrList, th, tl, tw, conn_in, conn_out, pc_x, pc_y,
-                        pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
-                        pore_right, hydr_cond)
+# pl = network_data_cpp.pore_list
+# p_conn = network_data_cpp.pore_conns
+# conn_numb = network_data_cpp.conn_number
+# ppr = network_data_cpp.pore_per_row
 #
-eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
-                     pc_y, pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
-                     pore_right, hydr_cond)
-
-diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw,
-                        conn_in, conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn,
-                        conn_numb,
-                        ppr, pore_left, pore_right, hydr_cond,
-                        langm_coeffs)
+# plx = network_data_cpp.pore_left_x
+# prx = network_data_cpp.pore_right_x
 #
+# p_back_y = network_data_cpp.pore_back_y
+# p_front_y = network_data_cpp.pore_front_y
+#
+# p_bot_z = network_data_cpp.pore_bot_z
+# p_top_z = network_data_cpp.pore_top_z
+#
+# pore_left = p_bot_z
+# pore_right = p_top_z
+#
+# langm_coeffs = props.langm_coeff
+# #
 # # # =============================================================================
-# # # Figure 1 (Avg Pore Pressure and Avg Concentration)
-time = np.arange(0, props.time, props.time_step)
-# TODO: fix the issue with time step
-time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
-pore_press_av = diff_pnm.get_pressure_av()
-matrix_mass_total = diff_pnm.get_matrix_mass_total()
-inlet_pressure = diff_pnm.get_inlet_pressure()
-
-y_values = {'$M_{matrix}$  ': matrix_mass_total,
-            '$P_{av}$': pore_press_av,
-            '$P_{in}$': inlet_pressure}
-
-fig_width = 4.5
-y_scale = 1.3
-
-fig, axs = plt.subplots(2, sharex='all',
-                        figsize=(fig_width, fig_width * y_scale),
-                        tight_layout=True)
-
-colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
-# fig, axs = plt.subplots(2, sharex='all', sharey='col',
+# #
+# hydr_cond = network_data_cpp.hydraulic_cond_coeff
+#
+# nd_cpp = NetworkDataCpp(thrList, th, tl, tw, conn_in, conn_out, pc_x, pc_y,
+#                         pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
+#                         pore_right, hydr_cond)
+# #
+# eq_pnm = EquationPNM(props_pnm, thrList, th, tl, tw, conn_in, conn_out, pc_x,
+#                      pc_y, pc_z, pr, pl, p_conn, conn_numb, ppr, pore_left,
+#                      pore_right, hydr_cond)
+#
+# diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, thrList, th, tl, tw,
+#                         conn_in, conn_out, pc_x, pc_y, pc_z, pr, pl, p_conn,
+#                         conn_numb,
+#                         ppr, pore_left, pore_right, hydr_cond,
+#                         langm_coeffs)
+# #
+# # # # =============================================================================
+# # # # Figure 1 (Avg Pore Pressure and Avg Concentration)
+# time = np.arange(0, props.time, props.time_step)
+# # TODO: fix the issue with time step
+# time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
+# pore_press_av = diff_pnm.get_pressure_av()
+# matrix_mass_total = diff_pnm.get_matrix_mass_total()
+# inlet_pressure = diff_pnm.get_inlet_pressure()
+#
+# y_values = {'$M_{matrix}$  ': matrix_mass_total,
+#             '$P_{av}$': pore_press_av,
+#             '$P_{in}$': inlet_pressure}
+#
+# fig_width = 4.5
+# y_scale = 1.3
+#
+# fig, axs = plt.subplots(2, sharex='all',
 #                         figsize=(fig_width, fig_width * y_scale),
 #                         tight_layout=True)
-# plt.suptitle('Model Params vs Time', y=1.0)
-
-plot_x_ymult(axs[0], time, y_values, 1, '$time, sec$', '$Mass, kg$',
-             '$P, Pa$', colors, 0, 'solid', [], [])
-
-df_fig1 = pd.DataFrame({"time": time,
-                        "Avg_pore_press": pore_press_av,
-                        "Matrix_vol_total": matrix_mass_total})
-
-df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
-               header=True)
 #
-# # # =============================================================================
-# # # Figure 2 (Total Flow Rate)
-flow_rate_in = diff_pnm.get_flow_pores_in()
-flow_rate_out = diff_pnm.get_flow_pores_out()
-flow_rate_diff = diff_pnm.get_flow_diff()
-flow_rate_out = flow_rate_diff + flow_rate_in
-
-flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
-flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)
-
-df_fig2 = pd.DataFrame(
-    {"time": time,
-     "avg_pore_press": pore_press_av,
-     "flow_rate_in": flow_rate_in,
-     "flow_rate_out": flow_rate_out,
-     "mat_gas_release": flow_rate_diff})
-
-df_fig2.to_csv(r'../output/fig_press_flowrates.txt', sep=' ', index=False,
-               header=True)
-
-y_values = {'$N_{out}$': flow_rate_out_cum,
-            '$N_{release}$': flow_rate_diff_cum,
-            '$Q_{out}$': flow_rate_out,
-            '$Q_{release}$': flow_rate_diff}
-
-plot_x_ymult(axs[1], time, y_values, 2, '$time, sec$', '$Mass, kg$',
-             '$Q, kg/sec$', colors, 2, 'solid', [], [])
-
-plt.savefig('../output/flow_params_inflow.eps', format="eps",
-            bbox_inches='tight')
-plt.show()
+# colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
+# # fig, axs = plt.subplots(2, sharex='all', sharey='col',
+# #                         figsize=(fig_width, fig_width * y_scale),
+# #                         tight_layout=True)
+# # plt.suptitle('Model Params vs Time', y=1.0)
+#
+# plot_x_ymult(axs[0], time, y_values, 1, '$time, sec$', '$Mass, kg$',
+#              '$P, Pa$', colors, 2, 'solid', [5], [6.3 * 10.e-8, 6.42 * 10.e-8],
+#              [0.2 + 3.e+5, 0.52 + 3.e+5])
+#
+# df_fig1 = pd.DataFrame({"time": time,
+#                         "Avg_pore_press": pore_press_av,
+#                         "Matrix_vol_total": matrix_mass_total})
+#
+# df_fig1.to_csv(r'../output/fig_press_conc.txt', sep=' ', index=False,
+#                header=True)
+# #
+# # # # =============================================================================
+# # # # Figure 2 (Total Flow Rate)
+# flow_rate_in = diff_pnm.get_flow_pores_in()
+# flow_rate_out = diff_pnm.get_flow_pores_out()
+# flow_rate_diff = diff_pnm.get_flow_diff()
+# flow_rate_out = flow_rate_diff + flow_rate_in
+#
+# flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
+# flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)
+#
+# df_fig2 = pd.DataFrame(
+#     {"time": time,
+#      "avg_pore_press": pore_press_av,
+#      "flow_rate_in": flow_rate_in,
+#      "flow_rate_out": flow_rate_out,
+#      "mat_gas_release": flow_rate_diff})
+#
+# df_fig2.to_csv(r'../output/fig_press_flowrates.txt', sep=' ', index=False,
+#                header=True)
+#
+# y_values = {'$N_{out}$': flow_rate_out_cum,
+#             '$N_{release}$': flow_rate_diff_cum,
+#             '$Q_{out}$': flow_rate_out,
+#             '$Q_{release}$': flow_rate_diff}
+#
+# plot_x_ymult(axs[1], time, y_values, 2, '$time, sec$', '$Mass, kg$',
+#              '$Q, kg/sec$', colors, 2, 'solid', [],
+#              [-0.3 * 10.e-9, 6.5 * 10.e-9], [-0.12 * 10.e-11, 1.12 * 10.e-11])
+#
+# plt.savefig('../output/flow_params_release.eps', format="eps",
+#             bbox_inches='tight')
+# plt.show()
 #
 # # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
