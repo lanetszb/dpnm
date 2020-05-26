@@ -10,6 +10,7 @@ sys.path.append(os.path.join(current_path, '../'))
 from output import plot_x_y
 from output import plot_x_ymult
 from matplotlib import rc
+import matplotlib.lines as mlines
 
 rc('text', usetex=True)
 
@@ -29,14 +30,6 @@ fig1, ax1 = plt.subplots(figsize=(fig_width, fig_width * y_scale),
 num_arr = [np.array(df_num.coord_num), np.array(df_num.conc_num1),
            np.array(df_num.conc_num2), np.array(df_num.conc_num3)]
 
-for i in range(len(num_arr) - 1):
-    plot_x_y(num_arr[0], num_arr[i + 1], x_name='Length, m',
-             y_name='Concentration, kg/m$^3$',
-             graph_name=None,
-             line_type='--',
-             lw=1.4,
-             color='k')
-
 analyt_arr = [np.array(df_analyt.coord_analyt),
               np.array(df_analyt.conc_analyt1),
               np.array(df_analyt.conc_analyt2),
@@ -46,43 +39,52 @@ colors = ['b', 'r', 'g']
 
 for i in range(len(analyt_arr) - 1):
     plot_x_y(analyt_arr[0], analyt_arr[i + 1], x_name='Length, m',
-             y_name='Concentration, kg/m$^3$',
+             y_name='Concentration, $kg/m^3$',
              graph_name=None,
              line_type='-',
              color=colors[i],
-             alpha=0.5)
+             lw=1.5)
 
-line_type = ['--', '-']
-line_name = ['numerical', 'analytical']
-for i in range(len(line_type)):
-    plt.plot([], [], linestyle=line_type[i], c='k',
-             label=line_name[i])
+for i in range(len(num_arr) - 1):
+    plot_x_y(num_arr[0], num_arr[i + 1], x_name='Length, $m$',
+             y_name='Concentration, $kg/m^3$',
+             graph_name=None,
+             line_type='-',
+             lw=0.7,
+             color='k',
+             marker='o',
+             markersize=2.5)
+
+markers = ['o', '']
+line_names = ['numerical', 'analytical']
+for i in range(len(line_names)):
+    plt.plot([], [], linestyle='-', c='k',
+             label=line_names[i], marker=markers[i], markersize='2.0')
 
 legend_1 = plt.legend(scatterpoints=1, frameon=True, labelspacing=1, loc=2)
 
 plt.gca().add_artist(legend_1)
 
-ax1 = plt.scatter([], [], marker="_", c='b', alpha=0.5, s=30,
-                  label=str(1))
-ax2 = plt.scatter([], [], marker="_", c='r', alpha=0.5, s=30,
-                  label=str(7))
-ax3 = plt.scatter([], [], marker="_", c='g', alpha=0.5, s=30,
-                  label=str(12))
+ax1 = mlines.Line2D([], [], linestyle='-', c='b', markersize='2.0',
+                    label=str(1))
+ax2 = mlines.Line2D([], [], linestyle='-', c='r', markersize='2.0',
+                    label=str(7))
+ax3 = mlines.Line2D([], [], linestyle='-', c='g', markersize='2.0',
+                    label=str(17))
 
 plt.legend(handles=[ax1, ax2, ax3], scatterpoints=1, frameon=True,
-           labelspacing=1,
+           labelspacing=0.5,
            title='time, sec',
            loc=9)
 
-plt.savefig('../output/diffusion_valid_2.eps', format="eps",
-            bbox_inches='tight')
+# plt.savefig('../output/diffusion_valid_2.eps', format="eps",
+#             bbox_inches='tight')
 
 # Figure showing the influence of grid block N on numerical solution
-
 table_gridnum10 = pd.read_csv('gridnum10.csv')
 df_gridnum10 = pd.DataFrame(table_gridnum10)
 
-table_gridnum30 = pd.read_csv('gridnum30.csv')
+table_gridnum30 = pd.read_csv('gridnum20.csv')
 df_gridnum30 = pd.DataFrame(table_gridnum30)
 
 table_gridnum100 = pd.read_csv('gridnum100.csv')
@@ -100,51 +102,102 @@ fig2, ax2 = plt.subplots(figsize=(fig_width, fig_width * y_scale),
 coord_analyt = np.array(df_gridnum_analyt.coord_analyt)
 conc_analyt = np.array(df_gridnum_analyt.conc_analyt)
 
-plot_x_y(analyt_arr[0], analyt_arr[i + 1], x_name='Length, m',
-         y_name='Concentration, kg/m$^3$',
+plot_x_y(analyt_arr[0], analyt_arr[i + 1], x_name='Length, $m$',
+         y_name='Concentration, $kg/m^3$',
          graph_name=None,
          line_type='-',
-         color='k',
-         alpha=0.85)
+         color='darkorange',
+         lw=1.5)
 
-colors = ['g', 'b', 'r']
+colors = ['g', 'b', 'purple']
+
 coord_array_num = [np.array(df_gridnum10.coord_num_10),
-                   np.array(df_gridnum30.coord_num_30),
-                   np.array(df_gridnum100.coord_num_100)]
+                   np.array(df_gridnum30.coord_num_20)]
 
 conc_array_num = [np.array(df_gridnum10.conc_num_10),
-                  np.array(df_gridnum30.conc_num_30),
-                  np.array(df_gridnum100.conc_num_100)]
+                  np.array(df_gridnum30.conc_num_20)]
 
 for i in range(len(coord_array_num)):
-    plot_x_y(coord_array_num[i], conc_array_num[i], x_name='Length, m',
-             y_name='Concentration, kg/m$^3$',
+    plot_x_y(coord_array_num[i], conc_array_num[i], x_name='Length, $m$',
+             y_name='Concentration, $kg/m^3$',
              graph_name=None,
-             line_type='--',
-             lw=1.4,
+             line_type='-',
+             lw=0.7,
+             marker='o',
+             markersize=2.5,
              color=colors[i])
 
-line_type = ['--', '-']
-line_name = ['numerical', 'analytical']
-for i in range(len(line_type)):
-    plt.plot([], [], linestyle=line_type[i], c='k',
-             label=line_name[i])
+ax1 = mlines.Line2D([], [], linestyle='-', c='g', marker='o', markersize='2.0',
+                    label='10')
+ax2 = mlines.Line2D([], [], linestyle='-', c='b', marker='o', markersize='2.0',
+                    label='20')
+ax3 = mlines.Line2D([], [], linestyle='-', c='darkorange',
+                    label='analytical')
+#
+legend_2 = plt.legend(handles=[ax3], loc=2)
 
-legend_1 = plt.legend(scatterpoints=1, frameon=True, labelspacing=1, loc=2)
-
-plt.gca().add_artist(legend_1)
-
-ax1 = plt.scatter([], [], marker="_", c='g', alpha=0.5, s=30,
-                  label=str(10))
-ax2 = plt.scatter([], [], marker="_", c='b', alpha=0.5, s=30,
-                  label=str(30))
-ax3 = plt.scatter([], [], marker="_", c='r', alpha=0.5, s=30,
-                  label=str(100))
-
-plt.legend(handles=[ax1, ax2, ax3], scatterpoints=1, frameon=True,
+plt.legend(handles=[ax1, ax2], scatterpoints=1,
+           frameon=True,
            labelspacing=1,
            title='grid number',
            loc=9)
 
-plt.savefig('../output/gridnum_valid.eps', format="eps",
-            bbox_inches='tight')
+plt.gca().add_artist(legend_2)
+
+# plt.savefig('../output/gridnum_valid.eps', format="eps", bbox_inches='tight')
+#
+# # Figure varying diffusion coefficients
+
+table_vary_diffusion = pd.read_csv('release_vary_diff.csv')
+df_vary_diff = pd.DataFrame(table_vary_diffusion)
+
+fig3, ax3 = plt.subplots(figsize=(fig_width, fig_width * y_scale),
+                         tight_layout=True)
+
+x_array = np.array(df_vary_diff.time)
+
+diff1_cum = np.array(df_vary_diff.q1cum)
+diff2_cum = np.array(df_vary_diff.q2cum)
+diff3_cum = np.array(df_vary_diff.q3cum)
+
+diff1 = df_vary_diff.q1
+diff2 = df_vary_diff.q2
+diff3 = df_vary_diff.q3
+
+y_values = {'$diff1_cum$': diff1_cum, '$diff2_cum$': diff2_cum,
+            '$diff3_cum$': diff3_cum,
+            '$diff1$': diff1, '$diff2$': diff2,
+            '$diff3$': diff3}
+
+colors = ['r', 'g', 'b', 'r', 'g', 'b']
+
+line_type = ['--', '-']
+line_name = ['instant', 'accum']
+for i in range(len(line_type)):
+    plt.plot([], [], linestyle=line_type[i], c='k',
+             label=line_name[i])
+
+legend_1 = plt.legend(scatterpoints=1, frameon=True, labelspacing=1,
+                      loc='upper center')
+plt.gca().add_artist(legend_1)
+
+a1 = plt.scatter([], [], marker="_", c='g', s=30,
+                 label=str(5))
+a2 = plt.scatter([], [], marker="_", c='b', s=30,
+                 label=str(50))
+a3 = plt.scatter([], [], marker="_", c='r', s=30,
+                 label=str(500))
+
+plt.legend(handles=[a1, a2, a3], scatterpoints=1, frameon=True,
+           labelspacing=1, bbox_to_anchor=(0.5, 0.3, 0.5, 0.5),
+           title='$D, \; 10^{-11} \: m^2/s$',
+           loc='center right')
+
+plot_x_ymult(ax3, x_array, y_values, 3, 'time, sec', 'mass, $kg$',
+             '$Q, kg/sec$', colors, 0, 'solid', [0, 2.0 * 10 ** -8],
+             [0, 9.5 * 10 ** -11], linestyle='--')
+
+# plt.savefig('../output/release_vary_diff.eps', format="eps",
+#             bbox_inches='tight')
+
+plt.show()
