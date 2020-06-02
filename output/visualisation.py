@@ -50,7 +50,7 @@ for i in range(len(num_arr) - 1):
              y_name='Concentration, $kg/m^3$',
              graph_name=None,
              line_type='-',
-             lw=0.7,
+             lw=0.3,
              color='k',
              marker='o',
              markersize=2.5)
@@ -77,8 +77,8 @@ plt.legend(handles=[ax1, ax2, ax3], scatterpoints=1, frameon=True,
            title='time, sec',
            loc=9)
 
-# plt.savefig('../output/diffusion_valid_2.eps', format="eps",
-#             bbox_inches='tight')
+plt.savefig('../output/diffusion_valid_2.eps', format="eps",
+            bbox_inches='tight')
 
 # Figure showing the influence of grid block N on numerical solution
 table_gridnum10 = pd.read_csv('gridnum10.csv')
