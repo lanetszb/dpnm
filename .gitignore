@@ -1,7 +1,15 @@
 *.so
 *.csv
 *.eps
+*.aux
+*.log
+*.nlo
+*.out
+*.pdf
+*.gz
+*png
 __pycache__
 .idea/
 .DS_Store
 cmake-build-debug/
+
