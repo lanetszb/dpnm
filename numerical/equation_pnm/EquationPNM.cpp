@@ -274,7 +274,7 @@ void EquationPNM::setInitialCond() {
 
     calcThroatConns();
     calcPorConns();
-    networkData.findBoundaryPores(networkData.poreCoordX);
+    // networkData.findBoundaryPores(networkData.poreCoordX);
 
     getPorConnsIsOut();
 
