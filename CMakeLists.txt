@@ -4,11 +4,13 @@ project(PNflow)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(PythonLibs 3.7 REQUIRED)
+set(PYTHON_LIBRARY "/usr/local/Cellar/python@3.8/3.8.3/Frameworks/Python.framework/Versions/3.8/lib/libpython3.8.dylib")
+set(PYTHON_INCLUDE_DIR "/usr/local/Cellar/python@3.8/3.8.3/Frameworks/Python.framework/Versions/3.8/include/python3.8")
+find_package(PythonLibs)
 
 set(Boost_NO_BOOST_CMAKE TRUE)
 
-find_package(Boost REQUIRED COMPONENTS python37 numpy37)
+find_package(Boost REQUIRED COMPONENTS python38 numpy38)
 
 find_package(Eigen3 REQUIRED)
 
