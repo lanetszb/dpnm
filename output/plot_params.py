@@ -26,7 +26,7 @@ def plot_x_y(x_values, y_values, x_name, y_name, graph_name, line_type,
 
     plt.plot(x_values, y_values, line_type, **kwargs)
 
-    plt.show()
+    # plt.show()
 
 
 def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
@@ -76,5 +76,5 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
     if y2_lim:
         ax2.set_ylim(y2_lim)
 
-    # ax.legend(bbox_to_anchor=(0., -0.2), loc='upper left')
-    # ax2.legend(bbox_to_anchor=(1., -0.2), loc='upper right')
+    ax.legend(bbox_to_anchor=(0., -0.2), loc='upper left')
+    ax2.legend(bbox_to_anchor=(1., -0.2), loc='upper right')
