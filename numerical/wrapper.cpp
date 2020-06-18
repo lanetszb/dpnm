@@ -43,7 +43,7 @@ BOOST_PYTHON_MODULE (cfd) {
             .add_property("grid_block_n",
                           &PropsDiffusion::getGridBlockN,
                           &PropsDiffusion::setGridBlockN)
-            .add_property("concIni",
+            .add_property("conc_ini",
                           &PropsDiffusion::getConcentration,
                           &PropsDiffusion::setConcentration)
             .add_property("diffusivity",
@@ -67,7 +67,6 @@ BOOST_PYTHON_MODULE (cfd) {
                  &LocalDiffusion::calcVolCylindr,
                  p::args("radius",
                          "eff_radius",
-                         "grid_block_n",
                          "throat_length"))
 
             .def("calc_vol_cartesian",
@@ -95,8 +94,6 @@ BOOST_PYTHON_MODULE (cfd) {
                           &LocalDiffusion::getAlpha);
 
 
-
-//
     p::class_<ConvectiveDiffusion>("ConvectiveDiffusion",
                                    p::init<std::vector<double>>(
                                            p::args("props_array")))

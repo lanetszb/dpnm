@@ -17,20 +17,18 @@ int LocalDiffusion::right(const int &index) {
     return index + 1;
 }
 
-double LocalDiffusion::calcDelRadius(const double &radius,
-                                     const double &effRadius,
-                                     const int &gridBlockN) {
+double
+LocalDiffusion::calcDelRadius(const double &radius, const double &effRadius) {
 
-    return (effRadius - radius) / gridBlockN;
+    return (effRadius - radius) / propsDiffusion.gridBlockN;
 }
 
-void LocalDiffusion::calcRadiusCurr(const double &radius,
-                                    const double &effRadius,
-                                    const int &gridBlockN) {
+void
+LocalDiffusion::calcRadiusCurr(const double &radius, const double &effRadius) {
 
-    dRadius = calcDelRadius(radius, effRadius, gridBlockN);
+    dRadius = calcDelRadius(radius, effRadius);
 
-    for (int i = 0; i < gridBlockN + 1; i++)
+    for (int i = 0; i < propsDiffusion.gridBlockN + 1; i++)
         radiusCurr[i] = radius + i * dRadius;
 }
 
@@ -44,12 +42,11 @@ void LocalDiffusion::calcVolCartesian(const double &frac_height,
                        propsDiffusion.gridBlockN;
 }
 
-void LocalDiffusion::calcVolCylindr(const double &radius,
-                                    const double &effRadius,
-                                    const int &gridBlockN,
-                                    const double &thrLength) {
+void
+LocalDiffusion::calcVolCylindr(const double &radius, const double &effRadius,
+                               const double &thrLength) {
 
-    calcRadiusCurr(radius, effRadius, gridBlockN);
+    calcRadiusCurr(radius, effRadius);
 
     for (int i = 0; i < alpha.size(); i++)
         volCylindr[i] = (M_PI * thrLength *

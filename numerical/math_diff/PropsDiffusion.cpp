@@ -24,7 +24,7 @@ operator<<(std::ostream &stream, const PropsDiffusion &propsDiffusion) {
     stream << "radius " << propsDiffusion.radius << std::endl;
     stream << "effRadius " << propsDiffusion.effRadius << std::endl;
     stream << "gridBlockN " << propsDiffusion.gridBlockN << std::endl;
-    stream << "concIni " << propsDiffusion.length << std::endl;
+    stream << "concIni " << propsDiffusion.concIni << std::endl;
     stream << "diffusivity " << propsDiffusion.diffusivity << std::endl;
     stream << "iterativeAccuracy " << propsDiffusion.iterativeAccuracy
            << std::endl;

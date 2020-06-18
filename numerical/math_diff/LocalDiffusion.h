@@ -15,18 +15,15 @@ public:
 
     static int right(const int &index);
 
-    double calcDelRadius(const double &radius,
-                         const double &effRadius,
-                         const int &gridBlockN);
+    double calcDelRadius(const double &radius, const double &effRadius);
 
     void calcVolCartesian(const double &frac_height, const double &matrix_width,
                           const double &frac_length, const double &frac_width);
 
     void calcVolCylindr(const double &radius, const double &effRadius,
-                        const int &gridBlockN, const double &thrLength);
+                        const double &thrLength);
 
-    void calcRadiusCurr(const double &radius, const double &effRadius,
-                        const int &gridBlockN);
+    void calcRadiusCurr(const double &radius, const double &effRadius);
 
     void calculateAlpha(const double &dt,
                         const std::vector<double> &vol);

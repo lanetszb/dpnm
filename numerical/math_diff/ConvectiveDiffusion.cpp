@@ -12,8 +12,7 @@ ConvectiveDiffusion::ConvectiveDiffusion(const std::vector<double> &propsVector)
 void ConvectiveDiffusion::calcOmegaCylindr(const double &length) {
 
     localDiffusion.calcRadiusCurr(propsDiffusion.radius,
-                                  propsDiffusion.effRadius,
-                                  propsDiffusion.gridBlockN);
+                                  propsDiffusion.effRadius);
 
     for (int i = 0; i < beta.size(); i++) {
         omegaCylindric[i] = 2 * M_PI * localDiffusion.radiusCurr[i] * length;
@@ -45,7 +44,7 @@ void ConvectiveDiffusion::calculateBeta(const double &radius,
                                         const int &gridBlockN,
                                         const std::vector<double> &omega) {
 
-    localDiffusion.calcRadiusCurr(radius, effRadius, gridBlockN);
+    localDiffusion.calcRadiusCurr(radius, effRadius);
     auto diffusivityList = calc_diffusivityList(beta.size(), diffusivity);
 
     for (int i = 0; i < beta.size(); i++) {
