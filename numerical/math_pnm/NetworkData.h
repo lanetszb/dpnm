@@ -29,9 +29,6 @@ public :
 
     virtual ~NetworkData() {}
 
-    friend std::ostream &operator<<(
-            std::ostream &stream, const NetworkData &networkData);
-
     void printThroatRadius();
 
     void printThroatLength();
@@ -45,7 +42,6 @@ public :
     std::vector<double> getThroatLength() const;
 
     std::vector<int> getPoreList() const;
-
 
     std::vector<double> throatRadius;
     std::vector<double> throatLength;

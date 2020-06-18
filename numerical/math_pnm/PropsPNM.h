@@ -11,8 +11,7 @@ public:
     explicit PropsPNM(const std::vector<double> &_propsVector);
 
     virtual ~PropsPNM() {}
-
-
+    
     friend std::ostream &
     operator<<(std::ostream &stream, const PropsPNM &propsPNM);
 

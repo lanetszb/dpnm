@@ -42,11 +42,6 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
         poreRightX(_poreRightX),
         hydraulicCond(_hydraulicCond) {}
 
-std::ostream &operator<<(std::ostream &stream, const NetworkData &networkData) {
-
-    return stream;
-}
-
 
 std::vector<double> NetworkData::getThroatRadius() const {
     return throatRadius;

@@ -223,7 +223,6 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "pore_left_x",
                                            "pore_right_x",
                                            "hydr_cond")))
-            .def("__str__", __str__<NetworkData>)
 
             .add_property("throat_radius",
                           &NetworkData::getThroatRadius)
@@ -234,9 +233,9 @@ BOOST_PYTHON_MODULE (cfd) {
 
             .def("print_throat_radius",
                  &NetworkData::printThroatRadius)
-            .def("print_throat_radius",
+            .def("print_throat_length",
                  &NetworkData::printThroatLength)
-            .def("print_throat_radius",
+            .def("print_pore_list",
                  &NetworkData::printPoreList);
 //
     p::class_<EquationPNM>("EquationPNM",
