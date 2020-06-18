@@ -45,7 +45,7 @@ public:
     void calculateMatrix(const int &boundCond,
                          const std::vector<double> &connCoeff,
                          const std::vector<double> &centralCoeff,
-                         const std::vector<int> &boundPores,
+                         const std::vector<bool> &boundPores,
                          std::vector<std::vector<int>> &inOutCoeff,
                          const std::vector<double> &diffCoeff);
 
@@ -67,7 +67,7 @@ public:
     void calculatePress(const int &solverMethod);
 
     void cfdProcedure(const int &boundCond,
-                      const std::vector<int> &boundPores,
+                      const std::vector<bool> &boundPores,
                       const double &pIn,
                       const double &pOut);
 
@@ -83,7 +83,7 @@ public:
 
     void calcInletFlow(const std::vector<bool> &boundPorIn);
 
-    void calcTotFlow(const std::vector<int> &boundPores);
+    void calcTotFlow(const std::vector<bool> &boundPores);
 
 
     PropsPNM propsPNM;

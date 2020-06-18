@@ -50,37 +50,43 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
 
     equationPNM.setInitialCond();
 
+    std::vector<std::vector<int>> poreConnsIsOutByPressureSaved = getGamma();
+
+    getInletFlow();
+
+    // calculate PN with diffusion with mixed Dirichlet-Newman
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        for (int j = 0; j < equationPNM.porConnsIsOutByPressure[i].size(); j++)
+            equationPNM.porConnsIsOutByPressure[i][j] = poreConnsIsOutByPressureSaved[i][j];
+
+    cfdProcedureDiff();
+}
+
+std::vector<std::vector<int>> DiffusionPNM::getGamma() {
+
     // calculate PN no diffusion with Direchlet-Newman for finding Gamma
     std::vector<bool> boundPoresInputForGamma;
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++) {
-        if (equationPNM.networkData.poreRightX[i])
-            boundPoresInputForGamma.emplace_back(false);
-        else boundPoresInputForGamma.emplace_back(true);
+        boundPoresInputForGamma.emplace_back(
+                !equationPNM.networkData.poreRightX[i]);
     }
 
     std::vector<bool> poreLeftXSaved;
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         poreLeftXSaved.push_back(equationPNM.networkData.poreLeftX[i]);
 
-
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         equationPNM.networkData.poreLeftX[i] = boundPoresInputForGamma[i];
-
-    std::vector<int> boundPoresRight;
-
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        if (equationPNM.networkData.poreRightX[i])
-            boundPoresRight.emplace_back(i);
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         equationPNM.porFlowRate[i] = 1.e-12;
 
     equationPNM.cfdProcedure(0,
-                             boundPoresRight,
+                             equationPNM.networkData.poreRightX,
                              equationPNM.pIn,
                              equationPNM.pOut);
-
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         equationPNM.networkData.poreLeftX[i] = poreLeftXSaved[i];
@@ -93,14 +99,17 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
             poreConnsIsOutByPressureSaved[i].push_back(
                     equationPNM.porConnsIsOutByPressure[i][j]);
 
+    return poreConnsIsOutByPressureSaved;
+}
+
+void DiffusionPNM::getInletFlow() {
+
     // calculate PN no diffusion with Direchlet
-    std::vector<int> boundPoresInput;
+    std::vector<bool> boundPoresInput;
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        if (equationPNM.networkData.poreLeftX[i] or
-            equationPNM.networkData.poreRightX[i])
-            boundPoresInput.emplace_back(i);
-
+        boundPoresInput.emplace_back(equationPNM.networkData.poreLeftX[i] or
+                                     equationPNM.networkData.poreRightX[i]);
 
     equationPNM.cfdProcedure(1,
                              boundPoresInput,
@@ -110,18 +119,9 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
     // calculate PN no diffusion with mixed Dirichlet-Newman
 
     equationPNM.cfdProcedure(0,
-                             boundPoresRight,
+                             equationPNM.networkData.poreRightX,
                              equationPNM.pIn,
                              equationPNM.pOut);
-
-    // calculate PN with diffusion with mixed Dirichlet-Newman
-
-
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        for (int j = 0; j < equationPNM.porConnsIsOutByPressure[i].size(); j++)
-            equationPNM.porConnsIsOutByPressure[i][j] = poreConnsIsOutByPressureSaved[i][j];
-
-    cfdProcedureDiff();
 
 }
 
@@ -277,7 +277,6 @@ void DiffusionPNM::updateConc() {
             equationDiffusion.conc[1][j] = matrixConc[i][j];
         }
 
-
         auto fracHeight = equationPNM.networkData.throatRadius[i];
         auto fracLength = equationPNM.networkData.throatLength[i];
         auto fracWidth = equationPNM.networkData.throatWidth[i];
@@ -331,7 +330,6 @@ void DiffusionPNM::calcMatCoeffDiff() {
     }
 }
 
-//
 // potential error
 void DiffusionPNM::calcMatCoupledCoeff() {
 
@@ -466,7 +464,7 @@ void DiffusionPNM::calcCoupledFlow() {
     equationPNM.calculateMatrix(0,
                                 equationPNM.connCoeff,
                                 equationPNM.centralCoeff,
-                                boundPoresRight,
+                                equationPNM.networkData.poreRightX,
                                 equationPNM.porConnsIsOutByPressure,
                                 connCoeffDiff);
 
@@ -488,7 +486,7 @@ void DiffusionPNM::calcCoupledFlow() {
     equationPNM.calcPorFlowRate();
 
 
-    equationPNM.calcTotFlow(boundPoresRight);
+    equationPNM.calcTotFlow(equationPNM.networkData.poreRightX);
 
 
     // for calculating diffusive flow to outlet throat
@@ -504,7 +502,7 @@ void DiffusionPNM::calcCoupledFlow() {
     // totalFlowPoresOut.emplace_back(
     //         -1 * (equationPNM.totFlowRate-diffFlowInst[9]) * densityConst);
 
-    equationPNM.calcTotFlow(boundPoresLeft);
+    equationPNM.calcTotFlow(equationPNM.networkData.poreLeftX);
     totalFlowPoresIn.emplace_back(equationPNM.totFlowRate * densityConst);
 
     // updateConc();
@@ -527,8 +525,6 @@ void DiffusionPNM::cfdProcedureDiff() {
     sum = 0;
     std::vector<double> matrixMass;
     for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-
-        auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
 
         auto fracHeight = equationPNM.networkData.throatRadius[i];
         auto fracLength = equationPNM.networkData.throatLength[i];
@@ -580,7 +576,7 @@ void DiffusionPNM::cfdProcedureDiff() {
     pressIn.emplace_back(pressInlet / boundPoresLeft.size());
 
     // To rewrite latter
-    
+
     for (double t = equationDiffusion.propsDiffusion.timeStep;
          t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
          t += equationDiffusion.propsDiffusion.timeStep) {

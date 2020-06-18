@@ -78,11 +78,11 @@ void EquationPNM::calcPorConns() {
 
     int pore_iterator = 0;
     for (int i = 0; i < networkData.poreN; i++) {
-      porConns[i].clear();
-      for (int j = 0; j < networkData.connNumber[i]; j++) {
-        porConns[i].emplace_back(networkData.poreConns[pore_iterator]);
-        pore_iterator++;
-      }
+        porConns[i].clear();
+        for (int j = 0; j < networkData.connNumber[i]; j++) {
+            porConns[i].emplace_back(networkData.poreConns[pore_iterator]);
+            pore_iterator++;
+        }
     }
 
     for (int i = 0; i < porConns.size(); i++)
@@ -161,17 +161,15 @@ void EquationPNM::calcMatCoeff() {
 void EquationPNM::calculateMatrix(const int &boundCond,
                                   const std::vector<double> &connCoeff,
                                   const std::vector<double> &centralCoeff,
-                                  const std::vector<int> &boundPores,
+                                  const std::vector<bool> &boundPores,
                                   std::vector<std::vector<int>> &inOutCoeff,
                                   const std::vector<double> &diffCoeff) {
 
     // Matrix construction
-
     std::vector<Triplet> triplets;
     triplets.reserve(3 * dim - 4);
 
     int pore_iterator = 0;
-    int bound_it = 0;
 
     for (int i = 0; i < networkData.connNumber.size(); i++) {
 
@@ -179,8 +177,7 @@ void EquationPNM::calculateMatrix(const int &boundCond,
 
         for (int j = 0; j < networkData.connNumber[i]; j++) {
 
-            if ((i != boundPores[bound_it] and boundCond == 0) or
-                (i != boundPores[bound_it] and boundCond == 1)) {
+            if (!boundPores[i]) {
 
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
                                       -1. * connCoeff[porConns[i][j]]
@@ -191,7 +188,6 @@ void EquationPNM::calculateMatrix(const int &boundCond,
             } else {
                 triplets.emplace_back(i, i, -1. * centralCoeff[i] + 1);
                 pore_iterator += networkData.connNumber[i];
-                bound_it++;
                 break;
             }
         }
@@ -285,10 +281,9 @@ void EquationPNM::setInitialCond() {
 }
 
 void EquationPNM::cfdProcedure(const int &boundCond,
-                               const std::vector<int> &boundPores,
+                               const std::vector<bool> &boundPores,
                                const double &pIn,
                                const double &pOut) {
-
 
     calcMatCoeff();
 
@@ -308,23 +303,15 @@ void EquationPNM::cfdProcedure(const int &boundCond,
     calculateGuessPress(pIn, pOut);
     calculateGuessVector();
 
-    calculatePress(1);
+    calculatePress(0);
 
     getPorConnsIsOutByPressure();
 
     calcThrFlowRate();
     calcPorFlowRate();
 
-
     calcInletFlow(networkData.poreLeftX);
-
-    std::vector<int> boundPoresIn;
-
-    for (int i = 0; i < networkData.poreN; i++)
-        if (networkData.poreLeftX[i])
-            boundPoresIn.emplace_back(i);
-
-    calcTotFlow(boundPoresIn);
+    calcTotFlow(networkData.poreLeftX);
 
 //    calculateFreeVector(pIn, pOut);
 }
@@ -395,15 +382,13 @@ void EquationPNM::calcInletFlow(const std::vector<bool> &boundPorIn) {
             inletFlow.emplace_back(porFlowRate[i]);
 }
 
-void EquationPNM::calcTotFlow(const std::vector<int> &boundPores) {
+void EquationPNM::calcTotFlow(const std::vector<bool> &boundPores) {
 
     totFlowRate = 0;
 
     for (int i = 0; i < boundPores.size(); i++)
-        for (int j = 0; j < networkData.poreList.size(); j++)
-            if (boundPores[i] == networkData.poreList[j]) {
-                totFlowRate += porFlowRate[j];
-            }
+        if (boundPores[i])
+            totFlowRate += porFlowRate[i];
 }
 
 const std::vector<double> EquationPNM::getPressure() const {

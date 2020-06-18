@@ -38,6 +38,10 @@ public:
     EquationPNM equationPNM;
     EquationDiffusion equationDiffusion;
 
+    std::vector<std::vector<int>> getGamma();
+
+    void getInletFlow();
+
     double calcSideLength(std::vector<double> &poreCoord);
 
     double calcDensConst();

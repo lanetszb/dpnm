@@ -30,31 +30,31 @@ rc('text', usetex=True)
 props = Props(config_file=sys.argv[1])
 
 props_diff_vector = props.get_diff_props_array()
-
-props_diff = PropsDiffusion(props_diff_vector)
-print(props_diff, '\n')
-
-props_diff.print_props_vector()
-print('\n')
+#
+# props_diff = PropsDiffusion(props_diff_vector)
+# print(props_diff, '\n')
+#
+# props_diff.print_props_vector()
+# print('\n')
 
 #
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-convective_diff = ConvectiveDiffusion(props_diff_vector)
-
-local_diff = LocalDiffusion(props_diff_vector)
-
-equation_diff = EquationDiffusion(props_diff_vector)
+# convective_diff = ConvectiveDiffusion(props_diff_vector)
+#
+# local_diff = LocalDiffusion(props_diff_vector)
+#
+# equation_diff = EquationDiffusion(props_diff_vector)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-time_step = props_diff.time_step
-radius = props_diff.radius
-eff_radius = props_diff.eff_radius
-thr_length = props_diff.length
-grid_block_n = props_diff.grid_block_n
-diffusivity = props_diff.diffusivity
-conc_wall = 2.0
+# time_step = props_diff.time_step
+# radius = props_diff.radius
+# eff_radius = props_diff.eff_radius
+# thr_length = props_diff.length
+# grid_block_n = props_diff.grid_block_n
+# diffusivity = props_diff.diffusivity
+# conc_wall = 2.0
 #
 # #
 # local_diff.calc_vol_cylinder(radius, eff_radius,
