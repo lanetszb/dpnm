@@ -52,13 +52,21 @@ public:
 
     void calcMatrixWidth();
 
+    void calcMatricesOmega();
+
+    void calcMatricesVolume();
+
     double calcLangmConc(double pressure);
 
     void calcThroatConc(const double &dP);
 
     void calcThroatAvPress();
 
-    void calcPressAv();
+    void calcPorePressAv();
+
+    void calcMatrixMassTot();
+
+    void calcPressInlet();
 
     void calcDiffFlow(std::vector<double> &diffFlowVector);
 
@@ -110,8 +118,8 @@ public:
     std::vector<double> throatConc;
 
     std::vector<std::vector<double>> matrixConc;
-    std::vector<std::vector<double>> vectorOmegas;
-    std::vector<std::vector<double>> vectorVolumes;
+    std::vector<std::vector<double>> matricesOmega;
+    std::vector<std::vector<double>> matricesVolume;
 
 
     std::vector<double> diffFlowInst;
