@@ -58,6 +58,8 @@ public:
 
     void calcThroatAvPress();
 
+    void calcPressAv();
+
     void calcDiffFlow(std::vector<double> &diffFlowVector);
 
     void calcDiffFlowDeriv();
@@ -108,6 +110,9 @@ public:
     std::vector<double> throatConc;
 
     std::vector<std::vector<double>> matrixConc;
+    std::vector<std::vector<double>> vectorOmegas;
+    std::vector<std::vector<double>> vectorVolumes;
+
 
     std::vector<double> diffFlowInst;
     std::vector<double> diffFlowInstPlus;

@@ -156,56 +156,54 @@ plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
 
 # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
-p_av = diff_pnm.get_pressure_av()
+# p_av = diff_pnm.get_pressure_av()
+#
+# fig_width = 4.5
+# y_scale = 0.8
+#
+# fig, axs = plt.subplots(1, sharex='all', sharey='col',
+#                         figsize=(fig_width, fig_width * y_scale),
+#                         tight_layout=True)
+# # a_dens (kg/m3) is a coefficient for equation density = a * P + b
+# a_dens = 6.71079e-06
+#
+# # b_dens (kg/m3/Pa) is b coefficient for equation density = a * P + b
+# b_dens = -2.37253E-02
+#
+# # rho_const (kg/m3) is a constant density value
+# rho_const = a_dens * 300000.3 + b_dens
+#
+#
+# def calc_langm_conc(pressure):
+#     langm_conc = 0
+#     for i in range(len(props.langm_coeff)):
+#         langm_conc += props.langm_coeff[i] * pressure ** i
+#     return langm_conc
+#
+#
+# langm_conc_list = []
+# for i in range(len(p_av)):
+#     langm_conc_list.append(calc_langm_conc(p_av[i]))
+#
+# density_list = []
+# for i in range(len(p_av)):
+#     density_list.append(a_dens * p_av[i] + b_dens)
+#
+# density_const_list = []
+# for i in range(len(p_av)):
+#     density_const_list.append(rho_const)
+#
+# y_values = {"$C_{langm}$": langm_conc_list,
+#             "$\\rho$": density_list,
+#             "const $\\rho$": density_const_list}
+#
+# plot_x_ymult(axs, p_av, y_values, 1, 'Pressure (Pa)',
+#              'Concentration, $kg/m^3$', 'Density, $kg/m^3$', colors, 2,
+#              'solid', [], [])
+#
+# plt.show()
 
-fig_width = 4.5
-y_scale = 0.8
-
-fig, axs = plt.subplots(1, sharex='all', sharey='col',
-                        figsize=(fig_width, fig_width * y_scale),
-                        tight_layout=True)
-# a_dens (kg/m3) is a coefficient for equation density = a * P + b
-a_dens = 6.71079e-06
-
-# b_dens (kg/m3/Pa) is b coefficient for equation density = a * P + b
-b_dens = -2.37253E-02
-
-# rho_const (kg/m3) is a constant density value
-rho_const = a_dens * 300000.3 + b_dens
-
-
-def calc_langm_conc(pressure):
-    langm_conc = 0
-    for i in range(len(props.langm_coeff)):
-        langm_conc += props.langm_coeff[i] * pressure ** i
-    return langm_conc
-
-
-langm_conc_list = []
-for i in range(len(p_av)):
-    langm_conc_list.append(calc_langm_conc(p_av[i]))
-
-density_list = []
-for i in range(len(p_av)):
-    density_list.append(a_dens * p_av[i] + b_dens)
-
-density_const_list = []
-for i in range(len(p_av)):
-    density_const_list.append(rho_const)
-
-y_values = {"$C_{langm}$": langm_conc_list,
-            "$\\rho$": density_list,
-            "const $\\rho$": density_const_list}
-
-plot_x_ymult(axs, p_av, y_values, 1, 'Pressure (Pa)',
-             'Concentration, $kg/m^3$', 'Density, $kg/m^3$', colors, 2,
-             'solid', [], [])
-
-plt.show()
-
-# plot_x_ymult(axs[1], time, y  _values, 2, 'time, sec', 'mass, $kg$',
-#              '$Q, kg/sec$', colors, 2, 'solid', [], [])
-
+# TODO: add one more figure of pressure distribution vs length
 # Figure 4 (Pressure and Concentration by Length)
 # length_coords = len(pores_coord_x)
 #

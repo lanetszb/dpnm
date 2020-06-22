@@ -38,7 +38,7 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
     ax.set_xlabel(x_name)
     # ax.set_clip_on(False)
 
-    # ax.yaxis.set_major_locator(plt.LinearLocator(numticks=6))
+    ax.yaxis.set_major_locator(plt.LinearLocator(numticks=6))
     # ax.yaxis.set_minor_locator(plt.LinearLocator(numticks=5))
 
     ax.set_ylabel(list(y_values.keys())[0], color=color)

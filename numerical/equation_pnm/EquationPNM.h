@@ -85,7 +85,6 @@ public:
 
     void calcTotFlow(const std::vector<bool> &boundPores);
 
-
     PropsPNM propsPNM;
     NetworkData networkData;
 

@@ -107,6 +107,7 @@ void EquationPNM::calcMatCoeff() {
 
     for (int i = 0; i < networkData.throatN; i++) {
 
+        // TODO: include various options for calculating resistances
         // auto tR = networkData.throatRadius[i];
         // auto tH = tR;
         // auto tW = networkData.throatWidth[i];
