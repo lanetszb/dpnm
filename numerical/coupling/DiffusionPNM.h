@@ -76,7 +76,13 @@ public:
 
     void cfdProcedureDiff();
 
+    void calcDiffPart();
+
+    void solveCoupledMatrix();
+
     void calcMatCoupledCoeff();
+
+    void calcCoupledFlowParams();
 
     void calcCoupledFreeVector();
 
@@ -133,7 +139,7 @@ public:
     std::vector<double> connCoeffDiff;
     std::vector<double> centralCoeffDiff;
 
-    std::vector<double> pressureAverage;
+    std::vector<double> pressureAv;
     std::vector<double> pressIn;
     std::vector<double> matrixMassTotal;
 

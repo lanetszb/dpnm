@@ -414,86 +414,6 @@ void DiffusionPNM::setInitialCond() {
             matrixConc[i][j] = conc_ini;
 }
 
-void DiffusionPNM::calcCoupledFlow() {
-
-    calcThroatAvPress();
-
-    // Enhance and rethink later
-    dP = 0;
-    calcThroatConc(dP);
-    calcDiffFlow(diffFlowInst);
-
-    dP = (equationPNM.pIn - equationPNM.pOut) / 10.e+5;
-    calcThroatConc(dP / 2);
-    calcDiffFlow(diffFlowInstPlus);
-
-    calcThroatConc(-1 * dP / 2);
-    calcDiffFlow(diffFlowInstMinus);
-
-    calcDiffFlowDeriv();
-    updateConc();
-
-    // Made To calculate diff flow properly
-    double diffFlowThroat = 0;
-
-    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-        diffFlowThroat += diffFlowInst[i];
-    }
-    totalFlowDiff.emplace_back(diffFlowThroat * densityConst);
-    // diffFlowThroat += diffFlowInst[i] - flowDerivDiff[i] * throatAvPress[i];
-
-    calcMatCoeffDiff();
-    calcMatCoupledCoeff();
-
-    equationPNM.calculateMatrix(0,
-                                equationPNM.connCoeff,
-                                equationPNM.centralCoeff,
-                                equationPNM.networkData.poreRightX,
-                                equationPNM.porConnsIsOutByPressure,
-                                connCoeffDiff);
-
-    calcCoupledFreeVector();
-    equationPNM.calculateGuessVector();
-    // TODO: the solution with guess vector should be preffered later
-    equationPNM.calculatePress(1);
-
-    // Made to calculate diff flow properly
-
-    // for (int i = 0; i < equationPNM.networkData.throatN; i++)
-    //    diffFlowThroat += diffFlowInst[i];
-    //     diffFlowThroat += flowDerivDiff[i] * throatAvPress[i];
-
-    // equationPNM.getPorConnsIsOutByPressure();
-
-    equationPNM.calcThrFlowRate();
-    equationPNM.calcPorFlowRate();
-
-
-    equationPNM.calcTotFlow(equationPNM.networkData.poreRightX);
-
-
-    // for calculating diffusive flow to outlet throat
-    for (int i = 0; i < equationPNM.porFlowRate.size(); i++)
-        if (equationPNM.networkData.poreRightX[i])
-            for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
-                equationPNM.totFlowRate +=
-                        -1. * diffFlowInst[equationPNM.porConns[i][j]];
-            }
-
-    totalFlowPoresOut.emplace_back(-equationPNM.totFlowRate * densityConst);
-    equationPNM.calcTotFlow(equationPNM.networkData.poreLeftX);
-    totalFlowPoresIn.emplace_back(equationPNM.totFlowRate * densityConst);
-}
-
-void DiffusionPNM::calcPorePressAv() {
-
-    double sum = 0;
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        sum += equationPNM.pressure[i];
-
-    pressureAverage.emplace_back(sum / equationPNM.networkData.poreN);
-}
-
 void DiffusionPNM::calcMatrixMassTot() {
 
     double sum = 0;
@@ -512,6 +432,15 @@ void DiffusionPNM::calcMatrixMassTot() {
             accumulate(matrixMass.begin(), matrixMass.end(), 0.0));
 }
 
+void DiffusionPNM::calcPorePressAv() {
+
+    double pressAverage = 0;
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        pressAverage += equationPNM.pressure[i];
+
+    pressureAv.emplace_back(pressAverage / equationPNM.networkData.poreN);
+}
+
 void DiffusionPNM::calcPressInlet() {
 
     // TODO: Should be already known, rather than calculated every time
@@ -527,7 +456,82 @@ void DiffusionPNM::calcPressInlet() {
     }
 
     pressIn.emplace_back(pressInlet / boundPoresLeftSize);
+}
 
+void DiffusionPNM::calcDiffPart() {
+
+    calcThroatAvPress();
+
+    // Enhance and rethink later
+    dP = 0;
+    calcThroatConc(dP);
+    calcDiffFlow(diffFlowInst);
+
+    dP = (equationPNM.pIn - equationPNM.pOut) / 10.e+5;
+    calcThroatConc(dP / 2);
+    calcDiffFlow(diffFlowInstPlus);
+
+    calcThroatConc(-1 * dP / 2);
+    calcDiffFlow(diffFlowInstMinus);
+
+    calcDiffFlowDeriv();
+    updateConc();
+}
+
+void DiffusionPNM::solveCoupledMatrix() {
+
+    calcMatCoeffDiff();
+    calcMatCoupledCoeff();
+
+    equationPNM.calculateMatrix(0,
+                                equationPNM.connCoeff,
+                                equationPNM.centralCoeff,
+                                equationPNM.networkData.poreRightX,
+                                equationPNM.porConnsIsOutByPressure,
+                                connCoeffDiff);
+
+    calcCoupledFreeVector();
+    equationPNM.calculateGuessVector();
+    // TODO: the solution with guess vector should be preffered later
+    equationPNM.calculatePress(1);
+}
+
+void DiffusionPNM::calcCoupledFlowParams() {
+
+    // Made To calculate diff flow properly
+    double diffFlowThroat = 0;
+
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        diffFlowThroat += diffFlowInst[i];
+    totalFlowDiff.emplace_back(diffFlowThroat * densityConst);
+    // diffFlowThroat += diffFlowInst[i] - flowDerivDiff[i] * throatAvPress[i];
+
+    // equationPNM.getPorConnsIsOutByPressure();
+
+    equationPNM.calcThrFlowRate();
+    equationPNM.calcPorFlowRate();
+    equationPNM.calcTotFlow(equationPNM.networkData.poreRightX);
+
+
+    // for calculating diffusive flow to outlet throat
+    for (int i = 0; i < equationPNM.porFlowRate.size(); i++)
+        if (equationPNM.networkData.poreRightX[i])
+            for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
+                equationPNM.totFlowRate +=
+                        -1. * diffFlowInst[equationPNM.porConns[i][j]];
+            }
+
+    totalFlowPoresOut.emplace_back(-equationPNM.totFlowRate * densityConst);
+    equationPNM.calcTotFlow(equationPNM.networkData.poreLeftX);
+    totalFlowPoresIn.emplace_back(equationPNM.totFlowRate * densityConst);
+
+}
+
+void DiffusionPNM::calcCoupledFlow() {
+
+    calcDiffPart();
+    solveCoupledMatrix();
+    calcCoupledFlowParams();
 }
 
 void DiffusionPNM::cfdProcedureDiff() {
@@ -540,10 +544,9 @@ void DiffusionPNM::cfdProcedureDiff() {
     totalFlowPoresOut.emplace_back(equationPNM.totFlowRate * densityConst);
     totalFlowPoresIn.emplace_back(equationPNM.totFlowRate * densityConst);
 
-    // TODO: inlet pressure to be rewritten later
     calcPressInlet();
-    // To rewrite latter
 
+    // TODO: Remove castyl
     for (double t = equationDiffusion.propsDiffusion.timeStep;
          t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
          t += equationDiffusion.propsDiffusion.timeStep) {
@@ -552,19 +555,13 @@ void DiffusionPNM::cfdProcedureDiff() {
         calcPressInlet();
         calcPorePressAv();
         calcMatrixMassTot();
-
-        // double diffFlowAv =
-        //         accumulate(diffFlowInst.begin(), diffFlowInst.end(), 0.0) /
-        //         diffFlowInst.size();
-
-        // totalFlowDiff.emplace_back(diffFlowAv);
     }
 }
 //
 // Getters for Python
 
 const std::vector<double> DiffusionPNM::getPressureAverage() const {
-    return pressureAverage;
+    return pressureAv;
 }
 
 const std::vector<double> DiffusionPNM::getMatrixMassTotal() const {
