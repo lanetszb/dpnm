@@ -62,7 +62,8 @@ public:
 
     void calcThroatAvPress();
 
-    void calcPorePressAv();
+    void calcVecSum(const int &iter, const std::vector<double> &vectorToSum,
+                    std::vector<double> &vectorSum, const double &mult);
 
     void calcMatrixMassTot();
 
@@ -145,7 +146,6 @@ public:
 
     std::vector<double> totalFlowPoresOut;
     std::vector<double> totalFlowPoresIn;
-
     std::vector<double> totalFlowDiff;
 };
 

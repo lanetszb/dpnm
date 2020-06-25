@@ -181,7 +181,6 @@ void DiffusionPNM::calcMatrixWidth() {
 
     calcEffRadius();
 
-
     for (int i = 0; i < throatN; i++) {
 
         auto fracHeight = equationPNM.networkData.throatRadius[i];
@@ -209,7 +208,6 @@ void DiffusionPNM::calcThroatAvPress() {
                 (equationPNM.pressure[equationPNM.throatConns[i].first]
                  + equationPNM.pressure[equationPNM.throatConns[i].second]) / 2;
 }
-
 
 void DiffusionPNM::calcThroatConc(const double &dP) {
 
@@ -256,7 +254,6 @@ void DiffusionPNM::calcMatricesVolume() {
         }
     }
 }
-
 
 void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
 
@@ -432,13 +429,16 @@ void DiffusionPNM::calcMatrixMassTot() {
             accumulate(matrixMass.begin(), matrixMass.end(), 0.0));
 }
 
-void DiffusionPNM::calcPorePressAv() {
+void DiffusionPNM::calcVecSum(const int &iter,
+                              const std::vector<double> &vectorToSum,
+                              std::vector<double> &vectorSum,
+                              const double &mult) {
 
-    double pressAverage = 0;
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        pressAverage += equationPNM.pressure[i];
+    double sum = 0;
+    for (int i = 0; i < iter; i++)
+        sum += vectorToSum[i];
 
-    pressureAv.emplace_back(pressAverage / equationPNM.networkData.poreN);
+    vectorSum.emplace_back(sum * mult);
 }
 
 void DiffusionPNM::calcPressInlet() {
@@ -498,33 +498,17 @@ void DiffusionPNM::solveCoupledMatrix() {
 
 void DiffusionPNM::calcCoupledFlowParams() {
 
-    // Made To calculate diff flow properly
-    double diffFlowThroat = 0;
-
-    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-        diffFlowThroat += diffFlowInst[i];
-    totalFlowDiff.emplace_back(diffFlowThroat * densityConst);
+    // Total flow from diffusion
+    calcVecSum(equationPNM.networkData.throatN, diffFlowInst,
+               totalFlowDiff, densityConst);
     // diffFlowThroat += diffFlowInst[i] - flowDerivDiff[i] * throatAvPress[i];
 
     // equationPNM.getPorConnsIsOutByPressure();
 
     equationPNM.calcThrFlowRate();
     equationPNM.calcPorFlowRate();
-    equationPNM.calcTotFlow(equationPNM.networkData.poreRightX);
-
-
-    // for calculating diffusive flow to outlet throat
-    for (int i = 0; i < equationPNM.porFlowRate.size(); i++)
-        if (equationPNM.networkData.poreRightX[i])
-            for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
-                equationPNM.totFlowRate +=
-                        -1. * diffFlowInst[equationPNM.porConns[i][j]];
-            }
-
-    totalFlowPoresOut.emplace_back(-equationPNM.totFlowRate * densityConst);
     equationPNM.calcTotFlow(equationPNM.networkData.poreLeftX);
     totalFlowPoresIn.emplace_back(equationPNM.totFlowRate * densityConst);
-
 }
 
 void DiffusionPNM::calcCoupledFlow() {
@@ -537,7 +521,8 @@ void DiffusionPNM::calcCoupledFlow() {
 void DiffusionPNM::cfdProcedureDiff() {
 
     setInitialCond();
-    calcPorePressAv();
+    calcVecSum(equationPNM.networkData.poreN, equationPNM.pressure,
+               pressureAv, 1.0 / equationPNM.networkData.poreN);
     calcMatrixMassTot();
 
     totalFlowDiff.emplace_back(0);
@@ -553,13 +538,13 @@ void DiffusionPNM::cfdProcedureDiff() {
 
         calcCoupledFlow();
         calcPressInlet();
-        calcPorePressAv();
+        calcVecSum(equationPNM.networkData.poreN, equationPNM.pressure,
+                   pressureAv, 1.0 / equationPNM.networkData.poreN);
         calcMatrixMassTot();
     }
 }
-//
-// Getters for Python
 
+// Getters for Python
 const std::vector<double> DiffusionPNM::getPressureAverage() const {
     return pressureAv;
 }
@@ -587,14 +572,6 @@ const std::vector<double> DiffusionPNM::getInletPressure() const {
 const std::vector<double> DiffusionPNM::getPorePressure() const {
     return equationPNM.pressure;
 }
-
-//        for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-//            std::cout << i << std::endl;
-//            for (int j = 0; j < equation.propsDiffusion.gridBlockN; j++) {
-//                std::cout << matrixConc[i][j] << ' ';
-//            }
-//            std::cout << std::endl;
-//        }
 
 
 

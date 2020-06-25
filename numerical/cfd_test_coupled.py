@@ -126,7 +126,6 @@ plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
 # Figure 2 (Total Flow Rate)
 
 flow_rate_in = diff_pnm.get_flow_pores_in()
-# flow_rate_out = diff_pnm.get_flow_pores_out()
 flow_rate_diff = diff_pnm.get_flow_diff()
 flow_rate_out = flow_rate_diff + flow_rate_in
 
