@@ -54,18 +54,6 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
         dP(0) {
 
-    equationPNM.setInitialCond();
-
-    std::vector<std::vector<int>> poreConnsIsOutByPressureSaved = getGamma();
-
-    getInletFlow();
-
-    // calculate PN with diffusion with mixed Dirichlet-Newman
-
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        for (int j = 0; j < equationPNM.porConnsIsOutByPressure[i].size(); j++)
-            equationPNM.porConnsIsOutByPressure[i][j] = poreConnsIsOutByPressureSaved[i][j];
-
     cfdProcedureDiff();
 }
 
@@ -101,9 +89,9 @@ std::vector<std::vector<int>> DiffusionPNM::getGamma() {
             equationPNM.networkData.poreN);
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        for (int j = 0; j < equationPNM.porConnsIsOutByPressure[i].size(); j++)
+        for (int j = 0; j < equationPNM.gammaPnm[i].size(); j++)
             poreConnsIsOutByPressureSaved[i].push_back(
-                    equationPNM.porConnsIsOutByPressure[i][j]);
+                    equationPNM.gammaPnm[i][j]);
 
     return poreConnsIsOutByPressureSaved;
 }
@@ -327,7 +315,7 @@ void DiffusionPNM::calcMatCoeffDiff() {
         double coeffSum = 0;
         for (int j = 0; j < equationPNM.porConns[i].size(); j++)
 
-            coeffSum += equationPNM.porConnsIsOutByPressure[i][j] *
+            coeffSum += equationPNM.gammaPnm[i][j] *
                         flowDerivDiff[equationPNM.porConns[i][j]] / 2;
 
         // TODO: understand plus or minus sign and properly name as derivDiff
@@ -359,7 +347,7 @@ void DiffusionPNM::calcCoupledFreeVector() {
 
         for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
 
-            coeffSum += equationPNM.porConnsIsOutByPressure[i][j] *
+            coeffSum += equationPNM.gammaPnm[i][j] *
                         diffFlowInst[equationPNM.porConns[i][j]];
         }
         porFlowDiff[i] = coeffSum;
@@ -369,7 +357,7 @@ void DiffusionPNM::calcCoupledFreeVector() {
         double coeffSum = 0;
         for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
 
-            coeffSum -= equationPNM.porConnsIsOutByPressure[i][j] *
+            coeffSum -= equationPNM.gammaPnm[i][j] *
                         flowDerivDiff[equationPNM.porConns[i][j]] *
                         throatAvPress[equationPNM.porConns[i][j]];
         }
@@ -389,7 +377,7 @@ void DiffusionPNM::calcCoupledFreeVector() {
     // equationPNM.freeVector[i] += -1 * (porFlowDiff[i] - porFlowDiffDer[i]);
 }
 
-void DiffusionPNM::setInitialCond() {
+void DiffusionPNM::setInitialCondCoupledMod() {
 
     densityConst = calcDensConst();
 
@@ -487,7 +475,7 @@ void DiffusionPNM::solveCoupledMatrix() {
                                 equationPNM.connCoeff,
                                 equationPNM.centralCoeff,
                                 equationPNM.networkData.poreRightX,
-                                equationPNM.porConnsIsOutByPressure,
+                                equationPNM.gammaPnm,
                                 connCoeffDiff);
 
     calcCoupledFreeVector();
@@ -503,7 +491,7 @@ void DiffusionPNM::calcCoupledFlowParams() {
                totalFlowDiff, densityConst);
     // diffFlowThroat += diffFlowInst[i] - flowDerivDiff[i] * throatAvPress[i];
 
-    // equationPNM.getPorConnsIsOutByPressure();
+    // equationPNM.getGammaByPressure();
 
     equationPNM.calcThrFlowRate();
     equationPNM.calcPorFlowRate();
@@ -520,7 +508,15 @@ void DiffusionPNM::calcCoupledFlow() {
 
 void DiffusionPNM::cfdProcedureDiff() {
 
-    setInitialCond();
+    equationPNM.setInitialCondPurePnm();
+    std::vector<std::vector<int>> gammaByPressureSaved = getGamma();
+    getInletFlow();
+
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        for (int j = 0; j < equationPNM.gammaPnm[i].size(); j++)
+            equationPNM.gammaPnm[i][j] = gammaByPressureSaved[i][j];
+
+    setInitialCondCoupledMod();
     calcVecSum(equationPNM.networkData.poreN, equationPNM.pressure,
                pressureAv, 1.0 / equationPNM.networkData.poreN);
     calcMatrixMassTot();

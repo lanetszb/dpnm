@@ -75,11 +75,11 @@ public:
 
     void calcPorFlowRate();
 
-    void getPorConnsIsOut();
+    void getGammaByLabel();
 
-    void getPorConnsIsOutByPressure();
+    void getGammaByPressure();
 
-    void setInitialCond();
+    void setInitialCondPurePnm();
 
     void calcInletFlow(const std::vector<bool> &boundPorIn);
 
@@ -102,7 +102,7 @@ public:
     std::vector<std::vector<int>> porConns;
 
     std::vector<std::vector<bool>> porConnsIsOut;
-    std::vector<std::vector<int>> porConnsIsOutByPressure;
+    std::vector<std::vector<int>> gammaPnm;
 
     std::vector<double> connCoeff;
     std::vector<double> centralCoeff;

@@ -37,7 +37,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                     std::make_pair(-1, -1)),
         porConns(networkData.poreN),
         porConnsIsOut(networkData.poreN),
-        porConnsIsOutByPressure(networkData.poreN),
+        gammaPnm(networkData.poreN),
         centralCoeff(dim, 0),
         connCoeff(networkData.throatN, 0),
         pressure(dim, 0),
@@ -45,7 +45,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         porFlowRate(dim, 0) {
 
 
-//    setInitialCond();
+//    setInitialCondPurePnm();
 //
 //    std::vector<int> boundPoresInput;
 //
@@ -267,17 +267,17 @@ void EquationPNM::calculatePress(const int &solverMethod) {
         pressure[i] = variable[i];
 }
 
-void EquationPNM::setInitialCond() {
+void EquationPNM::setInitialCondPurePnm() {
 
     calcThroatConns();
     calcPorConns();
     // networkData.findBoundaryPores(networkData.poreCoordX);
 
-    getPorConnsIsOut();
+    getGammaByLabel();
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
         for (int j = 0; j < networkData.connNumber[i]; j++) {
-            porConnsIsOutByPressure[i].emplace_back(0);
+            gammaPnm[i].emplace_back(0);
         }
 }
 
@@ -288,7 +288,7 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     calcMatCoeff();
 
-    // getPorConnsIsOutByPressure();
+    // getGammaByPressure();
 
     std::vector<double> diffCoeff(networkData.throatN, 0);
 
@@ -296,7 +296,7 @@ void EquationPNM::cfdProcedure(const int &boundCond,
                     connCoeff,
                     centralCoeff,
                     boundPores,
-                    porConnsIsOutByPressure,
+                    gammaPnm,
                     diffCoeff);
 
     calculateFreeVector(boundCond, pIn, pOut);
@@ -306,7 +306,7 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     calculatePress(0);
 
-    getPorConnsIsOutByPressure();
+    getGammaByPressure();
 
     calcThrFlowRate();
     calcPorFlowRate();
@@ -324,7 +324,7 @@ void EquationPNM::calcThrFlowRate() {
                                              pressure[throatConns[i].second]));
 }
 
-void EquationPNM::getPorConnsIsOut() {
+void EquationPNM::getGammaByLabel() {
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
         for (int j = 0; j < porConns[i].size(); j++) {
@@ -341,22 +341,22 @@ void EquationPNM::getPorConnsIsOut() {
         }
 }
 
-void EquationPNM::getPorConnsIsOutByPressure() {
+void EquationPNM::getGammaByPressure() {
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
         for (int j = 0; j < porConns[i].size(); j++) {
 
             if (porConnsIsOut[i][j]) {
                 if (pressure[i] >= pressure[throatConns[porConns[i][j]].second])
-                    porConnsIsOutByPressure[i][j] = 0;
+                    gammaPnm[i][j] = 0;
                 else
-                    porConnsIsOutByPressure[i][j] = 1;
+                    gammaPnm[i][j] = 1;
 
             } else if (!porConnsIsOut[i][j]) {
                 if (pressure[throatConns[porConns[i][j]].first] > pressure[i])
-                    porConnsIsOutByPressure[i][j] = 1;
+                    gammaPnm[i][j] = 1;
                 else
-                    porConnsIsOutByPressure[i][j] = 0;
+                    gammaPnm[i][j] = 0;
             }
         }
 }
@@ -368,7 +368,7 @@ void EquationPNM::calcPorFlowRate() {
 
     for (int i = 0; i < porFlowRate.size(); i++)
         for (int j = 0; j < porConns[i].size(); j++) {
-            if (porConnsIsOutByPressure[i][j] == 0)
+            if (gammaPnm[i][j] == 0)
                 porFlowRate[i] += thrFlowRate[porConns[i][j]];
             else
                 porFlowRate[i] -= thrFlowRate[porConns[i][j]];

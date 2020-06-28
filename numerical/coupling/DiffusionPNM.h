@@ -89,7 +89,7 @@ public:
 
     void updateConc();
 
-    void setInitialCond();
+    void setInitialCondCoupledMod();
 
     void calcCoupledFlow();
 
