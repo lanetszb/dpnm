@@ -52,10 +52,7 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
         flowDerivDiff(equationPNM.networkData.throatN, 0),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0),
-        dP(0) {
-
-    cfdProcedureDiff();
-}
+        dP(0) {}
 
 std::vector<std::vector<int>> DiffusionPNM::getGamma() {
 
@@ -506,7 +503,7 @@ void DiffusionPNM::calcCoupledFlow() {
     calcCoupledFlowParams();
 }
 
-void DiffusionPNM::cfdProcedureDiff() {
+void DiffusionPNM::cfdProcedurePnmDiff() {
 
     equationPNM.setInitialCondPurePnm();
     std::vector<std::vector<int>> gammaByPressureSaved = getGamma();

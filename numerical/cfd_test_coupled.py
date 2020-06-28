@@ -93,6 +93,10 @@ diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, throats_list,
                         pores_length, pores_conns, conn_number,
                         pores_per_row, pore_inlet, pore_outlet,
                         hydr_cond, langm_coeffs)
+
+diff_pnm.cfd_procedure_pnm_diff()
+
+
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
 # TODO: fix the issue with time step

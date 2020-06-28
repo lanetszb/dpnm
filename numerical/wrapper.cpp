@@ -324,6 +324,9 @@ BOOST_PYTHON_MODULE (cfd) {
                                             "hydr_cond",
                                             "langmuir_coeff")))
 
+            .def("cfd_procedure_pnm_diff",
+                 &DiffusionPNM::cfdProcedurePnmDiff)
+
             .def("get_pressure_av",
                  &DiffusionPNM::getPressureAverage)
 

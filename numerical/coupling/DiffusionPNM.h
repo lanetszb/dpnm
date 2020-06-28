@@ -75,7 +75,7 @@ public:
 
     void calcMatCoeffDiff();
 
-    void cfdProcedureDiff();
+    void cfdProcedurePnmDiff();
 
     void calcDiffPart();
 
