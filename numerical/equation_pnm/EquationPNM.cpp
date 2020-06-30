@@ -42,26 +42,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
         connCoeff(networkData.throatN, 0),
         pressure(dim, 0),
         thrFlowRate(networkData.throatN, 0),
-        porFlowRate(dim, 0) {
-
-
-//    setInitialCondPurePnm();
-//
-//    std::vector<int> boundPoresInput;
-//
-//    for (int i = 0; i < networkData.poreN; i++)
-//        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
-//            boundPoresInput.emplace_back(i);
-//
-//    cfdProcedure(1, boundPoresInput, pIn, pOut);
-//
-//    std::cout << "completed" << std::endl;
-//
-//    std::cout << matrix << std::endl;
-//
-//    for (int i = 0; i < networkData.poreN; i++)
-//        std::cout << pressure[i] << std::endl;
-}
+        porFlowRate(dim, 0) {}
 
 
 void EquationPNM::calcThroatConns() {
@@ -159,8 +140,7 @@ void EquationPNM::calcMatCoeff() {
             centralCoeff[i] += connCoeff[porConns[i][j]];
 }
 
-void EquationPNM::calculateMatrix(const int &boundCond,
-                                  const std::vector<double> &connCoeff,
+void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
                                   const std::vector<double> &centralCoeff,
                                   const std::vector<bool> &boundPores,
                                   std::vector<std::vector<int>> &inOutCoeff,
@@ -203,16 +183,16 @@ void EquationPNM::calculateMatrix(const int &boundCond,
     }
 }
 
-void EquationPNM::calculateFreeVector(const int &boundCond,
+void EquationPNM::calculateFreeVector(const std::string &boundCond,
                                       const double &pIn,
                                       const double &pOut) {
 
-    if (boundCond == 1) {
+    if (boundCond == "dirichlet") {
         for (int i = 0; i < networkData.poreN; i++)
             if (networkData.poreLeftX[i])
                 freeVector[i] = pIn;
 
-    } else {
+    } else if (boundCond == "mixed") {
         for (int i = 0; i < networkData.poreN; i++)
             if (networkData.poreLeftX[i])
                 freeVector[i] = porFlowRate[i];
@@ -281,7 +261,7 @@ void EquationPNM::setInitialCondPurePnm() {
         }
 }
 
-void EquationPNM::cfdProcedure(const int &boundCond,
+void EquationPNM::cfdProcedure(const std::string &boundCond,
                                const std::vector<bool> &boundPores,
                                const double &pIn,
                                const double &pOut) {
@@ -292,8 +272,7 @@ void EquationPNM::cfdProcedure(const int &boundCond,
 
     std::vector<double> diffCoeff(networkData.throatN, 0);
 
-    calculateMatrix(boundCond,
-                    connCoeff,
+    calculateMatrix(connCoeff,
                     centralCoeff,
                     boundPores,
                     gammaPnm,
@@ -315,6 +294,18 @@ void EquationPNM::cfdProcedure(const int &boundCond,
     calcTotFlow(networkData.poreLeftX);
 
 //    calculateFreeVector(pIn, pOut);
+}
+
+void EquationPNM::cfdProcPurePnmDirichlet() {
+
+    setInitialCondPurePnm();
+    std::vector<bool> allBoundaryPores(networkData.poreLeftX.size(), 0);
+
+    for (int i = 0; i < allBoundaryPores.size(); i++)
+        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
+            allBoundaryPores[i] = true;
+
+    cfdProcedure("dirichlet", allBoundaryPores, pIn, pOut);
 }
 
 void EquationPNM::calcThrFlowRate() {

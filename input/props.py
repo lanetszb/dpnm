@@ -23,13 +23,11 @@ class Props:
         s.liq_visc = float(get('Properties_liquid', 'liq_visc'))
 
         # Getting simulation properties PNM
-
         s.pressure_in = float(get('Properties_simulation', 'pressure_in'))
         s.pressure_out = float(get('Properties_simulation', 'pressure_out'))
         s.it_accuracy_PNM = float(get('Properties_simulation', 'it_accuracy'))
 
         # Getting diffusion properties
-
         s.time = float(get('Properties_diffusion', 'time'))
         s.time_step = float(get('Properties_diffusion', 'time_step'))
         s.length = float(get('Properties_diffusion', 'length'))
@@ -40,8 +38,12 @@ class Props:
         s.diffusivity = float(get('Properties_diffusion', 'diffusivity'))
         s.it_accuracy = float(get('Properties_diffusion', 'iterative_accuracy'))
 
+        # Getting langmuir coeffs
         s.langm_coeff = str(get('Langmuir_isotherm', 'langm_coeff'))
         s.langm_coeff = np.loadtxt(s.langm_coeff)
+
+        # Getting matrix volume
+        s.matrix_volume = float(get('Properties_matrix', 'matrix_volume'))
 
     def get_props_array(s):
         props_list = list()

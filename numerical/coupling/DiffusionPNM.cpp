@@ -23,7 +23,8 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
                            const std::vector<bool> &poreLeftX,
                            const std::vector<bool> &poreRightX,
                            const std::vector<double> &hydraulicCond,
-                           const std::vector<double> &langmuirCoeff) :
+                           const std::vector<double> &langmuirCoeff,
+                           const double &matrixVolume) :
 
         equationPNM(propsPNM, throatList, throatHeight, throatLength,
                     throatWidth, connIndIn, connIndOut, poreCoordX, poreCoordY,
@@ -33,6 +34,8 @@ DiffusionPNM::DiffusionPNM(const std::vector<double> &propsPNM,
         equationDiffusion(propsDiffusion),
         langmuirCoeff(langmuirCoeff),
         effRadius(equationPNM.networkData.throatN, 0),
+        // TODO: don't forget to remove 0.1
+        matrixVolume(matrixVolume * 0.1),
         matrixWidth(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
         throatConc(equationPNM.networkData.throatN, 0),
@@ -74,7 +77,7 @@ std::vector<std::vector<int>> DiffusionPNM::getGamma() {
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         equationPNM.porFlowRate[i] = 1.e-12;
 
-    equationPNM.cfdProcedure(0,
+    equationPNM.cfdProcedure("mixed",
                              equationPNM.networkData.poreRightX,
                              equationPNM.pIn,
                              equationPNM.pOut);
@@ -102,14 +105,14 @@ void DiffusionPNM::getInletFlow() {
         boundPoresInput.emplace_back(equationPNM.networkData.poreLeftX[i] or
                                      equationPNM.networkData.poreRightX[i]);
 
-    equationPNM.cfdProcedure(1,
+    equationPNM.cfdProcedure("dirichlet",
                              boundPoresInput,
                              equationPNM.pIn,
                              equationPNM.pOut);
 
     // calculate PN no diffusion with mixed Dirichlet-Newman
 
-    equationPNM.cfdProcedure(0,
+    equationPNM.cfdProcedure("mixed",
                              equationPNM.networkData.poreRightX,
                              equationPNM.pIn,
                              equationPNM.pOut);
@@ -143,21 +146,23 @@ double DiffusionPNM::calcDensConst() {
 
 void DiffusionPNM::calcRockVolume() {
 
-    auto lengthX = calcSideLength(equationPNM.networkData.poreCoordX);
-    auto lengthY = calcSideLength(equationPNM.networkData.poreCoordY);
-    auto lengthZ = calcSideLength(equationPNM.networkData.poreCoordZ);
+    if (matrixVolume <= 0.) {
 
-    // TODO: to make the option of intputing real rock volume
-    // rockVolume = (lengthX * lengthY * lengthZ);
-    rockVolume = 0.018 * 0.018 * 0.018 * 0.1;
+        auto lengthX = calcSideLength(equationPNM.networkData.poreCoordX);
+        auto lengthY = calcSideLength(equationPNM.networkData.poreCoordY);
+        auto lengthZ = calcSideLength(equationPNM.networkData.poreCoordZ);
+
+        matrixVolume = lengthX * lengthY * lengthZ;
+    }
 }
 
 void DiffusionPNM::calcEffRadius() {
 
+    // TODO: connect effRadii to fracture area
     auto throatN = equationPNM.networkData.throatN;
 
     for (int i = 0; i < effRadius.size(); i++)
-        effRadius[i] = rockVolume / throatN;
+        effRadius[i] = matrixVolume / throatN;
 }
 
 void DiffusionPNM::calcMatrixWidth() {
@@ -245,8 +250,6 @@ void DiffusionPNM::calcDiffFlow(std::vector<double> &diffFlowVector) {
     for (int i = 0; i < equationPNM.networkData.throatN; i++) {
 
         auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
-
-        // TODO: think whether it is ok to recalculate omegas and volumes
 
         for (int j = 0; j < gridBlockN; j++) {
             equationDiffusion.conc[0][j] = matrixConc[i][j];
@@ -362,7 +365,7 @@ void DiffusionPNM::calcCoupledFreeVector() {
         // porFlowDiffDer[i] = coeffSum;
     }
 
-    equationPNM.calculateFreeVector(0,
+    equationPNM.calculateFreeVector("mixed",
                                     equationPNM.propsPNM.pressIn,
                                     equationPNM.propsPNM.pressOut);
 
@@ -468,12 +471,12 @@ void DiffusionPNM::solveCoupledMatrix() {
     calcMatCoeffDiff();
     calcMatCoupledCoeff();
 
-    equationPNM.calculateMatrix(0,
-                                equationPNM.connCoeff,
-                                equationPNM.centralCoeff,
-                                equationPNM.networkData.poreRightX,
-                                equationPNM.gammaPnm,
-                                connCoeffDiff);
+    equationPNM.calculateMatrix(
+            equationPNM.connCoeff,
+            equationPNM.centralCoeff,
+            equationPNM.networkData.poreRightX,
+            equationPNM.gammaPnm,
+            connCoeffDiff);
 
     calcCoupledFreeVector();
     equationPNM.calculateGuessVector();

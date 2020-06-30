@@ -275,6 +275,10 @@ BOOST_PYTHON_MODULE (cfd) {
                                            "pore_left_x",
                                            "pore_right_x",
                                            "hydr_cond")))
+
+            .def("cfd_proc_pure_pnm_dirichlet",
+                 &EquationPNM::cfdProcPurePnmDirichlet)
+
             .add_property("tot_flow_rate",
                           &EquationPNM::getTotFlowRate)
 
@@ -302,7 +306,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                     std::vector<bool>,
                                     std::vector<bool>,
                                     std::vector<double>,
-                                    std::vector<double>>(
+                                    std::vector<double>,
+                                    double>(
                                     p::args("props_PNM",
                                             "props_diffusion",
                                             "throat_list",
@@ -322,7 +327,8 @@ BOOST_PYTHON_MODULE (cfd) {
                                             "pore_left_x",
                                             "pore_right_x",
                                             "hydr_cond",
-                                            "langmuir_coeff")))
+                                            "langmuir_coeff",
+                                            "matrix_volume")))
 
             .def("cfd_procedure_pnm_diff",
                  &DiffusionPNM::cfdProcedurePnmDiff)

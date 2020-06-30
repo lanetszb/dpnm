@@ -42,8 +42,7 @@ public:
 
     virtual ~EquationPNM() = default;
 
-    void calculateMatrix(const int &boundCond,
-                         const std::vector<double> &connCoeff,
+    void calculateMatrix(const std::vector<double> &connCoeff,
                          const std::vector<double> &centralCoeff,
                          const std::vector<bool> &boundPores,
                          std::vector<std::vector<int>> &inOutCoeff,
@@ -55,7 +54,7 @@ public:
 
     void calcMatCoeff();
 
-    void calculateFreeVector(const int &boundCond,
+    void calculateFreeVector(const std::string &boundCond,
                              const double &pIn,
                              const double &pOut);
 
@@ -66,10 +65,12 @@ public:
 
     void calculatePress(const int &solverMethod);
 
-    void cfdProcedure(const int &boundCond,
+    void cfdProcedure(const std::string &boundCond,
                       const std::vector<bool> &boundPores,
                       const double &pIn,
                       const double &pOut);
+
+    void cfdProcPurePnmDirichlet();
 
     void calcThrFlowRate();
 

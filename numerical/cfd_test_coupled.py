@@ -70,6 +70,7 @@ pore_inlet = pores_bot_z
 pore_outlet = pores_top_z
 
 langm_coeffs = props.langm_coeff
+matrix_volume = props.matrix_volume
 # =======================================================================
 hydr_cond = network_data_cpp.hydraulic_cond_coeff
 
@@ -86,13 +87,15 @@ eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
                      pores_conns, conn_number, pores_per_row, pore_inlet,
                      pore_outlet, hydr_cond)
 
+eq_pnm.cfd_proc_pure_pnm_dirichlet()
+
 diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, throats_list,
                         throats_height, throats_length, throats_width,
                         conns_idx_in, conns_idx_out, pores_coord_x,
                         pores_coord_y, pores_coord_z, pores_radius,
                         pores_length, pores_conns, conn_number,
                         pores_per_row, pore_inlet, pore_outlet,
-                        hydr_cond, langm_coeffs)
+                        hydr_cond, langm_coeffs, matrix_volume)
 
 diff_pnm.cfd_procedure_pnm_diff()
 
@@ -104,44 +107,40 @@ time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
 pore_press_av = diff_pnm.get_pressure_av()
 matrix_mass_total = diff_pnm.get_matrix_mass_total()
 inlet_pressure = diff_pnm.get_inlet_pressure()
-
+#
 matrix_mass_total = matrix_mass_total[:-1]
 matrix_mass_total = np.insert(matrix_mass_total, 0, np.nan)
 pore_press_av[0] = np.nan
 inlet_pressure[0] = np.nan
-
+#
 y_values = {'$M_{matrix}$': matrix_mass_total,
             '$P_{av}$': pore_press_av,
             '$P_{in}$': inlet_pressure}
-
+#
 fig_width = 4.5
 y_scale = 1.3
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
-
+#
 fig, axs = plt.subplots(2, sharex='all', sharey='col',
                         figsize=(fig_width, fig_width * y_scale),
                         tight_layout=True)
-
-# Inflow params (numsticks = 5)
+#
+# # Inflow params (numsticks = 5)
 plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
-             '$P, Pa$', colors, 2, 'solid', [], [])
-
-# =============================================================================
-# Figure 2 (Total Flow Rate)
-
+              '$P, Pa$', colors, 2, 'solid', [], [])
+#
+# # =============================================================================
+# # Figure 2 (Total Flow Rate)
+#
 flow_rate_in = diff_pnm.get_flow_pores_in()
 flow_rate_diff = diff_pnm.get_flow_diff()
 flow_rate_out = flow_rate_diff + flow_rate_in
-
 flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
 flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)
-
 flow_rate_out_cum = flow_rate_out_cum[:-1]
 flow_rate_out_cum = np.insert(flow_rate_out_cum, 0, np.nan)
-
 flow_rate_diff_cum = flow_rate_diff_cum[:-1]
 flow_rate_diff_cum = np.insert(flow_rate_diff_cum, 0, np.nan)
-
 flow_rate_diff[0] = np.nan
 flow_rate_out[0] = np.nan
 #
@@ -149,10 +148,10 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
             '$N_{release}$': flow_rate_diff_cum,
             '$Q_{out}$': flow_rate_out,
             '$Q_{release}$': flow_rate_diff}
-
 # Inflow params (numsticks = 5)
 plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
              '$Q, kg/sec$', colors, 2, 'solid', [], [])
+
 
 # plt.savefig('../output/flow_params_inflow.eps', format="eps",
 #             bbox_inches='tight')
