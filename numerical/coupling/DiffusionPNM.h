@@ -43,23 +43,14 @@ public:
     void getInletFlow();
 
     double calcSideLength(std::vector<double> &poreCoord);
-
     double calcDensConst();
-
     void calcRockVolume();
-
     void calcEffRadius();
-
     void calcMatrixWidth();
-
     void calcMatricesOmega();
-
     void calcMatricesVolume();
-
     double calcLangmConc(double pressure);
-
     void calcThroatConc(const double &dP);
-
     void calcThroatAvPress();
 
     void calcVecSum(const int &iter, const std::vector<double> &vectorToSum,
