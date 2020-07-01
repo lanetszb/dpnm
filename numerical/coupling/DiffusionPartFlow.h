@@ -9,6 +9,8 @@
 
 class DiffusionPartFlow {
 
+public:
+
     explicit DiffusionPartFlow(const std::vector<double> &propsPNM,
                                const std::vector<double> &propsDiffusion,
                                const std::vector<int> &throatList,
@@ -56,6 +58,4 @@ class DiffusionPartFlow {
     std::vector<double> flowDerivDiff;
 
 };
-
-
 #endif //PNFLOW_DIFFUSIONPARTFLOW_H
