@@ -6,6 +6,7 @@
 #include <DiffusionPartMath.h>
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
+#include <CouplingIniConds.h>
 
 class DiffusionPartFlow {
 
@@ -36,6 +37,7 @@ public:
     virtual  ~DiffusionPartFlow() = default;
 
     DiffusionPartMath diffusionPartMath;
+    CouplingIniConds couplingIniConds;
     EquationPNM equationPNM;
     EquationDiffusion equationDiffusion;
 
@@ -58,4 +60,5 @@ public:
     std::vector<double> flowDerivDiff;
 
 };
+
 #endif //PNFLOW_DIFFUSIONPARTFLOW_H

@@ -26,6 +26,7 @@ include_directories(
 
 python_add_module(cfd
         numerical/wrapper.cpp
+        numerical/coupling/CouplingIniConds.cpp
         numerical/coupling/CouplingParamsOut.cpp
         numerical/coupling/CouplingMatrix.cpp
         numerical/coupling/DiffusionPNM.cpp

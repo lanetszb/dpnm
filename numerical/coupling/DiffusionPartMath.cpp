@@ -38,6 +38,7 @@ DiffusionPartMath::DiffusionPartMath(const std::vector<double> &propsPNM,
         matrixWidth(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
         throatConc(equationPNM.networkData.throatN, 0),
+        conc_ini(equationDiffusion.propsDiffusion.concIni),
         matricesOmega(equationPNM.networkData.throatN,
                       std::vector<double>(
                               equationDiffusion.propsDiffusion.gridBlockN, 0)),

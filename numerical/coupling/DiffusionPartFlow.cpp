@@ -26,6 +26,13 @@ DiffusionPartFlow::DiffusionPartFlow(const std::vector<double> &propsPNM,
                                      const std::vector<double> &langmuirCoeff,
                                      const double &matrixVolume) :
 
+        couplingIniConds(propsPNM, propsDiffusion, throatList, throatHeight,
+                         throatLength, throatWidth, connIndIn, connIndOut,
+                         poreCoordX, poreCoordY, poreCoordZ, poreRadius,
+                         poreList, poreConns, connNumber, porePerRow,
+                         poreLeftX, poreRightX, hydraulicCond, langmuirCoeff,
+                         matrixVolume),
+
         diffusionPartMath(propsPNM, propsDiffusion, throatList, throatHeight,
                           throatLength, throatWidth, connIndIn, connIndOut,
                           poreCoordX, poreCoordY, poreCoordZ, poreRadius,
@@ -53,8 +60,8 @@ void DiffusionPartFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
         auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
 
         for (int j = 0; j < gridBlockN; j++) {
-            equationDiffusion.conc[0][j] = matrixConc[i][j];
-            equationDiffusion.conc[1][j] = matrixConc[i][j];
+            equationDiffusion.conc[0][j] = couplingIniConds.matrixConc[i][j];
+            equationDiffusion.conc[1][j] = couplingIniConds.matrixConc[i][j];
         }
 
         equationDiffusion.cfdProcedureOneStep(
@@ -81,7 +88,7 @@ void DiffusionPartFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
 
         for (int j = 0; j < gridBlockN; j++) {
             auto conc_prev = equationDiffusion.conc[equationDiffusion.iPrev][j];
-            matrixConc[i][j] = conc_prev;
+            couplingIniConds.matrixConc[i][j] = conc_prev;
         }
     }
 }
@@ -100,7 +107,7 @@ void DiffusionPartFlow::updateConc() {
 
         for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
             auto conc_curr = equationDiffusion.conc[equationDiffusion.iCurr][j];
-            matrixConc[i][j] = conc_curr;
+            couplingIniConds.matrixConc[i][j] = conc_curr;
         }
     }
 }
