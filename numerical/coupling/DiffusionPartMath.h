@@ -34,6 +34,7 @@ public:
 
     virtual  ~DiffusionPartMath() = default;
 
+    // ToDo: EquationPNM and EquationDiffusion should be references
     EquationPNM equationPNM;
     EquationDiffusion equationDiffusion;
 

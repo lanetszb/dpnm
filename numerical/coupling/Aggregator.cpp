@@ -77,14 +77,18 @@ void Aggregator::calcCoupledFlow() {
 void Aggregator::cfdProcedurePnmDiff() {
 
     equationPNM.setInitialCondPurePnm();
+    // auto = std::vector<std::vector<int>>
     std::vector<std::vector<int>> gammaByPressureSaved = couplingIniConds.getGamma();
     couplingIniConds.getInletFlow();
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        // equationPNM.gammaPnm = gammaByPressureSaved;
         for (int j = 0; j < equationPNM.gammaPnm[i].size(); j++)
             equationPNM.gammaPnm[i][j] = gammaByPressureSaved[i][j];
 
     couplingIniConds.setInitialCondCoupledMod();
+    // Unclear method
+    // Should be encapsulated and hidden in couplingParamsOut
     couplingParamsOut.calcVecSum(equationPNM.networkData.poreN,
                                  equationPNM.pressure,
                                  couplingParamsOut.pressureAv,

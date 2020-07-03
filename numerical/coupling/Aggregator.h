@@ -41,8 +41,11 @@ public:
     CouplingParamsOut couplingParamsOut;
     CouplingMatrix couplingMatrix;
     CouplingIniConds couplingIniConds;
+
+    // ToDo: EquationPNM and EquationDiffusion should be references
     DiffusionPartFlow diffusionPartFlow;
     DiffusionPartMath diffusionPartMath;
+
     EquationPNM equationPNM;
     EquationDiffusion equationDiffusion;
 

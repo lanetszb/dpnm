@@ -45,6 +45,9 @@ public:
 
     const std::vector<double> getAlpha() const;
 
+    // ToDo: const int getGridBlockN() const;
+
+
 };
 
 #endif
