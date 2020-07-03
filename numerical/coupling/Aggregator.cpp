@@ -25,12 +25,12 @@ Aggregator::Aggregator(const std::vector<double> &propsPNM,
                        const std::vector<double> &langmuirCoeff,
                        const double &matrixVolume) :
 
-        equationDiffusion(propsDiffusion),
-
         equationPNM(propsPNM, throatList, throatHeight, throatLength,
                     throatWidth, connIndIn, connIndOut, poreCoordX, poreCoordY,
                     poreCoordZ, poreRadius, poreList, poreConns, connNumber,
                     porePerRow, poreLeftX, poreRightX, hydraulicCond),
+
+        equationDiffusion(propsDiffusion),
 
         diffusionPartMath(propsPNM, propsDiffusion, throatList, throatHeight,
                           throatLength, throatWidth, connIndIn, connIndOut,

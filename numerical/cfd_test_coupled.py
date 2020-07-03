@@ -12,6 +12,7 @@ from numerical import PropsPNMCpp
 from numerical import NetworkDataCpp
 from numerical import EquationPNM
 from numerical import DiffusionPNM
+from numerical import Aggregator
 
 from input import Props
 from input import Network_Data_Cpp
@@ -89,6 +90,17 @@ eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
 
 eq_pnm.cfd_proc_pure_pnm_dirichlet()
 
+aggregator = Aggregator(props_pnm, props_diff_vector, throats_list,
+                        throats_height, throats_length, throats_width,
+                        conns_idx_in, conns_idx_out, pores_coord_x,
+                        pores_coord_y, pores_coord_z, pores_radius,
+                        pores_length, pores_conns, conn_number,
+                        pores_per_row, pore_inlet, pore_outlet,
+                        hydr_cond, langm_coeffs, matrix_volume)
+
+aggregator.cfd_procedure_pnm_diff()
+pore_press_av = aggregator.get_pressure_av()
+'''
 diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, throats_list,
                         throats_height, throats_length, throats_width,
                         conns_idx_in, conns_idx_out, pores_coord_x,
@@ -155,7 +167,7 @@ plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
 
 # plt.savefig('../output/flow_params_inflow.eps', format="eps",
 #             bbox_inches='tight')
-
+'''
 # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)
 # p_av = diff_pnm.get_pressure_av()
