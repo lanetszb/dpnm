@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include <CouplingParamsOut.h>
-#include <CouplingMatrix.h>
-#include <DiffusionPartFlow.h>
-#include <CouplingIniConds.h>
+#include <ParamsOut.h>
+#include <MatrixSolver.h>
+#include <DiffusionFlow.h>
+#include <IniConds.h>
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
 
@@ -38,16 +38,15 @@ public:
 
     virtual  ~Aggregator() = default;
 
-    CouplingParamsOut couplingParamsOut;
-    CouplingMatrix couplingMatrix;
-    CouplingIniConds couplingIniConds;
-
-    // ToDo: EquationPNM and EquationDiffusion should be references
-    DiffusionPartFlow diffusionPartFlow;
-    DiffusionPartMath diffusionPartMath;
-
     EquationPNM equationPNM;
     EquationDiffusion equationDiffusion;
+
+    // ToDo: EquationPNM and EquationDiffusion should be references
+    DiffusionFlow diffusionFlow;
+    DiffusionMath diffusionMath;
+    MatrixSolver matrixSolver;
+    IniConds iniConds;
+    ParamsOut paramsOut;
 
     void calcCoupledFlow();
 

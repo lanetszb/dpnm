@@ -1,40 +1,19 @@
-#include <DiffusionPartMath.h>
+#include <DiffusionMath.h>
 #include <numeric>
 #include <iomanip>
 
 
-DiffusionPartMath::DiffusionPartMath(const std::vector<double> &propsPNM,
-                                     const std::vector<double> &propsDiffusion,
-                                     const std::vector<int> &throatList,
-                                     const std::vector<double> &throatHeight,
-                                     const std::vector<double> &throatLength,
-                                     const std::vector<double> &throatWidth,
-                                     const std::vector<double> &connIndIn,
-                                     const std::vector<double> &connIndOut,
-                                     const std::vector<double> &poreCoordX,
-                                     const std::vector<double> &poreCoordY,
-                                     const std::vector<double> &poreCoordZ,
-                                     const std::vector<double> &poreRadius,
-                                     const std::vector<int> &poreList,
-                                     const std::vector<int> &poreConns,
-                                     const std::vector<int> &connNumber,
-                                     const std::vector<int> &porePerRow,
-                                     const std::vector<bool> &poreLeftX,
-                                     const std::vector<bool> &poreRightX,
-                                     const std::vector<double> &hydraulicCond,
-                                     const std::vector<double> &langmuirCoeff,
-                                     const double &matrixVolume) :
+DiffusionMath::DiffusionMath(EquationPNM &equationPNM,
+                             EquationDiffusion &equationDiffusion,
+                             const std::vector<double> &langmuirCoeff,
+                             const double &matrixVolume) :
 
-        equationPNM(propsPNM, throatList, throatHeight, throatLength,
-                    throatWidth, connIndIn, connIndOut, poreCoordX, poreCoordY,
-                    poreCoordZ, poreRadius, poreList, poreConns, connNumber,
-                    porePerRow, poreLeftX, poreRightX, hydraulicCond),
-
-        equationDiffusion(propsDiffusion),
+        equationPNM(equationPNM),
+        equationDiffusion(equationDiffusion),
         langmuirCoeff(langmuirCoeff),
+        matrixVolume(matrixVolume * 0.1),
         effRadius(equationPNM.networkData.throatN, 0),
         // TODO: don't forget to remove 0.1 castyl
-        matrixVolume(matrixVolume * 0.1),
         matrixWidth(equationPNM.networkData.throatN, 0),
         throatAvPress(equationPNM.networkData.throatN, 0),
         throatConc(equationPNM.networkData.throatN, 0),
@@ -47,7 +26,7 @@ DiffusionPartMath::DiffusionPartMath(const std::vector<double> &propsPNM,
                                equationDiffusion.propsDiffusion.gridBlockN,
                                0)) {}
 
-double DiffusionPartMath::calcSideLength(std::vector<double> &poreCoord) {
+double DiffusionMath::calcSideLength(std::vector<double> &poreCoord) {
 
     auto min = std::min_element(std::begin(poreCoord),
                                 std::end(poreCoord));
@@ -57,7 +36,7 @@ double DiffusionPartMath::calcSideLength(std::vector<double> &poreCoord) {
     return *max - *min;
 }
 
-double DiffusionPartMath::calcDensConst() {
+double DiffusionMath::calcDensConst() {
 
     auto aGasDens = equationPNM.propsPNM.aGasDens;
     auto bGasDens = equationPNM.propsPNM.bGasDens;
@@ -72,7 +51,7 @@ double DiffusionPartMath::calcDensConst() {
     // return aGasDens * pressureAv + bGasDens;
 }
 
-void DiffusionPartMath::calcRockVolume() {
+void DiffusionMath::calcRockVolume() {
 
     if (matrixVolume <= 0.) {
 
@@ -84,7 +63,7 @@ void DiffusionPartMath::calcRockVolume() {
     }
 }
 
-void DiffusionPartMath::calcEffRadius() {
+void DiffusionMath::calcEffRadius() {
 
     // TODO: connect effRadii to fracture area
     auto throatN = equationPNM.networkData.throatN;
@@ -93,7 +72,7 @@ void DiffusionPartMath::calcEffRadius() {
         effRadius[i] = matrixVolume / throatN;
 }
 
-void DiffusionPartMath::calcMatrixWidth() {
+void DiffusionMath::calcMatrixWidth() {
 
     auto throatN = equationPNM.networkData.throatN;
 
@@ -109,7 +88,7 @@ void DiffusionPartMath::calcMatrixWidth() {
     }
 }
 
-double DiffusionPartMath::calcLangmConc(double pressure) {
+double DiffusionMath::calcLangmConc(double pressure) {
 
     langmConc = 0;
     for (int i = 0; i < langmuirCoeff.size(); i++)
@@ -118,7 +97,7 @@ double DiffusionPartMath::calcLangmConc(double pressure) {
     return langmConc;
 }
 
-void DiffusionPartMath::calcThroatAvPress() {
+void DiffusionMath::calcThroatAvPress() {
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++)
         throatAvPress[i] =
@@ -126,13 +105,13 @@ void DiffusionPartMath::calcThroatAvPress() {
                  + equationPNM.pressure[equationPNM.throatConns[i].second]) / 2;
 }
 
-void DiffusionPartMath::calcThroatConc(const double &dP) {
+void DiffusionMath::calcThroatConc(const double &dP) {
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++)
         throatConc[i] = calcLangmConc(throatAvPress[i] + dP);
 }
 
-void DiffusionPartMath::calcMatricesOmega() {
+void DiffusionMath::calcMatricesOmega() {
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++) {
 
@@ -150,7 +129,7 @@ void DiffusionPartMath::calcMatricesOmega() {
     }
 }
 
-void DiffusionPartMath::calcMatricesVolume() {
+void DiffusionMath::calcMatricesVolume() {
 
     for (int i = 0; i < equationPNM.networkData.throatN; i++) {
 

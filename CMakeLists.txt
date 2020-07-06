@@ -27,12 +27,12 @@ include_directories(
 python_add_module(cfd
         numerical/wrapper.cpp
         numerical/coupling/Aggregator.cpp
-        numerical/coupling/CouplingIniConds.cpp
-        numerical/coupling/CouplingParamsOut.cpp
-        numerical/coupling/CouplingMatrix.cpp
+        numerical/coupling/IniConds.cpp
+        numerical/coupling/ParamsOut.cpp
+        numerical/coupling/MatrixSolver.cpp
         numerical/coupling/DiffusionPNM.cpp
-        numerical/coupling/DiffusionPartMath.cpp
-        numerical/coupling/DiffusionPartFlow.cpp
+        numerical/coupling/DiffusionMath.cpp
+        numerical/coupling/DiffusionFlow.cpp
         numerical/equation_pnm/EquationPNM.cpp
         numerical/math_pnm/PropsPNM.cpp
         numerical/math_pnm/NetworkData.cpp
