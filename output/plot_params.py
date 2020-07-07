@@ -57,8 +57,6 @@ def plot_x_ymult(ax, x_values, y_values, y_primary_len, x_name, y1_name,
 
     ax2 = ax.twinx()
     ax2.yaxis.set_major_locator(plt.LinearLocator(numticks=6))
-
-    # ax2.yaxis.set_major_locator(plt.LinearLocator(numticks=6))
     # ax2.set_clip_on(False)
 
     color = 'black'

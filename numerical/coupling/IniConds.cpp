@@ -76,6 +76,13 @@ void IniConds::getInletFlow() {
 }
 
 void IniConds::setInitialCondCoupledMod() {
+
+    auto gammaByPressureSaved = getGamma();
+
+    getInletFlow();
+
+    equationPNM.gammaPnm = gammaByPressureSaved;
+
     diffusionMath.densityConst = diffusionMath.calcDensConst();
 
     // equationPNM.calcPorConns();

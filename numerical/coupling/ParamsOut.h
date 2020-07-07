@@ -35,6 +35,10 @@ public:
     void calcVecSum(const int &iter, const std::vector<double> &vectorToSum,
                     std::vector<double> &vectorSum, const double &mult);
 
+    void calcPressureAv();
+
+    void calcTotalFlowDiff();
+
     void calcMatrixMassTot();
 
     void calcPressInlet();

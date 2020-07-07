@@ -39,16 +39,23 @@ void ParamsOut::calcMatrixMassTot() {
             accumulate(matrixMass.begin(), matrixMass.end(), 0.0));
 }
 
-void ParamsOut::calcVecSum(const int &iter,
-                           const std::vector<double> &vectorToSum,
-                           std::vector<double> &vectorSum,
-                           const double &mult) {
+void ParamsOut::calcTotalFlowDiff() {
 
     double sum = 0;
-    for (int i = 0; i < iter; i++)
-        sum += vectorToSum[i];
+    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+        sum += diffusionFlow.diffFlowInst[i];
 
-    vectorSum.emplace_back(sum * mult);
+    totalFlowDiff.emplace_back(sum * diffusionMath.densityConst);
+
+}
+
+void ParamsOut::calcPressureAv() {
+
+    double sum = 0;
+    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+        sum += equationPNM.pressure[i];
+
+    pressureAv.emplace_back(sum / equationPNM.networkData.poreN);
 }
 
 void ParamsOut::calcPressInlet() {
@@ -71,8 +78,7 @@ void ParamsOut::calcPressInlet() {
 void ParamsOut::calcCoupledFlowParams() {
 
     // Total flow from diffusion
-    calcVecSum(equationPNM.networkData.throatN, diffusionFlow.diffFlowInst,
-               totalFlowDiff, diffusionMath.densityConst);
+    calcTotalFlowDiff();
     // diffFlowThroat += diffFlowInst[i] - flowDerivDiff[i] * throatAvPress[i];
 
     // equationPNM.getGammaByPressure();
@@ -82,4 +88,8 @@ void ParamsOut::calcCoupledFlowParams() {
     equationPNM.calcTotFlow(equationPNM.networkData.poreLeftX);
     totalFlowPoresIn.emplace_back(equationPNM.totFlowRate *
                                   diffusionMath.densityConst);
+
+    calcPressInlet();
+    calcPressureAv();
+    calcMatrixMassTot();
 }

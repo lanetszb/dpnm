@@ -1,8 +1,5 @@
 #include <Aggregator.h>
 
-#include <numeric>
-#include <iomanip>
-
 Aggregator::Aggregator(const std::vector<double> &propsPNM,
                        const std::vector<double> &propsDiffusion,
                        const std::vector<int> &throatList,
@@ -45,8 +42,9 @@ Aggregator::Aggregator(const std::vector<double> &propsPNM,
         matrixSolver(equationPNM, equationDiffusion, diffusionMath,
                      diffusionFlow, langmuirCoeff, matrixVolume),
 
-        paramsOut(equationPNM, equationDiffusion, diffusionMath, iniConds,
-                  diffusionFlow, matrixSolver, langmuirCoeff, matrixVolume) {}
+        paramsOut(equationPNM, equationDiffusion, diffusionMath,
+                  iniConds, diffusionFlow, matrixSolver, langmuirCoeff,
+                  matrixVolume) {}
 
 void Aggregator::calcCoupledFlow() {
 
@@ -58,45 +56,17 @@ void Aggregator::calcCoupledFlow() {
 void Aggregator::cfdProcedurePnmDiff() {
 
     equationPNM.setInitialCondPurePnm();
-    // auto = std::vector<std::vector<int>>
-    std::vector<std::vector<int>> gammaByPressureSaved = iniConds.getGamma();
-    iniConds.getInletFlow();
-
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        // equationPNM.gammaPnm = gammaByPressureSaved;
-        for (int j = 0; j < equationPNM.gammaPnm[i].size(); j++)
-            equationPNM.gammaPnm[i][j] = gammaByPressureSaved[i][j];
 
     iniConds.setInitialCondCoupledMod();
-    // Unclear method
-    // Should be encapsulated and hidden in paramsOut
-    paramsOut.calcVecSum(equationPNM.networkData.poreN,
-                         equationPNM.pressure,
-                         paramsOut.pressureAv,
-                         1.0 / equationPNM.networkData.poreN);
-    paramsOut.calcMatrixMassTot();
 
-    paramsOut.totalFlowDiff.emplace_back(0);
-    paramsOut.totalFlowPoresOut.emplace_back(
-            equationPNM.totFlowRate * diffusionMath.densityConst);
-    paramsOut.totalFlowPoresIn.emplace_back(
-            equationPNM.totFlowRate * diffusionMath.densityConst);
-
-    paramsOut.calcPressInlet();
+    paramsOut.calcCoupledFlowParams();
 
     // TODO: Remove castyl
     for (double t = equationDiffusion.propsDiffusion.timeStep;
          t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
          t += equationDiffusion.propsDiffusion.timeStep) {
 
-
         calcCoupledFlow();
-        paramsOut.calcPressInlet();
-        paramsOut.calcVecSum(equationPNM.networkData.poreN,
-                             equationPNM.pressure,
-                             paramsOut.pressureAv,
-                             1.0 / equationPNM.networkData.poreN);
-        paramsOut.calcMatrixMassTot();
     }
 }
 
