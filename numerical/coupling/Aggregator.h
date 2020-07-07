@@ -34,7 +34,8 @@ public:
                         const std::vector<bool> &poreRightX,
                         const std::vector<double> &hydraulicCond,
                         const std::vector<double> &langmuirCoeff,
-                        const double &matrixVolume);
+                        const double &matrixVolume,
+                        const std::string &solverMethod);
 
     virtual  ~Aggregator() = default;
 

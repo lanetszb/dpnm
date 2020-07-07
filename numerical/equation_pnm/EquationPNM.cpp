@@ -18,7 +18,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<int> &porePerRow,
                          const std::vector<bool> &poreLeftX,
                          const std::vector<bool> &poreRightX,
-                         const std::vector<double> &hydraulicCond) :
+                         const std::vector<double> &hydraulicCond,
+                         const std::string &solverMethod) :
 
         propsPNM(propsVector),
         networkData(throatList, throatHeight, throatLength, throatWidth,
@@ -26,6 +27,7 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                     poreCoordZ, poreRadius, poreList, poreConns,
                     connNumber, porePerRow, poreLeftX, poreRightX,
                     hydraulicCond),
+        solverMethod(solverMethod),
         dim(networkData.poreN),
         pIn(propsPNM.pressIn),
         pOut(propsPNM.pressOut),
@@ -222,26 +224,26 @@ void EquationPNM::calculateGuessVector() {
         guessVector[i] = pressure[i];
 }
 
-void EquationPNM::calculatePress(const int &solverMethod) {
+void EquationPNM::calculatePress(const std::string &solverMethod) {
 
-    if (solverMethod == 0) {
+    if (solverMethod == "biCGSTAB") {
 
         BiCGSTAB biCGSTAB;
         biCGSTAB.compute(matrix);
         biCGSTAB.setTolerance(propsPNM.itAccuracy);
         variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
-    }
 
-    if (solverMethod == 1) {
+    } else if (solverMethod == "sparseLU") {
         SparseLU sparseLU;
         sparseLU.compute(matrix);
         variable = sparseLU.solve(freeVector);
-    }
 
-//    LeastSqCG leastSqCG;
-//    leastSqCG.compute(matrix);
-//    leastSqCG.setTolerance(propsPNM.itAccuracy);
-//    variable = leastSqCG.solveWithGuess(freeVector, guessVector);
+    } else if (solverMethod == "leastSqCG") {
+        LeastSqCG leastSqCG;
+        leastSqCG.compute(matrix);
+        leastSqCG.setTolerance(propsPNM.itAccuracy);
+        variable = leastSqCG.solveWithGuess(freeVector, guessVector);
+    }
 
     for (int i = 0; i < dim; i++)
         pressure[i] = variable[i];
@@ -283,7 +285,7 @@ void EquationPNM::cfdProcedure(const std::string &boundCond,
     calculateGuessPress(pIn, pOut);
     calculateGuessVector();
 
-    calculatePress(0);
+    calculatePress(solverMethod);
 
     getGammaByPressure();
 

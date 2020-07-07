@@ -20,12 +20,14 @@ Aggregator::Aggregator(const std::vector<double> &propsPNM,
                        const std::vector<bool> &poreRightX,
                        const std::vector<double> &hydraulicCond,
                        const std::vector<double> &langmuirCoeff,
-                       const double &matrixVolume) :
+                       const double &matrixVolume,
+                       const std::string &solverMethod) :
 
         equationPNM(propsPNM, throatList, throatHeight, throatLength,
                     throatWidth, connIndIn, connIndOut, poreCoordX, poreCoordY,
                     poreCoordZ, poreRadius, poreList, poreConns, connNumber,
-                    porePerRow, poreLeftX, poreRightX, hydraulicCond),
+                    porePerRow, poreLeftX, poreRightX, hydraulicCond,
+                    solverMethod),
 
         equationDiffusion(propsDiffusion),
 

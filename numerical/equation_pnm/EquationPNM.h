@@ -20,25 +20,25 @@ class EquationPNM {
 
 public:
 
-    explicit EquationPNM(
-            const std::vector<double> &propsVector,
-            const std::vector<int> &throatList,
-            const std::vector<double> &throatHeight,
-            const std::vector<double> &throatLength,
-            const std::vector<double> &throatWidth,
-            const std::vector<double> &connIndIn,
-            const std::vector<double> &connIndOut,
-            const std::vector<double> &poreCoordX,
-            const std::vector<double> &poreCoordY,
-            const std::vector<double> &poreCoordZ,
-            const std::vector<double> &poreRadius,
-            const std::vector<int> &poreList,
-            const std::vector<int> &poreConns,
-            const std::vector<int> &connNumber,
-            const std::vector<int> &porePerRow,
-            const std::vector<bool> &poreLeftX,
-            const std::vector<bool> &poreRightX,
-            const std::vector<double> &hydraulicCond);
+    explicit EquationPNM(const std::vector<double> &propsVector,
+                         const std::vector<int> &throatList,
+                         const std::vector<double> &throatHeight,
+                         const std::vector<double> &throatLength,
+                         const std::vector<double> &throatWidth,
+                         const std::vector<double> &connIndIn,
+                         const std::vector<double> &connIndOut,
+                         const std::vector<double> &poreCoordX,
+                         const std::vector<double> &poreCoordY,
+                         const std::vector<double> &poreCoordZ,
+                         const std::vector<double> &poreRadius,
+                         const std::vector<int> &poreList,
+                         const std::vector<int> &poreConns,
+                         const std::vector<int> &connNumber,
+                         const std::vector<int> &porePerRow,
+                         const std::vector<bool> &poreLeftX,
+                         const std::vector<bool> &poreRightX,
+                         const std::vector<double> &hydraulicCond,
+                         const std::string &solverMethod);
 
     virtual ~EquationPNM() = default;
 
@@ -63,7 +63,7 @@ public:
 
     void calculateGuessVector();
 
-    void calculatePress(const int &solverMethod);
+    void calculatePress(const std::string &solverMethod);
 
     void cfdProcedure(const std::string &boundCond,
                       const std::vector<bool> &boundPores,
@@ -113,6 +113,8 @@ public:
     std::vector<double> porFlowRate;
 
     double totFlowRate;
+
+    std::string solverMethod;
 
 
     // manual construction, has to be automatised later

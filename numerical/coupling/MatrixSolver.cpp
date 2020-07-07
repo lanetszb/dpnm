@@ -1,7 +1,5 @@
 #include <MatrixSolver.h>
 
-#include <numeric>
-
 MatrixSolver::MatrixSolver(EquationPNM &equationPNM,
                            EquationDiffusion &equationDiffusion,
                            DiffusionMath &diffusionMath,
@@ -15,8 +13,6 @@ MatrixSolver::MatrixSolver(EquationPNM &equationPNM,
         diffusionFlow(diffusionFlow),
         connCoeffDiff(equationPNM.networkData.throatN, 0),
         centralCoeffDiff(equationPNM.networkData.poreN, 0) {}
-
-#include <iomanip>
 
 void MatrixSolver::calcMatCoeffDiff() {
     auto flowDerivDiff = diffusionFlow.flowDerivDiff;
@@ -55,15 +51,13 @@ void MatrixSolver::calcMatCoupledCoeff() {
 
 void MatrixSolver::calcCoupledFreeVector() {
 
-
     std::vector<double> porFlowDiff(equationPNM.networkData.poreN, 0);
     std::vector<double> porFlowDiffDer(equationPNM.networkData.poreN, 0);
+    double coeffSum;
 
     for (int i = 0; i < equationPNM.porConns.size(); i++) {
-        double coeffSum = 0;
-
+        coeffSum = 0;
         for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
-
             coeffSum += equationPNM.gammaPnm[i][j] *
                         diffusionFlow.diffFlowInst[equationPNM.porConns[i][j]];
         }
@@ -71,9 +65,8 @@ void MatrixSolver::calcCoupledFreeVector() {
     }
 
     for (int i = 0; i < equationPNM.porConns.size(); i++) {
-        double coeffSum = 0;
+        coeffSum = 0;
         for (int j = 0; j < equationPNM.porConns[i].size(); j++) {
-
             coeffSum -= equationPNM.gammaPnm[i][j] *
                         diffusionFlow.flowDerivDiff[equationPNM.porConns[i][j]] *
                         diffusionMath.throatAvPress[equationPNM.porConns[i][j]];
@@ -107,6 +100,5 @@ void MatrixSolver::solveCoupledMatrix() {
 
     calcCoupledFreeVector();
     equationPNM.calculateGuessVector();
-    // TODO: the solution with guess vector should be preffered later
-    equationPNM.calculatePress(1);
+    equationPNM.calculatePress(equationPNM.solverMethod);
 }

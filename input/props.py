@@ -26,6 +26,7 @@ class Props:
         s.pressure_in = float(get('Properties_simulation', 'pressure_in'))
         s.pressure_out = float(get('Properties_simulation', 'pressure_out'))
         s.it_accuracy_PNM = float(get('Properties_simulation', 'it_accuracy'))
+        s.solver_method = str(get('Properties_simulation', 'solver_method'))
 
         # Getting diffusion properties
         s.time = float(get('Properties_diffusion', 'time'))
