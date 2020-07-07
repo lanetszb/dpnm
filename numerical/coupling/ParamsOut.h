@@ -25,9 +25,9 @@ public:
 
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
-    MatrixSolver &matrixSolver;
-    DiffusionFlow &diffusionFlow;
     DiffusionMath &diffusionMath;
+    DiffusionFlow &diffusionFlow;
+    MatrixSolver &matrixSolver;
 
     void calcVecSum(const int &iter, const std::vector<double> &vectorToSum,
                     std::vector<double> &vectorSum, const double &mult);

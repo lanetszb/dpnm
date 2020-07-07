@@ -8,7 +8,10 @@ IniConds::IniConds(EquationPNM &equationPNM,
 
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
-        diffusionMath(diffusionMath) {}
+        diffusionMath(diffusionMath),
+        matrixConc(equationPNM.networkData.throatN,
+                   std::vector<double>(
+                           equationDiffusion.propsDiffusion.gridBlockN, 0)) {}
 
 std::vector<std::vector<int>> IniConds::getGamma() {
 
@@ -73,7 +76,6 @@ void IniConds::getInletFlow() {
 }
 
 void IniConds::setInitialCondCoupledMod() {
-
     diffusionMath.densityConst = diffusionMath.calcDensConst();
 
     // equationPNM.calcPorConns();
@@ -89,7 +91,9 @@ void IniConds::setInitialCondCoupledMod() {
 
     equationDiffusion.calcConcIni(diffusionMath.conc_ini);
 
-    for (int i = 0; i < equationPNM.networkData.throatN; i++)
-        for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++)
+    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+        for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
             matrixConc[i][j] = diffusionMath.conc_ini;
+        }
+    }
 }

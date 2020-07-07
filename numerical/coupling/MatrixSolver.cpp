@@ -12,16 +12,18 @@ MatrixSolver::MatrixSolver(EquationPNM &equationPNM,
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
         diffusionMath(diffusionMath),
-        diffusionFlow(diffusionFlow) {}
+        diffusionFlow(diffusionFlow),
+        connCoeffDiff(equationPNM.networkData.throatN, 0),
+        centralCoeffDiff(equationPNM.networkData.poreN, 0) {}
 
 #include <iomanip>
 
 void MatrixSolver::calcMatCoeffDiff() {
-
     auto flowDerivDiff = diffusionFlow.flowDerivDiff;
 
-    for (int i = 0; i < flowDerivDiff.size(); i++)
+    for (int i = 0; i < flowDerivDiff.size(); i++) {
         connCoeffDiff[i] = 0;
+    }
     // connCoeffDiff[i] = flowDerivDiff[i] / 2;
 
 
@@ -97,12 +99,11 @@ void MatrixSolver::solveCoupledMatrix() {
     calcMatCoeffDiff();
     calcMatCoupledCoeff();
 
-    equationPNM.calculateMatrix(
-            equationPNM.connCoeff,
-            equationPNM.centralCoeff,
-            equationPNM.networkData.poreRightX,
-            equationPNM.gammaPnm,
-            connCoeffDiff);
+    equationPNM.calculateMatrix(equationPNM.connCoeff,
+                                equationPNM.centralCoeff,
+                                equationPNM.networkData.poreRightX,
+                                equationPNM.gammaPnm,
+                                connCoeffDiff);
 
     calcCoupledFreeVector();
     equationPNM.calculateGuessVector();

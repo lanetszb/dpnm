@@ -89,6 +89,7 @@ void Aggregator::cfdProcedurePnmDiff() {
          t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
          t += equationDiffusion.propsDiffusion.timeStep) {
 
+
         calcCoupledFlow();
         paramsOut.calcPressInlet();
         paramsOut.calcVecSum(equationPNM.networkData.poreN,

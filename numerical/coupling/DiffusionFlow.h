@@ -34,8 +34,8 @@ public:
 
     void calcDiffPart();
 
-    std::vector<double> throatConc;
-    std::vector<std::vector<double>> matrixConc;
+    // std::vector<double> throatConc;
+    // std::vector<std::vector<double>> matrixConc;
 
     std::vector<double> diffFlowInst;
     std::vector<double> diffFlowInstPlus;

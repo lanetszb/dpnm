@@ -41,11 +41,10 @@ public:
     EquationPNM equationPNM;
     EquationDiffusion equationDiffusion;
 
-    // ToDo: EquationPNM and EquationDiffusion should be references
-    DiffusionFlow diffusionFlow;
     DiffusionMath diffusionMath;
-    MatrixSolver matrixSolver;
     IniConds iniConds;
+    DiffusionFlow diffusionFlow;
+    MatrixSolver matrixSolver;
     ParamsOut paramsOut;
 
     void calcCoupledFlow();

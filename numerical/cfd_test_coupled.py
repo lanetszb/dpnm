@@ -99,6 +99,7 @@ aggregator = Aggregator(props_pnm, props_diff_vector, throats_list,
                         hydr_cond, langm_coeffs, matrix_volume)
 
 aggregator.cfd_procedure_pnm_diff()
+
 pore_press_av = aggregator.get_pressure_av()
 '''
 diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, throats_list,
@@ -110,7 +111,7 @@ diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, throats_list,
                         hydr_cond, langm_coeffs, matrix_volume)
 
 diff_pnm.cfd_procedure_pnm_diff()
-'''
+
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
 # TODO: fix the issue with time step
@@ -234,3 +235,4 @@ plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
 #                                            pore_by_coord)]
 #
 # pressure_by_pore = diff_pnm.get_pressure_by_pore()
+'''
