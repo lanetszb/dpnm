@@ -3,11 +3,12 @@
 
 #include <vector>
 
-#include <MatrixSolver.h>
-#include <DiffusionFlow.h>
-#include <DiffusionMath.h>
-#include <EquationDiffusion.h>
 #include <EquationPNM.h>
+#include <EquationDiffusion.h>
+#include <DiffusionMath.h>
+#include <IniConds.h>
+#include <DiffusionFlow.h>
+#include <MatrixSolver.h>
 
 class ParamsOut {
 
@@ -15,9 +16,10 @@ public:
 
     explicit ParamsOut(EquationPNM &equationPNM,
                        EquationDiffusion &equationDiffusion,
-                       DiffusionMath &diffusionMath,
-                       DiffusionFlow &diffusionFlow,
-                       MatrixSolver &matrixSolver,
+                       DiffusionMath &diffusionPartMath,
+                       IniConds &iniConds,
+                       DiffusionFlow &diffusionPartFlow,
+                       MatrixSolver &solver,
                        const std::vector<double> &langmuirCoeff,
                        const double &matrixVolume);
 
@@ -26,6 +28,7 @@ public:
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
     DiffusionMath &diffusionMath;
+    IniConds &iniConds;
     DiffusionFlow &diffusionFlow;
     MatrixSolver &matrixSolver;
 

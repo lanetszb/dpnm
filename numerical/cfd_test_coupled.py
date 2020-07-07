@@ -11,7 +11,6 @@ sys.path.append(os.path.join(current_path, '../'))
 from numerical import PropsPNMCpp
 from numerical import NetworkDataCpp
 from numerical import EquationPNM
-from numerical import DiffusionPNM
 from numerical import Aggregator
 
 from input import Props
@@ -89,7 +88,7 @@ eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
                      pore_outlet, hydr_cond)
 
 # eq_pnm.cfd_proc_pure_pnm_dirichlet()
-'''
+
 aggregator = Aggregator(props_pnm, props_diff_vector, throats_list,
                         throats_height, throats_length, throats_width,
                         conns_idx_in, conns_idx_out, pores_coord_x,
@@ -101,24 +100,14 @@ aggregator = Aggregator(props_pnm, props_diff_vector, throats_list,
 aggregator.cfd_procedure_pnm_diff()
 
 pore_press_av = aggregator.get_pressure_av()
-'''
-diff_pnm = DiffusionPNM(props_pnm, props_diff_vector, throats_list,
-                        throats_height, throats_length, throats_width,
-                        conns_idx_in, conns_idx_out, pores_coord_x,
-                        pores_coord_y, pores_coord_z, pores_radius,
-                        pores_length, pores_conns, conn_number,
-                        pores_per_row, pore_inlet, pore_outlet,
-                        hydr_cond, langm_coeffs, matrix_volume)
-
-diff_pnm.cfd_procedure_pnm_diff()
 
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
 # TODO: fix the issue with time step
 time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
-pore_press_av = diff_pnm.get_pressure_av()
-matrix_mass_total = diff_pnm.get_matrix_mass_total()
-inlet_pressure = diff_pnm.get_inlet_pressure()
+pore_press_av = aggregator.get_pressure_av()
+matrix_mass_total = aggregator.get_matrix_mass_total()
+inlet_pressure = aggregator.get_inlet_pressure()
 #
 matrix_mass_total = matrix_mass_total[:-1]
 matrix_mass_total = np.insert(matrix_mass_total, 0, np.nan)
@@ -144,8 +133,8 @@ plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
 # # =============================================================================
 # # Figure 2 (Total Flow Rate)
 #
-flow_rate_in = diff_pnm.get_flow_pores_in()
-flow_rate_diff = diff_pnm.get_flow_diff()
+flow_rate_in = aggregator.get_flow_pores_in()
+flow_rate_diff = aggregator.get_flow_diff()
 flow_rate_out = flow_rate_diff + flow_rate_in
 flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
 flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)

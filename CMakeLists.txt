@@ -30,7 +30,6 @@ python_add_module(cfd
         numerical/coupling/IniConds.cpp
         numerical/coupling/ParamsOut.cpp
         numerical/coupling/MatrixSolver.cpp
-        numerical/coupling/DiffusionPNM.cpp
         numerical/coupling/DiffusionMath.cpp
         numerical/coupling/DiffusionFlow.cpp
         numerical/equation_pnm/EquationPNM.cpp

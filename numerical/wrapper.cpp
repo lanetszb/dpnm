@@ -9,7 +9,6 @@
 #include <EquationPNM.h>
 #include <PropsPNM.h>
 #include <NetworkData.h>
-#include <DiffusionPNM.h>
 #include <Aggregator.h>
 
 
@@ -286,74 +285,6 @@ BOOST_PYTHON_MODULE (cfd) {
             .add_property("pressure",
                           &EquationPNM::getPressure);
 //            .def("__str__", __str__<EquationPNM>);
-
-    p::class_<DiffusionPNM>("DiffusionPNM",
-                            p::init<std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<int>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    std::vector<int>,
-                                    std::vector<int>,
-                                    std::vector<int>,
-                                    std::vector<int>,
-                                    std::vector<bool>,
-                                    std::vector<bool>,
-                                    std::vector<double>,
-                                    std::vector<double>,
-                                    double>(
-                                    p::args("props_PNM",
-                                            "props_diffusion",
-                                            "throat_list",
-                                            "throat_height",
-                                            "throat_length",
-                                            "throat_width",
-                                            "conn_ind_in",
-                                            "conn_ind_out",
-                                            "pore_coord_x",
-                                            "pore_coord_y",
-                                            "pore_coord_z",
-                                            "pore_radius",
-                                            "pore_list",
-                                            "pore_conns",
-                                            "conn_number",
-                                            "pore_per_row",
-                                            "pore_left_x",
-                                            "pore_right_x",
-                                            "hydr_cond",
-                                            "langmuir_coeff",
-                                            "matrix_volume")))
-
-            .def("cfd_procedure_pnm_diff",
-                 &DiffusionPNM::cfdProcedurePnmDiff)
-
-            .def("get_pressure_av",
-                 &DiffusionPNM::getPressureAverage)
-
-            .def("get_matrix_mass_total",
-                 &DiffusionPNM::getMatrixMassTotal)
-
-            .def("get_flow_pores_out",
-                 &DiffusionPNM::getTotalFlowPoresOut)
-
-            .def("get_flow_pores_in",
-                 &DiffusionPNM::getTotalFlowPoresIn)
-
-            .def("get_flow_diff",
-                 &DiffusionPNM::getTotalFlowDiff)
-
-            .def("get_pressure_by_pore",
-                 &DiffusionPNM::getPorePressure)
-
-            .def("get_inlet_pressure",
-                 &DiffusionPNM::getInletPressure);
 
     p::class_<Aggregator>("Aggregator",
                             p::init<std::vector<double>,

@@ -3,12 +3,12 @@
 
 #include <vector>
 
-#include <ParamsOut.h>
-#include <MatrixSolver.h>
-#include <DiffusionFlow.h>
-#include <IniConds.h>
-#include <EquationDiffusion.h>
 #include <EquationPNM.h>
+#include <EquationDiffusion.h>
+#include <IniConds.h>
+#include <DiffusionFlow.h>
+#include <MatrixSolver.h>
+#include <ParamsOut.h>
 
 class Aggregator {
 

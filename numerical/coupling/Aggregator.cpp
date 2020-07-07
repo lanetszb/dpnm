@@ -45,8 +45,8 @@ Aggregator::Aggregator(const std::vector<double> &propsPNM,
         matrixSolver(equationPNM, equationDiffusion, diffusionMath,
                      diffusionFlow, langmuirCoeff, matrixVolume),
 
-        paramsOut(equationPNM, equationDiffusion, diffusionMath, diffusionFlow,
-                  matrixSolver, langmuirCoeff, matrixVolume) {}
+        paramsOut(equationPNM, equationDiffusion, diffusionMath, iniConds,
+                  diffusionFlow, matrixSolver, langmuirCoeff, matrixVolume) {}
 
 void Aggregator::calcCoupledFlow() {
 

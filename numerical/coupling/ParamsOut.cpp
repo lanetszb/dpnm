@@ -6,6 +6,7 @@
 ParamsOut::ParamsOut(EquationPNM &equationPNM,
                      EquationDiffusion &equationDiffusion,
                      DiffusionMath &diffusionPartMath,
+                     IniConds &iniConds,
                      DiffusionFlow &diffusionPartFlow,
                      MatrixSolver &solver,
                      const std::vector<double> &langmuirCoeff,
@@ -13,10 +14,10 @@ ParamsOut::ParamsOut(EquationPNM &equationPNM,
 
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
-        matrixSolver(solver),
-        diffusionFlow(diffusionPartFlow),
         diffusionMath(diffusionPartMath),
-
+        iniConds(iniConds),
+        diffusionFlow(diffusionPartFlow),
+        matrixSolver(solver),
         conc_ini(equationDiffusion.propsDiffusion.concIni) {}
 
 
@@ -28,7 +29,7 @@ void ParamsOut::calcMatrixMassTot() {
         sum = 0;
         for (int j = 0;
              j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
-            sum += conc_ini *
+            sum += iniConds.matrixConc[i][j] *
                    equationDiffusion.localDiffusion.volCartes[j];
         }
         matrixMass.emplace_back(sum);
