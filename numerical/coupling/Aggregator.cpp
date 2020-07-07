@@ -56,9 +56,7 @@ void Aggregator::calcCoupledFlow() {
 void Aggregator::cfdProcedurePnmDiff() {
 
     equationPNM.setInitialCondPurePnm();
-
     iniConds.setInitialCondCoupledMod();
-
     paramsOut.calcCoupledFlowParams();
 
     // TODO: Remove castyl

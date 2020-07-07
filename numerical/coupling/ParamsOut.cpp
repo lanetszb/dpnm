@@ -23,16 +23,16 @@ ParamsOut::ParamsOut(EquationPNM &equationPNM,
 
 void ParamsOut::calcMatrixMassTot() {
 
-    double sum = 0;
+    double totalMass;
+
     std::vector<double> matrixMass;
     for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-        sum = 0;
-        for (int j = 0;
-             j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
-            sum += iniConds.matrixConc[i][j] *
-                   equationDiffusion.localDiffusion.volCartes[j];
+        totalMass = 0;
+        for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
+            totalMass += iniConds.matrixConc[i][j] *
+                         equationDiffusion.localDiffusion.volCartes[j];
         }
-        matrixMass.emplace_back(sum);
+        matrixMass.emplace_back(totalMass);
     }
 
     matrixMassTotal.emplace_back(
@@ -41,21 +41,21 @@ void ParamsOut::calcMatrixMassTot() {
 
 void ParamsOut::calcTotalFlowDiff() {
 
-    double sum = 0;
+    double diffusFlow;
     for (int i = 0; i < equationPNM.networkData.throatN; i++)
-        sum += diffusionFlow.diffFlowInst[i];
+        diffusFlow += diffusionFlow.diffFlowInst[i];
 
-    totalFlowDiff.emplace_back(sum * diffusionMath.densityConst);
+    totalFlowDiff.emplace_back(diffusFlow * diffusionMath.densityConst);
 
 }
 
 void ParamsOut::calcPressureAv() {
 
-    double sum = 0;
+    double totalPorePress;
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
-        sum += equationPNM.pressure[i];
+        totalPorePress += equationPNM.pressure[i];
 
-    pressureAv.emplace_back(sum / equationPNM.networkData.poreN);
+    pressureAv.emplace_back(totalPorePress / equationPNM.networkData.poreN);
 }
 
 void ParamsOut::calcPressInlet() {
