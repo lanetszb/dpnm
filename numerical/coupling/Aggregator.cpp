@@ -1,6 +1,35 @@
 #include <Aggregator.h>
 #include <cmath>
 
+
+Aggregator::Aggregator(const std::vector<double> &propsPNM,
+                       const std::vector<double> &propsDiffusion,
+                       const NetworkData &networkData,
+                       const std::vector<double> &langmuirCoeff,
+                       const double &matrixVolume,
+                       const std::string &solverMethod) :
+
+    equationPNM(propsPNM, networkData, solverMethod),
+
+    equationDiffusion(propsDiffusion),
+
+    diffusionMath(equationPNM, equationDiffusion, langmuirCoeff,
+                  matrixVolume),
+
+    iniConds(equationPNM, equationDiffusion, diffusionMath,
+             langmuirCoeff, matrixVolume),
+
+    diffusionFlow(equationPNM, equationDiffusion, diffusionMath,
+                  iniConds, langmuirCoeff, matrixVolume),
+
+
+    matrixSolver(equationPNM, equationDiffusion, diffusionMath,
+                 diffusionFlow, langmuirCoeff, matrixVolume),
+
+    paramsOut(equationPNM, equationDiffusion, diffusionMath,
+              iniConds, diffusionFlow, matrixSolver, langmuirCoeff,
+              matrixVolume) {}
+
 Aggregator::Aggregator(const std::vector<double> &propsPNM,
                        const std::vector<double> &propsDiffusion,
                        const std::vector<int> &throatList,
@@ -23,90 +52,71 @@ Aggregator::Aggregator(const std::vector<double> &propsPNM,
                        const std::vector<double> &langmuirCoeff,
                        const double &matrixVolume,
                        const std::string &solverMethod) :
-
-        equationPNM(propsPNM, throatList, throatHeight, throatLength,
-                    throatWidth, connIndIn, connIndOut, poreCoordX, poreCoordY,
-                    poreCoordZ, poreRadius, poreList, poreConns, connNumber,
-                    porePerRow, poreLeftX, poreRightX, hydraulicCond,
-                    solverMethod),
-
-        equationDiffusion(propsDiffusion),
-
-        diffusionMath(equationPNM, equationDiffusion, langmuirCoeff,
-                      matrixVolume),
-
-        iniConds(equationPNM, equationDiffusion, diffusionMath,
-                 langmuirCoeff, matrixVolume),
-
-        diffusionFlow(equationPNM, equationDiffusion, diffusionMath,
-                      iniConds, langmuirCoeff, matrixVolume),
-
-
-        matrixSolver(equationPNM, equationDiffusion, diffusionMath,
-                     diffusionFlow, langmuirCoeff, matrixVolume),
-
-        paramsOut(equationPNM, equationDiffusion, diffusionMath,
-                  iniConds, diffusionFlow, matrixSolver, langmuirCoeff,
-                  matrixVolume) {}
+    Aggregator(propsPNM, propsDiffusion,
+               NetworkData(throatList, throatHeight, throatLength,
+                           throatWidth, connIndIn, connIndOut, poreCoordX, poreCoordY,
+                           poreCoordZ, poreRadius, poreList, poreConns, connNumber,
+                           porePerRow, poreLeftX, poreRightX, hydraulicCond),
+               langmuirCoeff, matrixVolume, solverMethod) {}
 
 void Aggregator::calcCoupledFlow() {
 
-    diffusionFlow.calcDiffPart();
-    matrixSolver.solveCoupledMatrix();
-    paramsOut.calcCoupledFlowParams();
+  diffusionFlow.calcDiffPart();
+  matrixSolver.solveCoupledMatrix();
+  paramsOut.calcCoupledFlowParams();
 }
 
 void Aggregator::cfdProcedurePnmDiff() {
 
-    equationPNM.setInitialCondPurePnm();
-    iniConds.setInitialCondCoupledMod();
-    paramsOut.calcCoupledFlowParams();
+  equationPNM.setInitialCondPurePnm();
+  iniConds.setInitialCondCoupledMod();
+  paramsOut.calcCoupledFlowParams();
 
-    // TODO: Remove castyl
+  // TODO: Remove castyl
 
-    /*auto time = equationDiffusion.propsDiffusion.time;
-    auto configTimeStep = equationDiffusion.propsDiffusion.timeStep;
-    double fullStepsN;
-    auto lastStep = std::modf(time, &fullStepsN);
-    auto timeSteps = std::vector<double>(fullStepsN, configTimeStep);
-    if (lastStep > 0)
-      timeSteps.push_back(lastStep);
-    for(auto &&timeStep : timeSteps)
-      std::cout << timeStep<<std::endl;*/
+  /*auto time = equationDiffusion.propsDiffusion.time;
+  auto configTimeStep = equationDiffusion.propsDiffusion.timeStep;
+  double fullStepsN;
+  auto lastStep = std::modf(time, &fullStepsN);
+  auto timeSteps = std::vector<double>(fullStepsN, configTimeStep);
+  if (lastStep > 0)
+    timeSteps.push_back(lastStep);
+  for(auto &&timeStep : timeSteps)
+    std::cout << timeStep<<std::endl;*/
 
-    for (double t = equationDiffusion.propsDiffusion.timeStep;
-         t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
-         t += equationDiffusion.propsDiffusion.timeStep) {
+  for (double t = equationDiffusion.propsDiffusion.timeStep;
+       t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
+       t += equationDiffusion.propsDiffusion.timeStep) {
 
-        calcCoupledFlow();
-    }
+    calcCoupledFlow();
+  }
 }
 
 // Getters for Python
 const std::vector<double> Aggregator::getPressureAverage() const {
-    return paramsOut.pressureAv;
+  return paramsOut.pressureAv;
 }
 
 const std::vector<double> Aggregator::getMatrixMassTotal() const {
-    return paramsOut.matrixMassTotal;
+  return paramsOut.matrixMassTotal;
 }
 
 const std::vector<double> Aggregator::getTotalFlowPoresOut() const {
-    return paramsOut.totalFlowPoresOut;
+  return paramsOut.totalFlowPoresOut;
 }
 
 const std::vector<double> Aggregator::getTotalFlowPoresIn() const {
-    return paramsOut.totalFlowPoresIn;
+  return paramsOut.totalFlowPoresIn;
 }
 
 const std::vector<double> Aggregator::getTotalFlowDiff() const {
-    return paramsOut.totalFlowDiff;
+  return paramsOut.totalFlowDiff;
 }
 
 const std::vector<double> Aggregator::getInletPressure() const {
-    return paramsOut.pressIn;
+  return paramsOut.pressIn;
 }
 
 const std::vector<double> Aggregator::getPorePressure() const {
-    return equationPNM.pressure;
+  return equationPNM.pressure;
 }
