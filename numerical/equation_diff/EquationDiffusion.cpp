@@ -7,8 +7,7 @@ EquationDiffusion::EquationDiffusion(const std::vector<double> &propsVector) :
         dim(propsDiffusion.gridBlockN),
         conc(std::vector<std::vector<double>>()),
         time(propsDiffusion.time),
-        iCurr(0),
-        iPrev(1),
+        iCurr(0), iPrev(1),
         matrix(dim, dim),
         freeVector(dim),
         guessVector(dim),
@@ -64,7 +63,7 @@ void EquationDiffusion::calcConcIni(const double &concIni) {
     conc.emplace_back(std::vector<double>(dim, concIni));
 }
 
-// Делаю заплатку на 2ю концентрацию
+
 void EquationDiffusion::forceDirichletBound(const double &conc_in) {
 
     MatrixIterator it(matrix, dim - 1);

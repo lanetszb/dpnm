@@ -52,8 +52,8 @@ double DiffusionMath::calcDensConst() {
 }
 
 void DiffusionMath::calcRockVolume() {
-
-    if (matrixVolume <= 0.) {
+    // ToDo hint: <= 0.0...01
+    if (matrixVolume <= 0.00000001) {
 
         auto lengthX = calcSideLength(equationPNM.networkData.poreCoordX);
         auto lengthY = calcSideLength(equationPNM.networkData.poreCoordY);
@@ -98,7 +98,8 @@ double DiffusionMath::calcLangmConc(double pressure) {
 }
 
 void DiffusionMath::calcThroatAvPress() {
-
+    // ToDo provide pressure in this class without EquationPNM
+    // ToDo transfer throatConns from equationPNM to NetworkData
     for (int i = 0; i < equationPNM.networkData.throatN; i++)
         throatAvPress[i] =
                 (equationPNM.pressure[equationPNM.throatConns[i].first]

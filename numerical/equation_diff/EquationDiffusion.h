@@ -36,6 +36,8 @@ public:
 
     void forceDirichletBound(const double &concIni);
 
+    // ToDo DRY is not followed: radius, effRadius, thrLength, volumes, surfaces
+
     void cfdProcedureOneStep(const double &concThrWall,
                              const double &radius,
                              const double &effRadius,
