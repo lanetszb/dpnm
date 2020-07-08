@@ -1,4 +1,5 @@
 #include <Aggregator.h>
+#include <cmath>
 
 Aggregator::Aggregator(const std::vector<double> &propsPNM,
                        const std::vector<double> &propsDiffusion,
@@ -62,6 +63,17 @@ void Aggregator::cfdProcedurePnmDiff() {
     paramsOut.calcCoupledFlowParams();
 
     // TODO: Remove castyl
+
+    /*auto time = equationDiffusion.propsDiffusion.time;
+    auto configTimeStep = equationDiffusion.propsDiffusion.timeStep;
+    double fullStepsN;
+    auto lastStep = std::modf(time, &fullStepsN);
+    auto timeSteps = std::vector<double>(fullStepsN, configTimeStep);
+    if (lastStep > 0)
+      timeSteps.push_back(lastStep);
+    for(auto &&timeStep : timeSteps)
+      std::cout << timeStep<<std::endl;*/
+
     for (double t = equationDiffusion.propsDiffusion.timeStep;
          t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
          t += equationDiffusion.propsDiffusion.timeStep) {
