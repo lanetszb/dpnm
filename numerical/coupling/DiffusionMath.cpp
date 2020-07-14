@@ -38,11 +38,11 @@ double DiffusionMath::calcSideLength(std::vector<double> &poreCoord) {
 
 double DiffusionMath::calcDensConst() {
 
-    auto aGasDens = equationPNM.propsPNM.aGasDens;
-    auto bGasDens = equationPNM.propsPNM.bGasDens;
+    auto aGasDens = equationPNM.propsPnm.aGasDens;
+    auto bGasDens = equationPNM.propsPnm.bGasDens;
 
-    auto pressIn = equationPNM.propsPNM.pressIn;
-    auto pressOut = equationPNM.propsPNM.pressOut;
+    auto pressIn = equationPNM.propsPnm.pressIn;
+    auto pressOut = equationPNM.propsPnm.pressOut;
 
     auto pressureAv = (pressIn + pressOut) / 2;
 

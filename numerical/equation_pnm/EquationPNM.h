@@ -20,25 +20,29 @@ class EquationPNM {
 
 public:
 
+    explicit EquationPNM(PropsPNM &propsPnm,
+                NetworkData &networkData,
+                const std::string &solverMethod);
+
     explicit EquationPNM(const std::vector<double> &propsVector,
-                         const std::vector<int> &throatList,
-                         const std::vector<double> &throatHeight,
-                         const std::vector<double> &throatLength,
-                         const std::vector<double> &throatWidth,
-                         const std::vector<double> &connIndIn,
-                         const std::vector<double> &connIndOut,
-                         const std::vector<double> &poreCoordX,
-                         const std::vector<double> &poreCoordY,
-                         const std::vector<double> &poreCoordZ,
-                         const std::vector<double> &poreRadius,
-                         const std::vector<int> &poreList,
-                         const std::vector<int> &poreConns,
-                         const std::vector<int> &connNumber,
-                         const std::vector<int> &porePerRow,
-                         const std::vector<bool> &poreLeftX,
-                         const std::vector<bool> &poreRightX,
-                         const std::vector<double> &hydraulicCond,
-                         const std::string &solverMethod);
+                const std::vector<int> &throatList,
+                const std::vector<double> &throatHeight,
+                const std::vector<double> &throatLength,
+                const std::vector<double> &throatWidth,
+                const std::vector<double> &connIndIn,
+                const std::vector<double> &connIndOut,
+                const std::vector<double> &poreCoordX,
+                const std::vector<double> &poreCoordY,
+                const std::vector<double> &poreCoordZ,
+                const std::vector<double> &poreRadius,
+                const std::vector<int> &poreList,
+                const std::vector<int> &poreConns,
+                const std::vector<int> &connNumber,
+                const std::vector<int> &porePerRow,
+                const std::vector<bool> &poreLeftX,
+                const std::vector<bool> &poreRightX,
+                const std::vector<double> &hydraulicCond,
+                const std::string &solverMethod);
 
     virtual ~EquationPNM() = default;
 
@@ -86,7 +90,7 @@ public:
 
     void calcTotFlow(const std::vector<bool> &boundPores);
 
-    PropsPNM propsPNM;
+    PropsPNM propsPnm;
     NetworkData networkData;
 
     int &dim;

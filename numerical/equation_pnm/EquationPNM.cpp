@@ -1,6 +1,32 @@
 #include <EquationPNM.h>
 #include <math.h>
 
+EquationPNM::EquationPNM(PropsPNM &propsPnm,
+                         NetworkData &networkData,
+                         const std::string &solverMethod) :
+
+        propsPnm(propsPnm),
+        networkData(networkData),
+        solverMethod(solverMethod),
+
+        dim(networkData.poreN),
+        pIn(propsPnm.pressIn),
+        pOut(propsPnm.pressOut),
+        matrix(dim, dim),
+        freeVector(dim),
+        guessVector(dim),
+        variable(dim),
+        throatConns(networkData.throatN,
+                    std::make_pair(-1, -1)),
+        porConns(networkData.poreN),
+        porConnsIsOut(networkData.poreN),
+        gammaPnm(networkData.poreN),
+        centralCoeff(dim, 0),
+        connCoeff(networkData.throatN, 0),
+        pressure(dim, 0),
+        thrFlowRate(networkData.throatN, 0),
+        porFlowRate(dim, 0) {}
+
 EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<int> &throatList,
                          const std::vector<double> &throatHeight,
@@ -21,30 +47,14 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<double> &hydraulicCond,
                          const std::string &solverMethod) :
 
-        propsPNM(propsVector),
-        networkData(throatList, throatHeight, throatLength, throatWidth,
-                    connIndIn, connIndOut, poreCoordX, poreCoordY,
-                    poreCoordZ, poreRadius, poreList, poreConns,
-                    connNumber, porePerRow, poreLeftX, poreRightX,
-                    hydraulicCond),
-        solverMethod(solverMethod),
-        dim(networkData.poreN),
-        pIn(propsPNM.pressIn),
-        pOut(propsPNM.pressOut),
-        matrix(dim, dim),
-        freeVector(dim),
-        guessVector(dim),
-        variable(dim),
-        throatConns(networkData.throatN,
-                    std::make_pair(-1, -1)),
-        porConns(networkData.poreN),
-        porConnsIsOut(networkData.poreN),
-        gammaPnm(networkData.poreN),
-        centralCoeff(dim, 0),
-        connCoeff(networkData.throatN, 0),
-        pressure(dim, 0),
-        thrFlowRate(networkData.throatN, 0),
-        porFlowRate(dim, 0) {}
+        EquationPNM(PropsPNM(propsVector),
+                    NetworkData(throatList, throatHeight, throatLength,
+                                throatWidth, connIndIn, connIndOut,
+                                poreCoordX, poreCoordY, poreCoordZ,
+                                poreRadius, poreList, poreConns,
+                                connNumber, porePerRow, poreLeftX, poreRightX,
+                                hydraulicCond),
+                    solverMethod) {}
 
 
 void EquationPNM::calcThroatConns() {
@@ -96,7 +106,7 @@ void EquationPNM::calcMatCoeff() {
         // auto tW = networkData.throatWidth[i];
         // auto tL = networkData.throatLength[i];
         // 
-        // auto liqVisc = propsPNM.liqVisc;
+        // auto liqVisc = propsPnm.liqVisc;
         // 
         // auto rI = networkData.poreRadius[throatConns[i].first];
         // auto rJ = networkData.poreRadius[throatConns[i].second];
@@ -214,7 +224,7 @@ void EquationPNM::calculateGuessPress(const double &pIn,
                                 std::end(networkData.poreCoordX));
 
     for (int i = 0; i < dim; i++)
-        pressure[i] = propsPNM.pressOut +
+        pressure[i] = propsPnm.pressOut +
                       ((*max - networkData.poreCoordX[i]) / (*max - *min)) *
                       (pIn - pOut);
 }
@@ -230,7 +240,7 @@ void EquationPNM::calculatePress(const std::string &solverMethod) {
 
         BiCGSTAB biCGSTAB;
         biCGSTAB.compute(matrix);
-        biCGSTAB.setTolerance(propsPNM.itAccuracy);
+        biCGSTAB.setTolerance(propsPnm.itAccuracy);
         variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
 
     } else if (solverMethod == "sparseLU") {
@@ -241,7 +251,7 @@ void EquationPNM::calculatePress(const std::string &solverMethod) {
     } else if (solverMethod == "leastSqCG") {
         LeastSqCG leastSqCG;
         leastSqCG.compute(matrix);
-        leastSqCG.setTolerance(propsPNM.itAccuracy);
+        leastSqCG.setTolerance(propsPnm.itAccuracy);
         variable = leastSqCG.solveWithGuess(freeVector, guessVector);
     }
 

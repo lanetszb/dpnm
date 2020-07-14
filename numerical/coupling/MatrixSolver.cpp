@@ -76,8 +76,8 @@ void MatrixSolver::calcCoupledFreeVector() {
     }
 
     equationPNM.calculateFreeVector("mixed",
-                                    equationPNM.propsPNM.pressIn,
-                                    equationPNM.propsPNM.pressOut);
+                                    equationPNM.propsPnm.pressIn,
+                                    equationPNM.propsPnm.pressOut);
 
     for (int i = 0; i < equationPNM.networkData.poreN; i++)
         // TODO: understand plus or minus sign

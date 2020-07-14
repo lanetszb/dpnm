@@ -93,8 +93,8 @@ void IniConds::setInitialCondCoupledMod() {
     diffusionMath.calcMatricesOmega();
     diffusionMath.calcMatricesVolume();
 
-    // equationPNM.calculateGuessPress(equationPNM.propsPNM.pressIn,
-    //                                equationPNM.propsPNM.pressOut);
+    // equationPNM.calculateGuessPress(equationPNM.propsPnm.pressIn,
+    //                                equationPNM.propsPnm.pressOut);
 
     equationDiffusion.calcConcIni(diffusionMath.conc_ini);
 
