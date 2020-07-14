@@ -90,8 +90,8 @@ public:
     NetworkData &networkData;
 
     int &dim;
-    double pIn;
-    double pOut;
+    double &pIn;
+    double &pOut;
 
     Matrix matrix;
 
