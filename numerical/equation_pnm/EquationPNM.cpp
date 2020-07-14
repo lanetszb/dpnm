@@ -1,5 +1,23 @@
 #include <EquationPNM.h>
-#include <math.h>
+
+#include <vector>
+#include <string>
+#include <cmath>
+
+#include <Eigen/Sparse>
+
+#include <PropsPNM.h>
+#include <NetworkData.h>
+
+
+typedef Eigen::Triplet<double> Triplet;
+typedef Eigen::SparseMatrix<double, Eigen::RowMajor> Matrix;
+typedef Matrix::InnerIterator MatrixIterator;
+typedef Eigen::VectorXd Vector;
+typedef Eigen::BiCGSTAB<Eigen::SparseMatrix<double>> BiCGSTAB;
+typedef Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double>>
+    LeastSqCG;
+typedef Eigen::SparseLU<Eigen::SparseMatrix<double>> SparseLU;
 
 EquationPNM::EquationPNM(PropsPNM &propsPnm,
                          NetworkData &networkData,
@@ -47,13 +65,13 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<double> &hydraulicCond,
                          const std::string &solverMethod) :
 
-        EquationPNM(PropsPNM(propsVector),
-                    NetworkData(throatList, throatHeight, throatLength,
+        EquationPNM(*(new PropsPNM(propsVector)),
+                    *(new NetworkData(throatList, throatHeight, throatLength,
                                 throatWidth, connIndIn, connIndOut,
                                 poreCoordX, poreCoordY, poreCoordZ,
                                 poreRadius, poreList, poreConns,
                                 connNumber, porePerRow, poreLeftX, poreRightX,
-                                hydraulicCond),
+                                hydraulicCond)),
                     solverMethod) {}
 
 
