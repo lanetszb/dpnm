@@ -3,28 +3,29 @@
 #include <iomanip>
 
 
-DiffusionMath::DiffusionMath(EquationPNM &equationPNM,
+DiffusionMath::DiffusionMath(PropsPNM &propsPnm, NetworkData &networkData,
+                             EquationPNM &equationPNM,
                              EquationDiffusion &equationDiffusion,
                              const std::vector<double> &langmuirCoeff,
                              const double &matrixVolume) :
 
+        propsPnm(propsPnm),
+        networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
         langmuirCoeff(langmuirCoeff),
         matrixVolume(matrixVolume * 0.1),
-        effRadius(equationPNM.networkData.throatN, 0),
+        effRadius(networkData.throatN, 0),
+        gridBlockN(equationDiffusion.propsDiffusion.gridBlockN),
         // TODO: don't forget to remove 0.1 castyl
-        matrixWidth(equationPNM.networkData.throatN, 0),
-        throatAvPress(equationPNM.networkData.throatN, 0),
-        throatConc(equationPNM.networkData.throatN, 0),
+        matrixWidth(networkData.throatN, 0),
+        throatAvPress(networkData.throatN, 0),
+        throatConc(networkData.throatN, 0),
         conc_ini(equationDiffusion.propsDiffusion.concIni),
-        matricesOmega(equationPNM.networkData.throatN,
-                      std::vector<double>(
-                              equationDiffusion.propsDiffusion.gridBlockN, 0)),
-        matricesVolume(equationPNM.networkData.throatN,
-                       std::vector<double>(
-                               equationDiffusion.propsDiffusion.gridBlockN,
-                               0)) {}
+        matricesOmega(networkData.throatN,
+                      std::vector<double>(gridBlockN, 0)),
+        matricesVolume(networkData.throatN,
+                       std::vector<double>(gridBlockN, 0)) {}
 
 double DiffusionMath::calcSideLength(std::vector<double> &poreCoord) {
 
@@ -38,26 +39,20 @@ double DiffusionMath::calcSideLength(std::vector<double> &poreCoord) {
 
 double DiffusionMath::calcDensConst() {
 
-    auto aGasDens = equationPNM.propsPnm.aGasDens;
-    auto bGasDens = equationPNM.propsPnm.bGasDens;
-
-    auto pressIn = equationPNM.propsPnm.pressIn;
-    auto pressOut = equationPNM.propsPnm.pressOut;
-
-    auto pressureAv = (pressIn + pressOut) / 2;
+    auto pressureAv = (propsPnm.pressIn + propsPnm.pressOut) / 2;
 
     // TODO: use functional dependence
     return 1.986;
-    // return aGasDens * pressureAv + bGasDens;
+    // return propsPnm.aGasDens * pressureAv + propsPnm.bGasDens;
 }
 
 void DiffusionMath::calcRockVolume() {
     // ToDo hint: <= 0.0...01
     if (matrixVolume <= 0.00000001) {
 
-        auto lengthX = calcSideLength(equationPNM.networkData.poreCoordX);
-        auto lengthY = calcSideLength(equationPNM.networkData.poreCoordY);
-        auto lengthZ = calcSideLength(equationPNM.networkData.poreCoordZ);
+        auto lengthX = calcSideLength(networkData.poreCoordX);
+        auto lengthY = calcSideLength(networkData.poreCoordY);
+        auto lengthZ = calcSideLength(networkData.poreCoordZ);
 
         matrixVolume = lengthX * lengthY * lengthZ;
     }
@@ -66,7 +61,7 @@ void DiffusionMath::calcRockVolume() {
 void DiffusionMath::calcEffRadius() {
 
     // TODO: connect effRadii to fracture area
-    auto throatN = equationPNM.networkData.throatN;
+    auto throatN = networkData.throatN;
 
     for (int i = 0; i < effRadius.size(); i++)
         effRadius[i] = matrixVolume / throatN;
@@ -74,15 +69,15 @@ void DiffusionMath::calcEffRadius() {
 
 void DiffusionMath::calcMatrixWidth() {
 
-    auto throatN = equationPNM.networkData.throatN;
+    auto throatN = networkData.throatN;
 
     calcEffRadius();
 
     for (int i = 0; i < throatN; i++) {
 
-        auto fracHeight = equationPNM.networkData.throatRadius[i];
-        auto fracLength = equationPNM.networkData.throatLength[i];
-        auto fracWidth = equationPNM.networkData.throatWidth[i];
+        auto fracHeight = networkData.throatRadius[i];
+        auto fracLength = networkData.throatLength[i];
+        auto fracWidth = networkData.throatWidth[i];
 
         matrixWidth[i] = effRadius[i] / fracLength / fracHeight + fracWidth;
     }
@@ -100,7 +95,7 @@ double DiffusionMath::calcLangmConc(double pressure) {
 void DiffusionMath::calcThroatAvPress() {
     // ToDo provide pressure in this class without EquationPNM
     // ToDo transfer throatConns from equationPNM to NetworkData
-    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+    for (int i = 0; i < networkData.throatN; i++)
         throatAvPress[i] =
                 (equationPNM.pressure[equationPNM.throatConns[i].first]
                  + equationPNM.pressure[equationPNM.throatConns[i].second]) / 2;
@@ -108,17 +103,16 @@ void DiffusionMath::calcThroatAvPress() {
 
 void DiffusionMath::calcThroatConc(const double &dP) {
 
-    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+    for (int i = 0; i < networkData.throatN; i++)
         throatConc[i] = calcLangmConc(throatAvPress[i] + dP);
 }
 
 void DiffusionMath::calcMatricesOmega() {
 
-    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+    for (int i = 0; i < networkData.throatN; i++) {
 
-        auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
-        auto fracHeight = equationPNM.networkData.throatRadius[i];
-        auto fracLength = equationPNM.networkData.throatLength[i];
+        auto fracHeight = networkData.throatRadius[i];
+        auto fracLength = networkData.throatLength[i];
 
         equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
                                                               fracLength);
@@ -132,12 +126,11 @@ void DiffusionMath::calcMatricesOmega() {
 
 void DiffusionMath::calcMatricesVolume() {
 
-    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
+    for (int i = 0; i < networkData.throatN; i++) {
 
-        auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
-        auto fracHeight = equationPNM.networkData.throatRadius[i];
-        auto fracLength = equationPNM.networkData.throatLength[i];
-        auto fracWidth = equationPNM.networkData.throatWidth[i];
+        auto fracHeight = networkData.throatRadius[i];
+        auto fracLength = networkData.throatLength[i];
+        auto fracWidth = networkData.throatWidth[i];
 
 
         equationDiffusion.localDiffusion.calcVolCartesian(fracHeight,

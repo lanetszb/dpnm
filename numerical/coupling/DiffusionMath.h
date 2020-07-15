@@ -5,12 +5,16 @@
 
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
+#include <PropsPNM.h>
+#include <NetworkData.h>
 
 class DiffusionMath {
 
 public:
-
-    DiffusionMath(EquationPNM &equationPNM,
+    // TODO: think how to be with the diffusive part of the model
+    DiffusionMath(PropsPNM &propsPnm,
+                  NetworkData &networkData,
+                  EquationPNM &equationPNM,
                   EquationDiffusion &equationDiffusion,
                   const std::vector<double> &langmuirCoeff,
                   const double &matrixVolume);
@@ -18,6 +22,9 @@ public:
     virtual  ~DiffusionMath() = default;
 
     // ToDo: EquationPNM and EquationDiffusion should be references
+
+    PropsPNM &propsPnm;
+    NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
 
@@ -45,6 +52,7 @@ public:
     double langmConc;
     double conc_ini;
     double densityConst;
+    int &gridBlockN;
 
     std::vector<double> langmuirCoeff;
     std::vector<double> effRadius;

@@ -12,15 +12,15 @@ class MatrixSolver {
 
 public:
 
-    MatrixSolver(EquationPNM &equationPNM,
+    MatrixSolver(NetworkData &networkData, EquationPNM &equationPNM,
                  EquationDiffusion &equationDiffusion,
-                 DiffusionMath &diffusionMath,
-                 DiffusionFlow &diffusionFlow,
+                 DiffusionMath &diffusionMath, DiffusionFlow &diffusionFlow,
                  const std::vector<double> &langmuirCoeff,
                  const double &matrixVolume);
 
     virtual  ~MatrixSolver() = default;
 
+    NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
     DiffusionMath &diffusionMath;

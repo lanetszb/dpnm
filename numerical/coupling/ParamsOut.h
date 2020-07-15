@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <EquationPNM.h>
+#include <NetworkData.h>
 #include <EquationDiffusion.h>
 #include <DiffusionMath.h>
 #include <IniConds.h>
@@ -14,17 +15,16 @@ class ParamsOut {
 
 public:
 
-    explicit ParamsOut(EquationPNM &equationPNM,
+    explicit ParamsOut(NetworkData &networkData, EquationPNM &equationPNM,
                        EquationDiffusion &equationDiffusion,
-                       DiffusionMath &diffusionPartMath,
-                       IniConds &iniConds,
-                       DiffusionFlow &diffusionPartFlow,
-                       MatrixSolver &solver,
+                       DiffusionMath &diffusionPartMath, IniConds &iniConds,
+                       DiffusionFlow &diffusionPartFlow, MatrixSolver &solver,
                        const std::vector<double> &langmuirCoeff,
                        const double &matrixVolume);
 
     virtual  ~ParamsOut() = default;
 
+    NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
     DiffusionMath &diffusionMath;
@@ -43,6 +43,7 @@ public:
     void calcCoupledFlowParams();
 
     double conc_ini;
+    int &gridBlockN;
 
     std::vector<double> pressureAv;
     std::vector<double> pressIn;

@@ -1,18 +1,20 @@
 #include <MatrixSolver.h>
 
-MatrixSolver::MatrixSolver(EquationPNM &equationPNM,
+MatrixSolver::MatrixSolver(NetworkData &networkData, EquationPNM &equationPNM,
                            EquationDiffusion &equationDiffusion,
                            DiffusionMath &diffusionMath,
                            DiffusionFlow &diffusionFlow,
                            const std::vector<double> &langmuirCoeff,
                            const double &matrixVolume) :
 
+        networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
         diffusionMath(diffusionMath),
         diffusionFlow(diffusionFlow),
-        connCoeffDiff(equationPNM.networkData.throatN, 0),
-        centralCoeffDiff(equationPNM.networkData.poreN, 0) {}
+
+        connCoeffDiff(networkData.throatN, 0),
+        centralCoeffDiff(networkData.poreN, 0) {}
 
 void MatrixSolver::calcMatCoeffDiff() {
     auto flowDerivDiff = diffusionFlow.flowDerivDiff;
@@ -51,8 +53,8 @@ void MatrixSolver::calcMatCoupledCoeff() {
 
 void MatrixSolver::calcCoupledFreeVector() {
 
-    std::vector<double> porFlowDiff(equationPNM.networkData.poreN, 0);
-    std::vector<double> porFlowDiffDer(equationPNM.networkData.poreN, 0);
+    std::vector<double> porFlowDiff(networkData.poreN, 0);
+    std::vector<double> porFlowDiffDer(networkData.poreN, 0);
     double coeffSum;
 
     for (int i = 0; i < equationPNM.porConns.size(); i++) {
@@ -76,12 +78,12 @@ void MatrixSolver::calcCoupledFreeVector() {
     }
 
     equationPNM.calculateFreeVector("mixed",
-                                    equationPNM.propsPnm.pressIn,
-                                    equationPNM.propsPnm.pressOut);
+                                    equationPNM.pIn,
+                                    equationPNM.pOut);
 
-    for (int i = 0; i < equationPNM.networkData.poreN; i++)
+    for (int i = 0; i < networkData.poreN; i++)
         // TODO: understand plus or minus sign
-        if (!equationPNM.networkData.poreRightX[i])
+        if (!networkData.poreRightX[i])
             equationPNM.freeVector[i] += porFlowDiff[i];
     // equationPNM.freeVector[i] += porFlowDiff[i] + porFlowDiffDer[i];
     // equationPNM.freeVector[i] += -1 * (porFlowDiff[i] - porFlowDiffDer[i]);
@@ -94,7 +96,7 @@ void MatrixSolver::solveCoupledMatrix() {
 
     equationPNM.calculateMatrix(equationPNM.connCoeff,
                                 equationPNM.centralCoeff,
-                                equationPNM.networkData.poreRightX,
+                                networkData.poreRightX,
                                 equationPNM.gammaPnm,
                                 connCoeffDiff);
 

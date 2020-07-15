@@ -4,29 +4,30 @@
 #include <iomanip>
 
 
-DiffusionFlow::DiffusionFlow(EquationPNM &equationPNM,
+DiffusionFlow::DiffusionFlow(NetworkData &networkData,
+                             EquationPNM &equationPNM,
                              EquationDiffusion &equationDiffusion,
                              DiffusionMath &diffusionMath,
                              IniConds &iniConds,
                              const std::vector<double> &langmuirCoeff,
                              const double &matrixVolume) :
 
+        networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
         diffusionMath(diffusionMath),
         iniConds(iniConds),
 
-        diffFlowInst(equationPNM.networkData.throatN, 0),
-        diffFlowInstPlus(equationPNM.networkData.throatN, 0),
-        diffFlowInstMinus(equationPNM.networkData.throatN, 0),
-        flowDerivDiff(equationPNM.networkData.throatN, 0),
+        gridBlockN(equationDiffusion.propsDiffusion.gridBlockN),
+        diffFlowInst(networkData.throatN, 0),
+        diffFlowInstPlus(networkData.throatN, 0),
+        diffFlowInstMinus(networkData.throatN, 0),
+        flowDerivDiff(networkData.throatN, 0),
         dP(0) {}
 
 void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
 
-    for (int i = 0; i < equationPNM.networkData.throatN; i++) {
-
-        auto gridBlockN = equationDiffusion.propsDiffusion.gridBlockN;
+    for (int i = 0; i < networkData.throatN; i++) {
 
         for (int j = 0; j < gridBlockN; j++) {
             equationDiffusion.conc[0][j] = iniConds.matrixConc[i][j];
@@ -35,9 +36,9 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
 
         equationDiffusion.cfdProcedureOneStep(
                 diffusionMath.throatConc[i],
-                equationPNM.networkData.throatRadius[i],
+                networkData.throatRadius[i],
                 diffusionMath.matrixWidth[i],
-                equationPNM.networkData.throatLength[i],
+                networkData.throatLength[i],
                 diffusionMath.matricesVolume[i],
                 diffusionMath.matricesOmega[i]);
 
@@ -64,17 +65,15 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
 
 void DiffusionFlow::calcDiffFlowDeriv() {
 
-    for (int i = 0; i < equationPNM.networkData.throatN; i++)
+    for (int i = 0; i < networkData.throatN; i++)
         flowDerivDiff[i] = ((diffFlowInstPlus[i] - diffFlowInstMinus[i]) / dP);
 }
 
 void DiffusionFlow::updateConc() {
 
-    auto throatN = equationPNM.networkData.throatN;
+    for (int i = 0; i < networkData.throatN; i++) {
 
-    for (int i = 0; i < throatN; i++) {
-
-        for (int j = 0; j < equationDiffusion.propsDiffusion.gridBlockN; j++) {
+        for (int j = 0; j < gridBlockN; j++) {
             auto conc_curr = equationDiffusion.conc[equationDiffusion.iCurr][j];
             iniConds.matrixConc[i][j] = conc_curr;
         }

@@ -3,15 +3,16 @@
 
 #include <vector>
 
-#include <DiffusionMath.h>
 #include <EquationDiffusion.h>
+#include <NetworkData.h>
 #include <EquationPNM.h>
+#include <DiffusionMath.h>
 
 class IniConds {
 
 public:
 
-    explicit IniConds(EquationPNM &equationPNM,
+    explicit IniConds(NetworkData &networkData, EquationPNM &equationPNM,
                       EquationDiffusion &equationDiffusion,
                       DiffusionMath &diffusionMath,
                       const std::vector<double> &langmuirCoeff,
@@ -19,9 +20,12 @@ public:
 
     virtual  ~IniConds() = default;
 
+    NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
     DiffusionMath &diffusionMath;
+
+    int &gridBlockN;
 
     std::vector<std::vector<double>> matrixConc;
 

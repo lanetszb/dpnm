@@ -3,16 +3,18 @@
 
 #include <vector>
 
-#include <DiffusionMath.h>
 #include <EquationDiffusion.h>
+#include <NetworkData.h>
 #include <EquationPNM.h>
+#include <DiffusionMath.h>
 #include <IniConds.h>
 
 class DiffusionFlow {
 
 public:
 
-    DiffusionFlow(EquationPNM &equationPNM,
+    DiffusionFlow(NetworkData &networkData,
+                  EquationPNM &equationPNM,
                   EquationDiffusion &equationDiffusion,
                   DiffusionMath &diffusionMath,
                   IniConds &iniConds,
@@ -21,6 +23,8 @@ public:
 
     virtual  ~DiffusionFlow() = default;
 
+
+    NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
     DiffusionMath &diffusionMath;
@@ -42,6 +46,7 @@ public:
     std::vector<double> diffFlowInstMinus;
 
     double dP;
+    int &gridBlockN;
     std::vector<double> flowDerivDiff;
 
 };

@@ -28,6 +28,7 @@ EquationPNM::EquationPNM(PropsPNM &propsPnm,
         solverMethod(solverMethod),
 
         dim(networkData.poreN),
+        // TODO: think about the expression below
         pIn(propsPnm.pressIn),
         pOut(propsPnm.pressOut),
         matrix(dim, dim),
