@@ -7,7 +7,7 @@
 #include <ConvectiveDiffusion.h>
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
-#include <PropsPNM.h>
+#include <PropsPnm.h>
 #include <NetworkData.h>
 #include <Aggregator.h>
 
@@ -161,31 +161,31 @@ BOOST_PYTHON_MODULE (cfd) {
 //
 //    // Wrapper for PNM
 //
-    p::class_<PropsPNM>("PropsPNMCpp",
+    p::class_<PropsPnm>("PropsPNMCpp",
                         p::init<std::vector<double>>(
                                 p::args("props_array")))
-            .def("__str__", __str__<PropsPNM>)
+            .def("__str__", __str__<PropsPnm>)
 
             .add_property("a_gas_dens",
-                          &PropsPNM::getAGasDens,
-                          &PropsPNM::setAGasDens)
+                          &PropsPnm::getAGasDens,
+                          &PropsPnm::setAGasDens)
             .add_property("b_gas_dens",
-                          &PropsPNM::getBGasDens,
-                          &PropsPNM::setBGasDens)
+                          &PropsPnm::getBGasDens,
+                          &PropsPnm::setBGasDens)
             .add_property("gas_visc",
-                          &PropsPNM::getGasVisc,
-                          &PropsPNM::setGasVisc)
+                          &PropsPnm::getGasVisc,
+                          &PropsPnm::setGasVisc)
             .add_property("liq_dens",
-                          &PropsPNM::getLiqDens,
-                          &PropsPNM::setLiqDens)
+                          &PropsPnm::getLiqDens,
+                          &PropsPnm::setLiqDens)
             .add_property("liq_visc",
-                          &PropsPNM::getLiqVisc,
-                          &PropsPNM::setLiqVisc)
+                          &PropsPnm::getLiqVisc,
+                          &PropsPnm::setLiqVisc)
             .add_property("props_vector",
-                          &PropsPNM::getPropsVector)
+                          &PropsPnm::getPropsVector)
 
             .def("print_props_vector",
-                 &PropsPNM::printPropsVector);
+                 &PropsPnm::printPropsVector);
 
 
     p::class_<NetworkData>("NetworkDataCpp",

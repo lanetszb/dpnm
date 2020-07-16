@@ -52,7 +52,7 @@ void ParamsOut::calcTotalFlowDiff() {
 
 void ParamsOut::calcPressureAv() {
 
-    double totalPorePress;
+    double totalPorePress = 0;
     for (int i = 0; i < networkData.poreN; i++)
         totalPorePress += equationPNM.pressure[i];
 
@@ -61,19 +61,13 @@ void ParamsOut::calcPressureAv() {
 
 void ParamsOut::calcPressInlet() {
 
-    // TODO: Should be already known, rather than calculated every time
-    double boundPoresLeftSize = 0;
-    for (int i = 0; i < networkData.poreN; i++)
-        if (networkData.poreLeftX[i])
-            boundPoresLeftSize += 1;
-
     double pressInlet = 0;
     for (int i = 0; i < networkData.poreN; i++) {
         if (networkData.poreLeftX[i])
             pressInlet += equationPNM.pressure[i];
     }
 
-    pressIn.emplace_back(pressInlet / boundPoresLeftSize);
+    pressIn.emplace_back(pressInlet / networkData.boundPoresLeftSize);
 }
 
 void ParamsOut::calcCoupledFlowParams() {

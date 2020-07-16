@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <NetworkData.h>
-#include <PropsPNM.h>
+#include <PropsPnm.h>
 #include <EquationPNM.h>
 #include <EquationDiffusion.h>
 #include <IniConds.h>
@@ -17,7 +17,7 @@ class Aggregator {
 
 public:
 
-    explicit Aggregator(PropsPNM &propsPnm, NetworkData &networkData,
+    explicit Aggregator(PropsPnm &propsPnm, NetworkData &networkData,
                         const std::vector<double> &propsDiffusion,
                         const std::vector<double> &langmuirCoeff,
                         const double &matrixVolume,
@@ -49,7 +49,7 @@ public:
 
     virtual  ~Aggregator() = default;
 
-    PropsPNM &propsPnm;
+    PropsPnm &propsPnm;
     NetworkData &networkData;
 
     EquationPNM equationPNM;

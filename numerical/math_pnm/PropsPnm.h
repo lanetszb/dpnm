@@ -4,16 +4,16 @@
 #include <vector>
 #include <iostream>
 
-class PropsPNM {
+class PropsPnm {
 
 public:
 
-    explicit PropsPNM(const std::vector<double> &_propsVector);
+    explicit PropsPnm(const std::vector<double> &_propsVector);
 
-    virtual ~PropsPNM() {}
+    virtual ~PropsPnm() {}
     
     friend std::ostream &
-    operator<<(std::ostream &stream, const PropsPNM &propsPNM);
+    operator<<(std::ostream &stream, const PropsPnm &propsPNM);
 
     double getAGasDens() const;
 
@@ -47,9 +47,7 @@ public:
     double pressOut;
     double itAccuracy;
 
-
     std::vector<double> getPropsVector() const;
-
 
 private:
 

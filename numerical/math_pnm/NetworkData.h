@@ -37,6 +37,12 @@ public :
 
     void findBoundaryPores(std::vector<double> &poreCoord);
 
+    void calcThroatConns();
+
+    void calcPorConns();
+
+    void calcBoundPoresSizes();
+
     std::vector<double> getThroatRadius() const;
 
     std::vector<double> getThroatLength() const;
@@ -74,6 +80,13 @@ public :
     std::vector<int> boundaryPoresOut;
 
     std::vector<double> hydraulicCond;
+
+    std::vector<std::pair<int, int>> throatConns;
+    std::vector<std::vector<int>> porConns;
+
+    int boundPoresLeftSize;
+    int boundPoresRightSize;
+    int boundPoresSize;
 
 
 private:

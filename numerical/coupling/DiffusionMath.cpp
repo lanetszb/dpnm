@@ -3,7 +3,7 @@
 #include <iomanip>
 
 
-DiffusionMath::DiffusionMath(PropsPNM &propsPnm, NetworkData &networkData,
+DiffusionMath::DiffusionMath(PropsPnm &propsPnm, NetworkData &networkData,
                              EquationPNM &equationPNM,
                              EquationDiffusion &equationDiffusion,
                              const std::vector<double> &langmuirCoeff,
@@ -93,12 +93,11 @@ double DiffusionMath::calcLangmConc(double pressure) {
 }
 
 void DiffusionMath::calcThroatAvPress() {
-    // ToDo provide pressure in this class without EquationPNM
-    // ToDo transfer throatConns from equationPNM to NetworkData
+
     for (int i = 0; i < networkData.throatN; i++)
         throatAvPress[i] =
-                (equationPNM.pressure[equationPNM.throatConns[i].first]
-                 + equationPNM.pressure[equationPNM.throatConns[i].second]) / 2;
+                (equationPNM.pressure[networkData.throatConns[i].first]
+                 + equationPNM.pressure[networkData.throatConns[i].second]) / 2;
 }
 
 void DiffusionMath::calcThroatConc(const double &dP) {

@@ -2,7 +2,7 @@
 #include <cmath>
 
 
-Aggregator::Aggregator(PropsPNM &propsPnm, NetworkData &networkData,
+Aggregator::Aggregator(PropsPnm &propsPnm, NetworkData &networkData,
                        const std::vector<double> &propsDiffusion,
                        const std::vector<double> &langmuirCoeff,
                        const double &matrixVolume,
@@ -49,7 +49,7 @@ Aggregator::Aggregator(const std::vector<double> &propsVector,
                        const std::vector<double> &langmuirCoeff,
                        const double &matrixVolume,
                        const std::string &solverMethod) :
-        Aggregator(*(new PropsPNM(propsVector)),
+        Aggregator(*(new PropsPnm(propsVector)),
                    *(new NetworkData(throatList, throatHeight, throatLength,
                                      throatWidth, connIndIn, connIndOut,
                                      poreCoordX,

@@ -6,7 +6,7 @@
 
 #include <Eigen/Sparse>
 
-#include <PropsPNM.h>
+#include <PropsPnm.h>
 #include <NetworkData.h>
 
 
@@ -16,10 +16,10 @@ typedef Matrix::InnerIterator MatrixIterator;
 typedef Eigen::VectorXd Vector;
 typedef Eigen::BiCGSTAB<Eigen::SparseMatrix<double>> BiCGSTAB;
 typedef Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double>>
-    LeastSqCG;
+        LeastSqCG;
 typedef Eigen::SparseLU<Eigen::SparseMatrix<double>> SparseLU;
 
-EquationPNM::EquationPNM(PropsPNM &propsPnm,
+EquationPNM::EquationPNM(PropsPnm &propsPnm,
                          NetworkData &networkData,
                          const std::string &solverMethod) :
 
@@ -35,9 +35,6 @@ EquationPNM::EquationPNM(PropsPNM &propsPnm,
         freeVector(dim),
         guessVector(dim),
         variable(dim),
-        throatConns(networkData.throatN,
-                    std::make_pair(-1, -1)),
-        porConns(networkData.poreN),
         porConnsIsOut(networkData.poreN),
         gammaPnm(networkData.poreN),
         centralCoeff(dim, 0),
@@ -66,49 +63,16 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<double> &hydraulicCond,
                          const std::string &solverMethod) :
 
-        EquationPNM(*(new PropsPNM(propsVector)),
+        EquationPNM(*(new PropsPnm(propsVector)),
                     *(new NetworkData(throatList, throatHeight, throatLength,
-                                throatWidth, connIndIn, connIndOut,
-                                poreCoordX, poreCoordY, poreCoordZ,
-                                poreRadius, poreList, poreConns,
-                                connNumber, porePerRow, poreLeftX, poreRightX,
-                                hydraulicCond)),
+                                      throatWidth, connIndIn, connIndOut,
+                                      poreCoordX, poreCoordY, poreCoordZ,
+                                      poreRadius, poreList, poreConns,
+                                      connNumber, porePerRow, poreLeftX,
+                                      poreRightX,
+                                      hydraulicCond)),
                     solverMethod) {}
 
-
-void EquationPNM::calcThroatConns() {
-
-    for (int i = 0; i < networkData.throatN; i++) {
-        throatConns[i].first = networkData.connIndIn[i];
-        throatConns[i].second = networkData.connIndOut[i];
-    }
-}
-
-void EquationPNM::calcPorConns() {
-
-    // Ugly construction, has to be rewritten later, but works well for now
-
-    int pore_iterator = 0;
-    for (int i = 0; i < networkData.poreN; i++) {
-        porConns[i].clear();
-        for (int j = 0; j < networkData.connNumber[i]; j++) {
-            porConns[i].emplace_back(networkData.poreConns[pore_iterator]);
-            pore_iterator++;
-        }
-    }
-
-    for (int i = 0; i < porConns.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++)
-            for (int k = 0; k < throatConns.size(); k++) {
-                if ((i == throatConns[k].first and
-                     porConns[i][j] == throatConns[k].second) or
-                    (porConns[i][j] == throatConns[k].first and
-                     i == throatConns[k].second)) {
-                    porConns[i][j] = k;
-                    break;
-                }
-            }
-}
 
 void EquationPNM::calcMatCoeff() {
 
@@ -166,9 +130,9 @@ void EquationPNM::calcMatCoeff() {
         connCoeff[i] = networkData.hydraulicCond[i];
     }
 
-    for (int i = 0; i < porConns.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++)
-            centralCoeff[i] += connCoeff[porConns[i][j]];
+    for (int i = 0; i < networkData.porConns.size(); i++)
+        for (int j = 0; j < networkData.porConns[i].size(); j++)
+            centralCoeff[i] += connCoeff[networkData.porConns[i][j]];
 }
 
 void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
@@ -192,9 +156,10 @@ void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
             if (!boundPores[i]) {
 
                 triplets.emplace_back(i, networkData.poreConns[pore_iterator],
-                                      -1. * connCoeff[porConns[i][j]]
+                                      -1. *
+                                      connCoeff[networkData.porConns[i][j]]
                                       + 0. * inOutCoeff[i][j] *
-                                        diffCoeff[porConns[i][j]]);
+                                        diffCoeff[networkData.porConns[i][j]]);
                 pore_iterator++;
 
             } else {
@@ -280,8 +245,9 @@ void EquationPNM::calculatePress(const std::string &solverMethod) {
 
 void EquationPNM::setInitialCondPurePnm() {
 
-    calcThroatConns();
-    calcPorConns();
+    networkData.calcBoundPoresSizes();
+    networkData.calcThroatConns();
+    networkData.calcPorConns();
     // networkData.findBoundaryPores(networkData.poreCoordX);
 
     getGammaByLabel();
@@ -342,21 +308,22 @@ void EquationPNM::cfdProcPurePnmDirichlet() {
 void EquationPNM::calcThrFlowRate() {
 
     for (int i = 0; i < networkData.throatN; i++)
-        thrFlowRate[i] = connCoeff[i] * abs((pressure[throatConns[i].first] -
-                                             pressure[throatConns[i].second]));
+        thrFlowRate[i] =
+                connCoeff[i] * abs((pressure[networkData.throatConns[i].first] -
+                                    pressure[networkData.throatConns[i].second]));
 }
 
 void EquationPNM::getGammaByLabel() {
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.porConns[i].size(); j++) {
             porConnsIsOut[i].emplace_back(0);
         }
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.porConns[i].size(); j++) {
 
-            if (throatConns[porConns[i][j]].first == i)
+            if (networkData.throatConns[networkData.porConns[i][j]].first == i)
                 porConnsIsOut[i][j] = true;
             else
                 porConnsIsOut[i][j] = false;
@@ -366,16 +333,18 @@ void EquationPNM::getGammaByLabel() {
 void EquationPNM::getGammaByPressure() {
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.porConns[i].size(); j++) {
 
             if (porConnsIsOut[i][j]) {
-                if (pressure[i] >= pressure[throatConns[porConns[i][j]].second])
+                if (pressure[i] >=
+                    pressure[networkData.throatConns[networkData.porConns[i][j]].second])
                     gammaPnm[i][j] = 0;
                 else
                     gammaPnm[i][j] = 1;
 
             } else if (!porConnsIsOut[i][j]) {
-                if (pressure[throatConns[porConns[i][j]].first] > pressure[i])
+                if (pressure[networkData.throatConns[networkData.porConns[i][j]].first] >
+                    pressure[i])
                     gammaPnm[i][j] = 1;
                 else
                     gammaPnm[i][j] = 0;
@@ -389,11 +358,11 @@ void EquationPNM::calcPorFlowRate() {
         porFlowRate[i] = 0;
 
     for (int i = 0; i < porFlowRate.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.porConns[i].size(); j++) {
             if (gammaPnm[i][j] == 0)
-                porFlowRate[i] += thrFlowRate[porConns[i][j]];
+                porFlowRate[i] += thrFlowRate[networkData.porConns[i][j]];
             else
-                porFlowRate[i] -= thrFlowRate[porConns[i][j]];
+                porFlowRate[i] -= thrFlowRate[networkData.porConns[i][j]];
         }
 }
 

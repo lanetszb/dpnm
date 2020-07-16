@@ -5,14 +5,14 @@
 
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
-#include <PropsPNM.h>
+#include <PropsPnm.h>
 #include <NetworkData.h>
 
 class DiffusionMath {
 
 public:
     // TODO: think how to be with the diffusive part of the model
-    DiffusionMath(PropsPNM &propsPnm,
+    DiffusionMath(PropsPnm &propsPnm,
                   NetworkData &networkData,
                   EquationPNM &equationPNM,
                   EquationDiffusion &equationDiffusion,
@@ -21,9 +21,7 @@ public:
 
     virtual  ~DiffusionMath() = default;
 
-    // ToDo: EquationPNM and EquationDiffusion should be references
-
-    PropsPNM &propsPnm;
+    PropsPnm &propsPnm;
     NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;

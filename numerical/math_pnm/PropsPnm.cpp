@@ -1,7 +1,7 @@
-#include <PropsPNM.h>
+#include <PropsPnm.h>
 #include <vector>
 
-PropsPNM::PropsPNM(const std::vector<double> &_propsVector) :
+PropsPnm::PropsPnm(const std::vector<double> &_propsVector) :
 
         aGasDens(_propsVector[0]),
         bGasDens(_propsVector[1]),
@@ -13,7 +13,7 @@ PropsPNM::PropsPNM(const std::vector<double> &_propsVector) :
         itAccuracy(_propsVector[7]),
         propsVector(_propsVector) {}
 
-std::ostream &operator<<(std::ostream &stream, const PropsPNM &propsPNM) {
+std::ostream &operator<<(std::ostream &stream, const PropsPnm &propsPNM) {
     stream << "aGasDens " << propsPNM.aGasDens << std::endl;
     stream << "bGasDens " << propsPNM.bGasDens << std::endl;
     stream << "gasVisc " << propsPNM.gasVisc << std::endl;
@@ -26,53 +26,53 @@ std::ostream &operator<<(std::ostream &stream, const PropsPNM &propsPNM) {
     return stream;
 }
 
-std::vector<double> PropsPNM::getPropsVector() const {
+std::vector<double> PropsPnm::getPropsVector() const {
     return propsVector;
 }
 
-void PropsPNM::printPropsVector() {
+void PropsPnm::printPropsVector() {
     for (auto &element : propsVector)
         std::cout << element << std::endl;
 }
 
-double PropsPNM::getAGasDens() const {
+double PropsPnm::getAGasDens() const {
     return aGasDens;
 }
 
-void PropsPNM::setAGasDens(double aGasDens) {
-    PropsPNM::aGasDens = aGasDens;
+void PropsPnm::setAGasDens(double aGasDens) {
+    PropsPnm::aGasDens = aGasDens;
 }
 
-double PropsPNM::getBGasDens() const {
+double PropsPnm::getBGasDens() const {
     return bGasDens;
 }
 
-void PropsPNM::setBGasDens(double bGasDens) {
-    PropsPNM::bGasDens = bGasDens;
+void PropsPnm::setBGasDens(double bGasDens) {
+    PropsPnm::bGasDens = bGasDens;
 }
 
-double PropsPNM::getGasVisc() const {
+double PropsPnm::getGasVisc() const {
     return gasVisc;
 }
 
-void PropsPNM::setGasVisc(double gasVisc) {
-    PropsPNM::gasVisc = gasVisc;
+void PropsPnm::setGasVisc(double gasVisc) {
+    PropsPnm::gasVisc = gasVisc;
 }
 
-double PropsPNM::getLiqDens() const {
+double PropsPnm::getLiqDens() const {
     return liqDens;
 }
 
-void PropsPNM::setLiqDens(double liqDens) {
-    PropsPNM::liqDens = liqDens;
+void PropsPnm::setLiqDens(double liqDens) {
+    PropsPnm::liqDens = liqDens;
 }
 
-double PropsPNM::getLiqVisc() const {
+double PropsPnm::getLiqVisc() const {
     return liqVisc;
 }
 
-void PropsPNM::setLiqVisc(double liqVisc) {
-    PropsPNM::liqVisc = liqVisc;
+void PropsPnm::setLiqVisc(double liqVisc) {
+    PropsPnm::liqVisc = liqVisc;
 }
 
 

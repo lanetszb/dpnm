@@ -33,7 +33,7 @@ python_add_module(cfd
         numerical/coupling/DiffusionMath.cpp
         numerical/coupling/DiffusionFlow.cpp
         numerical/equation_pnm/EquationPNM.cpp
-        numerical/math_pnm/PropsPNM.cpp
+        numerical/math_pnm/PropsPnm.cpp
         numerical/math_pnm/NetworkData.cpp
         numerical/equation_diff/EquationDiffusion.cpp
         numerical/math_diff/PropsDiffusion.cpp

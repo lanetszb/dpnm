@@ -6,7 +6,7 @@
 
 #include <Eigen/Sparse>
 
-#include <PropsPNM.h>
+#include <PropsPnm.h>
 #include <NetworkData.h>
 
 typedef Eigen::SparseMatrix<double, Eigen::RowMajor> Matrix;
@@ -16,9 +16,9 @@ class EquationPNM {
 
 public:
 
-    explicit EquationPNM(PropsPNM &propsPnm,
-                NetworkData &networkData,
-                const std::string &solverMethod);
+    explicit EquationPNM(PropsPnm &propsPnm,
+                         NetworkData &networkData,
+                         const std::string &solverMethod);
 
     explicit EquationPNM(const std::vector<double> &propsVector,
                 const std::vector<int> &throatList,
@@ -47,10 +47,6 @@ public:
                          const std::vector<bool> &boundPores,
                          std::vector<std::vector<int>> &inOutCoeff,
                          const std::vector<double> &diffCoeff);
-
-    void calcThroatConns();
-
-    void calcPorConns();
 
     void calcMatCoeff();
 
@@ -86,7 +82,7 @@ public:
 
     void calcTotFlow(const std::vector<bool> &boundPores);
 
-    PropsPNM &propsPnm;
+    PropsPnm &propsPnm;
     NetworkData &networkData;
 
     int &dim;
@@ -98,9 +94,6 @@ public:
     Vector freeVector;
     Vector guessVector;
     Vector variable;
-
-    std::vector<std::pair<int, int>> throatConns;
-    std::vector<std::vector<int>> porConns;
 
     std::vector<std::vector<bool>> porConnsIsOut;
     std::vector<std::vector<int>> gammaPnm;

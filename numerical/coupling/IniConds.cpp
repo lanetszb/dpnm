@@ -1,4 +1,5 @@
 #include <IniConds.h>
+#include "NetworkData.h"
 
 IniConds::IniConds(NetworkData &networkData, EquationPNM &equationPNM,
                    EquationDiffusion &equationDiffusion,
@@ -88,7 +89,7 @@ void IniConds::setInitialCondCoupledMod() {
     diffusionMath.densityConst = diffusionMath.calcDensConst();
 
     // equationPNM.calcPorConns();
-    equationPNM.calcThroatConns();
+    networkData.calcThroatConns();
 
     diffusionMath.calcRockVolume();
     diffusionMath.calcMatrixWidth();

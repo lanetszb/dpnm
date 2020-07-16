@@ -1,3 +1,9 @@
+#include <PropsPnm.h>
+#include <Eigen/Sparse>
+#include <cmath>
+#include <string>
+#include <vector>
+#include <EquationPNM.h>
 #include <NetworkData.h>
 
 NetworkData::NetworkData(const std::vector<int> &_throatList,
@@ -25,6 +31,7 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
         connIndIn(_connIndIn),
         connIndOut(_connIndOut),
         throatN(throatList.size()),
+        throatConns(throatN, std::make_pair(-1, -1)),
 
         poreCoordX(_poreCoordX),
         poreCoordY(_poreCoordY),
@@ -35,11 +42,16 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
         poreN(poreList.size()),
 
         poreConns(_poreConns),
+        porConns(poreN),
         connNumber(_connNumber),
         porPerRow(_porePerRow),
 
         poreLeftX(_poreLeftX),
         poreRightX(_poreRightX),
+        boundPoresLeftSize(0),
+        boundPoresRightSize(0),
+        boundPoresSize(0),
+
         hydraulicCond(_hydraulicCond) {}
 
 
@@ -70,6 +82,41 @@ void NetworkData::printPoreList() {
         std::cout << element << std::endl;
 }
 
+
+void NetworkData::calcThroatConns() {
+
+    for (int i = 0; i < throatN; i++) {
+        throatConns[i].first = connIndIn[i];
+        throatConns[i].second = connIndOut[i];
+    }
+}
+
+void NetworkData::calcPorConns() {
+
+    // Ugly construction, has to be rewritten later, but works well for now
+
+    int pore_iterator = 0;
+    for (int i = 0; i < poreN; i++) {
+        porConns[i].clear();
+        for (int j = 0; j < connNumber[i]; j++) {
+            porConns[i].emplace_back(poreConns[pore_iterator]);
+            pore_iterator++;
+        }
+    }
+
+    for (int i = 0; i < porConns.size(); i++)
+        for (int j = 0; j < porConns[i].size(); j++)
+            for (int k = 0; k < throatConns.size(); k++) {
+                if ((i == throatConns[k].first and
+                     porConns[i][j] == throatConns[k].second) or
+                    (porConns[i][j] == throatConns[k].first and
+                     i == throatConns[k].second)) {
+                    porConns[i][j] = k;
+                    break;
+                }
+            }
+}
+
 void NetworkData::findBoundaryPores(std::vector<double> &poreCoord) {
 
     auto min = std::min_element(std::begin(poreCoord), std::end(poreCoord));
@@ -89,4 +136,18 @@ void NetworkData::findBoundaryPores(std::vector<double> &poreCoord) {
                          boundaryPoresOut.begin(), boundaryPoresOut.end());
 }
 
+void NetworkData::calcBoundPoresSizes() {
 
+    for (int i = 0; i < poreN; i++)
+        if (poreLeftX[i])
+            boundPoresLeftSize += 1;
+
+    std::cout << boundPoresLeftSize << std::endl;
+
+    for (int i = 0; i < poreN; i++)
+        if (poreRightX[i])
+            boundPoresRightSize += 1;
+
+
+    boundPoresSize = boundPoresLeftSize + boundPoresRightSize;
+}
