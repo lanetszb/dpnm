@@ -103,20 +103,34 @@ void EquationDiffusion::calcFlowRate() {
     flowRate = -convectiveDiffusion.beta[1] * (conc[iCurr][0] - conc[iCurr][1]);
 }
 
-void EquationDiffusion::cfdProcedureOneStep(const double &concThrWall,
+void EquationDiffusion::calcTimeVector() {
+
+    auto time = propsDiffusion.time;
+    auto configTimeStep = propsDiffusion.timeStep;
+    double division = time / configTimeStep;
+    double fullStepsN;
+    auto lastStep = std::modf(division, &fullStepsN);
+    std::cout << lastStep << std::endl;
+    auto timeSteps = std::vector<double>(fullStepsN, configTimeStep);
+    if (lastStep > 0)
+        timeSteps.push_back(lastStep * configTimeStep);
+    timeStepsVec = timeSteps;
+    for (auto &&timeStep : timeSteps)
+        std::cout << timeStep << std::endl;
+}
+
+void EquationDiffusion::cfdProcedureOneStep(const std::string &boundCond,
+                                            const double &concThrWall,
                                             const double &radius,
                                             const double &effRadius,
                                             const double &thrLength,
                                             const std::vector<double> &volumes,
-                                            const std::vector<double> &surfaces) {
-    // TODO: is not working independently as ConcIni shall be calculated. Might be good to think how to deal with it
-    // calcConcIni(propsDiffusion.concIni);
+                                            const std::vector<double> &surfaces,
+                                            const double &dt) {
 
     std::swap(iCurr, iPrev);
-
     localDiffusion.calculateAlpha(propsDiffusion.timeStep,
                                   volumes);
-
     convectiveDiffusion.calculateBeta(radius,
                                       effRadius,
                                       thrLength,
@@ -127,40 +141,13 @@ void EquationDiffusion::cfdProcedureOneStep(const double &concThrWall,
     calculateGuessVector();
     calculateMatrix();
     calculateFreeVector(concThrWall);
+    if (boundCond == "Dirichlet")
+        forceDirichletBound(concThrWall);
     calculateConc();
     calcFlowRate();
 }
 
-void EquationDiffusion::cfdProcDirichlet(const double &concThrWall,
-                                         const double &radius,
-                                         const double &effRadius,
-                                         const double &thrLength,
-                                         const std::vector<double> &volumes,
-                                         const std::vector<double> &surfaces) {
-
-    std::swap(iCurr, iPrev);
-
-    localDiffusion.calculateAlpha(propsDiffusion.timeStep,
-                                  volumes);
-
-    convectiveDiffusion.calculateBeta(radius,
-                                      effRadius,
-                                      thrLength,
-                                      propsDiffusion.diffusivity,
-                                      propsDiffusion.gridBlockN,
-                                      surfaces);
-
-    calculateGuessVector();
-    calculateMatrix();
-    calculateFreeVector(concThrWall);
-
-    forceDirichletBound(concThrWall);
-
-    calculateConc();
-    calcFlowRate();
-}
-
-void EquationDiffusion::cfdProcedure(const bool &boundCond,
+void EquationDiffusion::cfdProcedure(const std::string &boundCond,
                                      const double &concThrWall,
                                      const double &radius,
                                      const double &effRadius,
@@ -168,23 +155,14 @@ void EquationDiffusion::cfdProcedure(const bool &boundCond,
                                      const std::vector<double> &volumes,
                                      const std::vector<double> &surfaces) {
 
+    calcTimeVector();
     calcConcIni(propsDiffusion.concIni);
 
-    if (boundCond == 0) {
+    for (int i = 0; i <= timeStepsVec.size(); i++) {
 
-        for (double t = propsDiffusion.timeStep;
-             t <= propsDiffusion.time; t += propsDiffusion.timeStep) {
-            cfdProcedureOneStep(concThrWall, radius, effRadius, thrLength,
-                                volumes, surfaces);
-        }
-
-    } else
-
-        for (double t = propsDiffusion.timeStep;
-             t <= propsDiffusion.time; t += propsDiffusion.timeStep) {
-            cfdProcDirichlet(concThrWall, radius, effRadius, thrLength,
-                             volumes, surfaces);
-        }
+        cfdProcedureOneStep(boundCond, concThrWall, radius, effRadius,
+                            thrLength, volumes, surfaces, timeStepsVec[i]);
+    }
 }
 
 const std::vector<double> EquationDiffusion::getConc() const {

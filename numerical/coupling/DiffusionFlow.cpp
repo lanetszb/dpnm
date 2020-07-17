@@ -25,7 +25,8 @@ DiffusionFlow::DiffusionFlow(NetworkData &networkData,
         flowDerivDiff(networkData.throatN, 0),
         dP(0) {}
 
-void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
+void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
+                                 const double &dt) {
 
     for (int i = 0; i < networkData.throatN; i++) {
 
@@ -34,13 +35,14 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector) {
             equationDiffusion.conc[1][j] = iniConds.matrixConc[i][j];
         }
 
-        equationDiffusion.cfdProcedureOneStep(
-                diffusionMath.throatConc[i],
-                networkData.throatRadius[i],
-                diffusionMath.matrixWidth[i],
-                networkData.throatLength[i],
-                diffusionMath.matricesVolume[i],
-                diffusionMath.matricesOmega[i]);
+        equationDiffusion.cfdProcedureOneStep("default",
+                                              diffusionMath.throatConc[i],
+                                              networkData.throatRadius[i],
+                                              diffusionMath.matrixWidth[i],
+                                              networkData.throatLength[i],
+                                              diffusionMath.matricesVolume[i],
+                                              diffusionMath.matricesOmega[i],
+                                              dt);
 
         // diffFlowVector[i] = equationDiffusion.flowRate / densityConst;
 
@@ -80,21 +82,21 @@ void DiffusionFlow::updateConc() {
     }
 }
 
-void DiffusionFlow::calcDiffPart() {
+void DiffusionFlow::calcDiffPart(const double &dt) {
 
     diffusionMath.calcThroatAvPress();
 
     // Enhance and rethink later
     dP = 0;
     diffusionMath.calcThroatConc(dP);
-    calcDiffFlow(diffFlowInst);
+    calcDiffFlow(diffFlowInst, dt);
 
     dP = (equationPNM.pIn - equationPNM.pOut) / 10.e+5;
     diffusionMath.calcThroatConc(dP / 2);
-    calcDiffFlow(diffFlowInstPlus);
+    calcDiffFlow(diffFlowInstPlus, dt);
 
     diffusionMath.calcThroatConc(-1 * dP / 2);
-    calcDiffFlow(diffFlowInstMinus);
+    calcDiffFlow(diffFlowInstMinus, dt);
 
     calcDiffFlowDeriv();
     updateConc();

@@ -136,7 +136,8 @@ BOOST_PYTHON_MODULE (cfd) {
 
             .def("cfd_procedure_one_step",
                  &EquationDiffusion::cfdProcedureOneStep,
-                 p::args("conc_in",
+                 p::args("boundCond",
+                         "conc_in",
                          "radius",
                          "effective_radius",
                          "thr_length",
@@ -356,7 +357,10 @@ BOOST_PYTHON_MODULE (cfd) {
                  &Aggregator::getPorePressure)
 
             .def("get_inlet_pressure",
-                 &Aggregator::getInletPressure);
+                 &Aggregator::getInletPressure)
+
+            .def("get_time_steps_vec",
+                 &Aggregator::getTimeStepsVec);
 }
 
 

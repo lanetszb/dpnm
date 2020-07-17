@@ -42,9 +42,9 @@ void LocalDiffusion::calcVolCartesian(const double &frac_height,
                        propsDiffusion.gridBlockN;
 }
 
-void
-LocalDiffusion::calcVolCylindr(const double &radius, const double &effRadius,
-                               const double &thrLength) {
+void LocalDiffusion::calcVolCylindr(const double &radius,
+                                    const double &effRadius,
+                                    const double &thrLength) {
 
     calcRadiusCurr(radius, effRadius);
 

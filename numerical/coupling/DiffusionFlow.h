@@ -30,13 +30,14 @@ public:
     DiffusionMath &diffusionMath;
     IniConds &iniConds;
 
-    void calcDiffFlow(std::vector<double> &diffFlowVector);
+    void calcDiffFlow(std::vector<double> &diffFlowVector,
+                      const double &dt);
 
     void calcDiffFlowDeriv();
 
     void updateConc();
 
-    void calcDiffPart();
+    void calcDiffPart(const double &dt);
 
     // std::vector<double> throatConc;
     // std::vector<std::vector<double>> matrixConc;

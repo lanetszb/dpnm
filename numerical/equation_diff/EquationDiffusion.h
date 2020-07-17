@@ -34,18 +34,22 @@ public:
 
     void calcConcIni(const double &concIni);
 
+    void calcTimeVector();
+
     void forceDirichletBound(const double &concIni);
 
     // ToDo DRY is not followed: radius, effRadius, thrLength, volumes, surfaces
 
-    void cfdProcedureOneStep(const double &concThrWall,
-                             const double &radius,
-                             const double &effRadius,
-                             const double &thrLength,
-                             const std::vector<double> &volumes,
-                             const std::vector<double> &surfaces);
+    void
+    cfdProcedureOneStep(const std::string &boundCond,
+                        const double &concThrWall,
+                        const double &radius, const double &effRadius,
+                        const double &thrLength,
+                        const std::vector<double> &volumes,
+                        const std::vector<double> &surfaces,
+                        const double &dt);
 
-    void cfdProcedure(const bool &boundCond,
+    void cfdProcedure(const std::string &boundCond,
                       const double &concThrWall,
                       const double &radius,
                       const double &effRadius,
@@ -53,21 +57,15 @@ public:
                       const std::vector<double> &volumes,
                       const std::vector<double> &surfaces);
 
-    void cfdProcDirichlet(const double &concThrWall,
-                          const double &radius,
-                          const double &effRadius,
-                          const double &thrLength,
-                          const std::vector<double> &volumes,
-                          const std::vector<double> &surfaces);
 
     void calcFlowRate();
 
     int &dim;
 
     std::vector<std::vector<double>> conc;
+    std::vector<double> timeStepsVec;
 
     const std::vector<double> getConc() const;
-
     const double getFlowRate() const;
 
     PropsDiffusion propsDiffusion;

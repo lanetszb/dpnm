@@ -61,9 +61,9 @@ Aggregator::Aggregator(const std::vector<double> &propsVector,
                                      hydraulicCond)), propsDiffusion,
                    langmuirCoeff, matrixVolume, solverMethod) {}
 
-void Aggregator::calcCoupledFlow() {
+void Aggregator::calcCoupledFlow(const double &dt) {
 
-    diffusionFlow.calcDiffPart();
+    diffusionFlow.calcDiffPart(dt);
     matrixSolver.solveCoupledMatrix();
     paramsOut.calcCoupledFlowParams();
 }
@@ -73,24 +73,10 @@ void Aggregator::cfdProcedurePnmDiff() {
     equationPNM.setInitialCondPurePnm();
     iniConds.setInitialCondCoupledMod();
     paramsOut.calcCoupledFlowParams();
+    equationDiffusion.calcTimeVector();
 
-    // TODO: Remove castyl
-
-    /*auto time = equationDiffusion.propsDiffusion.time;
-    auto configTimeStep = equationDiffusion.propsDiffusion.timeStep;
-    double fullStepsN;
-    auto lastStep = std::modf(time, &fullStepsN);
-    auto timeSteps = std::vector<double>(fullStepsN, configTimeStep);
-    if (lastStep > 0)
-      timeSteps.push_back(lastStep);
-    for(auto &&timeStep : timeSteps)
-      std::cout << timeStep<<std::endl;*/
-
-    for (double t = equationDiffusion.propsDiffusion.timeStep;
-         t < equationDiffusion.propsDiffusion.time * (1. + 1.e-3);
-         t += equationDiffusion.propsDiffusion.timeStep) {
-
-        calcCoupledFlow();
+    for (int i = 0; i <= equationDiffusion.timeStepsVec.size() - 1; i++) {
+        calcCoupledFlow(equationDiffusion.timeStepsVec[i]);
     }
 }
 
@@ -121,4 +107,8 @@ const std::vector<double> Aggregator::getInletPressure() const {
 
 const std::vector<double> Aggregator::getPorePressure() const {
     return equationPNM.pressure;
+}
+
+const std::vector<double> Aggregator::getTimeStepsVec() const {
+    return equationDiffusion.timeStepsVec;
 }

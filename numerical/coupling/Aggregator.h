@@ -61,7 +61,7 @@ public:
     MatrixSolver matrixSolver;
     ParamsOut paramsOut;
 
-    void calcCoupledFlow();
+    void calcCoupledFlow(const double &dt);
 
     void cfdProcedurePnmDiff();
 
@@ -79,6 +79,8 @@ public:
     const std::vector<double> getPorePressure() const;
 
     const std::vector<double> getInletPressure() const;
+
+    const std::vector<double> getTimeStepsVec() const;
 };
 
 #endif //PNFLOW_AGGREGATOR_H

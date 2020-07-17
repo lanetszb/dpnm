@@ -17,6 +17,8 @@ public:
 
     double calcDelRadius(const double &radius, const double &effRadius);
 
+    void calcVol(const std::string &coordType);
+
     void calcVolCartesian(const double &frac_height, const double &matrix_width,
                           const double &frac_length, const double &frac_width);
 

@@ -70,7 +70,7 @@ convective_diff.calculate_beta(radius, eff_radius, thr_length,
 
 # Runs the solver, boundary cond can be either:
 # 0 (no-flow outer matrix, const C inner) or 1 (Dirichlet, const C both sides).
-equation_diff.cfd_procedure(1, conc_fracture_wall, radius,
+equation_diff.cfd_procedure('Dirichlet', conc_fracture_wall, radius,
                             eff_radius, thr_length,
                             volume_list, omega_list)
 

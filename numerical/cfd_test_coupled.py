@@ -75,12 +75,12 @@ solver_method = props.solver_method
 # =======================================================================
 hydr_cond = network_data_cpp.hydraulic_cond_coeff
 
-nd_cpp = NetworkDataCpp(throats_list, throats_height, throats_length,
-                        throats_width, conns_idx_in, conns_idx_out,
-                        pores_coord_x, pores_coord_y, pores_coord_z,
-                        pores_radius, pores_length, pores_conns,
-                        conn_number, pores_per_row, pore_inlet,
-                        pore_outlet, hydr_cond)
+# nd_cpp = NetworkDataCpp(throats_list, throats_height, throats_length,
+#                         throats_width, conns_idx_in, conns_idx_out,
+#                         pores_coord_x, pores_coord_y, pores_coord_z,
+#                         pores_radius, pores_length, pores_conns,
+#                         conn_number, pores_per_row, pore_inlet,
+#                         pore_outlet, hydr_cond)
 #
 eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
                      throats_width, conns_idx_in, conns_idx_out, pores_coord_x,
@@ -105,7 +105,9 @@ pore_press_av = aggregator.get_pressure_av()
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
 # TODO: fix the issue with time step
-time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
+# time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
+time = np.cumsum(aggregator.get_time_steps_vec())
+time = np.insert(time, 0, 0)
 pore_press_av = aggregator.get_pressure_av()
 matrix_mass_total = aggregator.get_matrix_mass_total()
 inlet_pressure = aggregator.get_inlet_pressure()
@@ -129,7 +131,7 @@ fig, axs = plt.subplots(2, sharex='all', sharey='col',
 #
 # # Inflow params (numsticks = 5)
 plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
-              '$P, Pa$', colors, 2, 'solid', [], [])
+             '$P, Pa$', colors, 2, 'solid', [], [])
 #
 # # =============================================================================
 # # Figure 2 (Total Flow Rate)
@@ -153,7 +155,6 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
 # Inflow params (numsticks = 5)
 plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
              '$Q, kg/sec$', colors, 2, 'solid', [], [])
-
 
 # plt.savefig('../output/flow_params_inflow.eps', format="eps",
 #             bbox_inches='tight')
