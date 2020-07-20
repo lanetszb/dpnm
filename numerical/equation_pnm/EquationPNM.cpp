@@ -130,9 +130,9 @@ void EquationPNM::calcMatCoeff() {
         connCoeff[i] = networkData.hydraulicCond[i];
     }
 
-    for (int i = 0; i < networkData.porConns.size(); i++)
-        for (int j = 0; j < networkData.porConns[i].size(); j++)
-            centralCoeff[i] += connCoeff[networkData.porConns[i][j]];
+    for (int i = 0; i < networkData.por2thrConns.size(); i++)
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++)
+            centralCoeff[i] += connCoeff[networkData.por2thrConns[i][j]];
 }
 
 void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
@@ -145,32 +145,30 @@ void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
     std::vector<Triplet> triplets;
     triplets.reserve(3 * dim - 4);
 
-    int pore_iterator = 0;
+    for (int i = 0; i < networkData.throatConns.size(); i++) {
 
-    for (int i = 0; i < networkData.connNumber.size(); i++) {
+        if (!boundPores[networkData.throatConns[i].first]) {
+            triplets.emplace_back(networkData.throatConns[i].first,
+                                  networkData.throatConns[i].second,
+                                  -1. * connCoeff[i]);
+        }
 
-        triplets.emplace_back(i, i, centralCoeff[i]);
-
-        for (int j = 0; j < networkData.connNumber[i]; j++) {
-
-            if (!boundPores[i]) {
-
-                triplets.emplace_back(i, networkData.poreConns[pore_iterator],
-                                      -1. *
-                                      connCoeff[networkData.porConns[i][j]]
-                                      + 0. * inOutCoeff[i][j] *
-                                        diffCoeff[networkData.porConns[i][j]]);
-                pore_iterator++;
-
-            } else {
-                triplets.emplace_back(i, i, -1. * centralCoeff[i] + 1);
-                pore_iterator += networkData.connNumber[i];
-                break;
-            }
+        if (!boundPores[networkData.throatConns[i].second]) {
+            triplets.emplace_back(networkData.throatConns[i].second,
+                                  networkData.throatConns[i].first,
+                                  -1. * connCoeff[i]);
         }
     }
 
+    for (int i = 0; i < networkData.poreN; i++) {
+        if (!boundPores[i])
+            triplets.emplace_back(i, i, centralCoeff[i]);
+        else
+            triplets.emplace_back(i, i, 1);
+    }
+
     matrix.setFromTriplets(triplets.begin(), triplets.end());
+    std::cout << matrix << std::endl;
 
     for (int i = 0; i < dim; i++) {
         freeVector[i] = 0;
@@ -316,14 +314,15 @@ void EquationPNM::calcThrFlowRate() {
 void EquationPNM::getGammaByLabel() {
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < networkData.porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
             porConnsIsOut[i].emplace_back(0);
         }
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < networkData.porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
 
-            if (networkData.throatConns[networkData.porConns[i][j]].first == i)
+            if (networkData.throatConns[networkData.por2thrConns[i][j]].first ==
+                i)
                 porConnsIsOut[i][j] = true;
             else
                 porConnsIsOut[i][j] = false;
@@ -333,17 +332,17 @@ void EquationPNM::getGammaByLabel() {
 void EquationPNM::getGammaByPressure() {
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < networkData.porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
 
             if (porConnsIsOut[i][j]) {
                 if (pressure[i] >=
-                    pressure[networkData.throatConns[networkData.porConns[i][j]].second])
+                    pressure[networkData.throatConns[networkData.por2thrConns[i][j]].second])
                     gammaPnm[i][j] = 0;
                 else
                     gammaPnm[i][j] = 1;
 
             } else if (!porConnsIsOut[i][j]) {
-                if (pressure[networkData.throatConns[networkData.porConns[i][j]].first] >
+                if (pressure[networkData.throatConns[networkData.por2thrConns[i][j]].first] >
                     pressure[i])
                     gammaPnm[i][j] = 1;
                 else
@@ -358,11 +357,11 @@ void EquationPNM::calcPorFlowRate() {
         porFlowRate[i] = 0;
 
     for (int i = 0; i < porFlowRate.size(); i++)
-        for (int j = 0; j < networkData.porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
             if (gammaPnm[i][j] == 0)
-                porFlowRate[i] += thrFlowRate[networkData.porConns[i][j]];
+                porFlowRate[i] += thrFlowRate[networkData.por2thrConns[i][j]];
             else
-                porFlowRate[i] -= thrFlowRate[networkData.porConns[i][j]];
+                porFlowRate[i] -= thrFlowRate[networkData.por2thrConns[i][j]];
         }
 }
 
@@ -390,3 +389,48 @@ const std::vector<double> EquationPNM::getPressure() const {
 double EquationPNM::getTotFlowRate() const {
     return totFlowRate;
 }
+
+//void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
+//                                  const std::vector<double> &centralCoeff,
+//                                  const std::vector<bool> &boundPores,
+//                                  std::vector<std::vector<int>> &inOutCoeff,
+//                                  const std::vector<double> &diffCoeff) {
+//
+//    // Matrix construction
+//    std::vector<Triplet> triplets;
+//    triplets.reserve(3 * dim - 4);
+//
+//    int pore_iterator = 0;
+//
+//    for (int i = 0; i < networkData.connNumber.size(); i++) {
+//
+//        triplets.emplace_back(i, i, centralCoeff[i]);
+//
+//        for (int j = 0; j < networkData.connNumber[i]; j++) {
+//
+//            if (!boundPores[i]) {
+//
+//                triplets.emplace_back(i, networkData.pore2poreConns[pore_iterator],
+//                                      -1. *
+//                                      connCoeff[networkData.por2thrConns[i][j]]
+//                                      + 0. * inOutCoeff[i][j] *
+//                                        diffCoeff[networkData.por2thrConns[i][j]]);
+//                pore_iterator++;
+//
+//            } else {
+//                triplets.emplace_back(i, i, -1. * centralCoeff[i] + 1);
+//                pore_iterator += networkData.connNumber[i];
+//                break;
+//            }
+//        }
+//    }
+//
+//    matrix.setFromTriplets(triplets.begin(), triplets.end());
+//    std::cout << matrix << std::endl;
+//
+//    for (int i = 0; i < dim; i++) {
+//        freeVector[i] = 0;
+//        guessVector[i] = 0;
+//        variable[i] = 0;
+//    }
+//}

@@ -25,12 +25,12 @@ void MatrixSolver::calcMatCoeffDiff() {
     // connCoeffDiff[i] = flowDerivDiff[i] / 2;
 
 
-    for (int i = 0; i < networkData.porConns.size(); i++) {
+    for (int i = 0; i < networkData.por2thrConns.size(); i++) {
         double coeffSum = 0;
-        for (int j = 0; j < networkData.porConns[i].size(); j++)
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++)
 
             coeffSum += equationPNM.gammaPnm[i][j] *
-                        flowDerivDiff[networkData.porConns[i][j]] / 2;
+                        flowDerivDiff[networkData.por2thrConns[i][j]] / 2;
 
         // TODO: understand plus or minus sign and properly name as derivDiff
         centralCoeffDiff[i] = 0;
@@ -57,21 +57,21 @@ void MatrixSolver::calcCoupledFreeVector() {
     std::vector<double> porFlowDiffDer(networkData.poreN, 0);
     double coeffSum;
 
-    for (int i = 0; i < networkData.porConns.size(); i++) {
+    for (int i = 0; i < networkData.por2thrConns.size(); i++) {
         coeffSum = 0;
-        for (int j = 0; j < networkData.porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
             coeffSum += equationPNM.gammaPnm[i][j] *
-                        diffusionFlow.diffFlowInst[networkData.porConns[i][j]];
+                        diffusionFlow.diffFlowInst[networkData.por2thrConns[i][j]];
         }
         porFlowDiff[i] = coeffSum;
     }
 
-    for (int i = 0; i < networkData.porConns.size(); i++) {
+    for (int i = 0; i < networkData.por2thrConns.size(); i++) {
         coeffSum = 0;
-        for (int j = 0; j < networkData.porConns[i].size(); j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
             coeffSum -= equationPNM.gammaPnm[i][j] *
-                        diffusionFlow.flowDerivDiff[networkData.porConns[i][j]] *
-                        diffusionMath.throatAvPress[networkData.porConns[i][j]];
+                        diffusionFlow.flowDerivDiff[networkData.por2thrConns[i][j]] *
+                        diffusionMath.throatAvPress[networkData.por2thrConns[i][j]];
         }
         porFlowDiffDer[i] = 0;
         // porFlowDiffDer[i] = coeffSum;

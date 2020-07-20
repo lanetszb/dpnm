@@ -17,7 +17,7 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
                          const std::vector<double> &_poreCoordZ,
                          const std::vector<double> &_poreRadius,
                          const std::vector<int> &_poreList,
-                         const std::vector<int> &_poreConns,
+                         const std::vector<int> &_pore2poreConns,
                          const std::vector<int> &_connNumber,
                          const std::vector<int> &_porePerRow,
                          const std::vector<bool> &_poreLeftX,
@@ -41,8 +41,8 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
         poreList(_poreList),
         poreN(poreList.size()),
 
-        poreConns(_poreConns),
-        porConns(poreN),
+        pore2poreConns(_pore2poreConns),
+        por2thrConns(poreN),
         connNumber(_connNumber),
         porPerRow(_porePerRow),
 
@@ -53,7 +53,6 @@ NetworkData::NetworkData(const std::vector<int> &_throatList,
         boundPoresSize(0),
 
         hydraulicCond(_hydraulicCond) {}
-
 
 std::vector<double> NetworkData::getThroatRadius() const {
     return throatRadius;
@@ -97,21 +96,21 @@ void NetworkData::calcPorConns() {
 
     int pore_iterator = 0;
     for (int i = 0; i < poreN; i++) {
-        porConns[i].clear();
+        por2thrConns[i].clear();
         for (int j = 0; j < connNumber[i]; j++) {
-            porConns[i].emplace_back(poreConns[pore_iterator]);
+            por2thrConns[i].emplace_back(pore2poreConns[pore_iterator]);
             pore_iterator++;
         }
     }
 
-    for (int i = 0; i < porConns.size(); i++)
-        for (int j = 0; j < porConns[i].size(); j++)
+    for (int i = 0; i < por2thrConns.size(); i++)
+        for (int j = 0; j < por2thrConns[i].size(); j++)
             for (int k = 0; k < throatConns.size(); k++) {
                 if ((i == throatConns[k].first and
-                     porConns[i][j] == throatConns[k].second) or
-                    (porConns[i][j] == throatConns[k].first and
+                     por2thrConns[i][j] == throatConns[k].second) or
+                    (por2thrConns[i][j] == throatConns[k].first and
                      i == throatConns[k].second)) {
-                    porConns[i][j] = k;
+                    por2thrConns[i][j] = k;
                     break;
                 }
             }
@@ -147,7 +146,6 @@ void NetworkData::calcBoundPoresSizes() {
     for (int i = 0; i < poreN; i++)
         if (poreRightX[i])
             boundPoresRightSize += 1;
-
 
     boundPoresSize = boundPoresLeftSize + boundPoresRightSize;
 }

@@ -20,7 +20,7 @@ public :
                          const std::vector<double> &_poreCoordZ,
                          const std::vector<double> &_poreRadius,
                          const std::vector<int> &_poreList,
-                         const std::vector<int> &_poreConns,
+                         const std::vector<int> &_pore2poreConns,
                          const std::vector<int> &_connNumber,
                          const std::vector<int> &_porePerRow,
                          const std::vector<bool> &_poreLeftX,
@@ -68,7 +68,7 @@ public :
     std::vector<int> poreList;
     int poreN;
 
-    std::vector<int> poreConns;
+    std::vector<int> pore2poreConns;
     std::vector<int> connNumber;
     std::vector<int> porPerRow;
 
@@ -82,7 +82,7 @@ public :
     std::vector<double> hydraulicCond;
 
     std::vector<std::pair<int, int>> throatConns;
-    std::vector<std::vector<int>> porConns;
+    std::vector<std::vector<int>> por2thrConns;
 
     int boundPoresLeftSize;
     int boundPoresRightSize;
