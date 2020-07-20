@@ -19,7 +19,9 @@ public:
                        const int &gridBlockN,
                        const std::vector<double> &omega);
 
-    void calcOmegaCylindr(const double &length);
+    void calcOmegaCylindr(const double &length,
+                          const double &radius,
+                          const double &effRadius);
 
     void calcOmegaCartes(const double &frac_height,
                        const double &frac_length);
@@ -40,8 +42,6 @@ public:
     const std::vector<double> getOmegaCylindr() const;
 
     const std::vector<double> getOmegaCartes() const;
-
-    const std::vector<double> getBeta() const;
 
 };
 

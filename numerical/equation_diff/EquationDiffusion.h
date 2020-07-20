@@ -40,20 +40,16 @@ public:
 
     // ToDo DRY is not followed: radius, effRadius, thrLength, volumes, surfaces
 
-    void
-    cfdProcedureOneStep(const std::string &boundCond,
-                        const double &concThrWall,
-                        const double &radius, const double &effRadius,
-                        const double &thrLength,
-                        const std::vector<double> &volumes,
-                        const std::vector<double> &surfaces,
-                        const double &dt);
+    void cfdProcedureOneStep(const std::string &boundCond,
+                             const double &concThrWall,
+                             const double &radius,
+                             const double &effRadius,
+                             const double &thrLength,
+                             const std::vector<double> &volumes,
+                             const std::vector<double> &surfaces,
+                             const double &dt);
 
     void cfdProcedure(const std::string &boundCond,
-                      const double &concThrWall,
-                      const double &radius,
-                      const double &effRadius,
-                      const double &thrLength,
                       const std::vector<double> &volumes,
                       const std::vector<double> &surfaces);
 
@@ -66,7 +62,10 @@ public:
     std::vector<double> timeStepsVec;
 
     const std::vector<double> getConc() const;
+
     const double getFlowRate() const;
+
+    const std::vector<double> getRadCurr() const;
 
     PropsDiffusion propsDiffusion;
     LocalDiffusion localDiffusion;

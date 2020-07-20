@@ -8,7 +8,6 @@
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
 #include <PropsPnm.h>
-#include <NetworkData.h>
 #include <Aggregator.h>
 
 
@@ -76,10 +75,10 @@ BOOST_PYTHON_MODULE (cfd) {
                          "frac_length",
                          "frac_width"))
 
-            .def("calculate_alpha",
-                 &LocalDiffusion::calculateAlpha,
-                 p::args("dt",
-                         "volume_list"))
+            .def("calc_matr_coord_curr",
+                 &LocalDiffusion::calcMatrCoordCurr,
+                 p::args("radius",
+                         "eff_radius"))
 
             .add_property("radius_curr",
                           &LocalDiffusion::getRadCurr)
@@ -88,20 +87,12 @@ BOOST_PYTHON_MODULE (cfd) {
                           &LocalDiffusion::getVolCylindr)
 
             .add_property("vol_cartes",
-                          &LocalDiffusion::getVolCartes)
-
-            .add_property("alpha",
-                          &LocalDiffusion::getAlpha);
+                          &LocalDiffusion::getVolCartes);
 
 
     p::class_<ConvectiveDiffusion>("ConvectiveDiffusion",
                                    p::init<std::vector<double>>(
                                            p::args("props_array")))
-
-            .def("calc_diffusivityList",
-                 &ConvectiveDiffusion::calc_diffusivityList,
-                 p::args("grid_block_n",
-                         "concIni"))
 
             .def("calc_omega_cylindr",
                  &ConvectiveDiffusion::calcOmegaCylindr,
@@ -112,24 +103,13 @@ BOOST_PYTHON_MODULE (cfd) {
                  p::args("frac_height",
                          "frac_length"))
 
-            .def("calculate_beta",
-                 &ConvectiveDiffusion::calculateBeta,
-                 p::args("radius",
-                         "effRadius",
-                         "length",
-                         "diffusivity",
-                         "grid_block_n",
-                         "omega"))
-
-            .def("get_beta",
-                 &ConvectiveDiffusion::getBeta)
-
             .add_property("omega_cylindr",
                           &ConvectiveDiffusion::getOmegaCylindr)
 
             .add_property("omega_cartes",
                           &ConvectiveDiffusion::getOmegaCartes);
 //
+
     p::class_<EquationDiffusion>("EquationDiffusion",
                                  p::init<std::vector<double>>(
                                          p::args("props_array")))
@@ -147,10 +127,6 @@ BOOST_PYTHON_MODULE (cfd) {
             .def("cfd_procedure",
                  &EquationDiffusion::cfdProcedure,
                  p::args("boundCond",
-                         "conc_in",
-                         "radius",
-                         "effective_radius",
-                         "thr_length",
                          "volumes",
                          "surfaces"))
 
@@ -188,56 +164,6 @@ BOOST_PYTHON_MODULE (cfd) {
             .def("print_props_vector",
                  &PropsPnm::printPropsVector);
 
-
-    p::class_<NetworkData>("NetworkDataCpp",
-                           p::init<std::vector<int>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<double>,
-                                   std::vector<int>,
-                                   std::vector<int>,
-                                   std::vector<int>,
-                                   std::vector<int>,
-                                   std::vector<bool>,
-                                   std::vector<bool>,
-                                   std::vector<double>>(
-                                   p::args("throat_list",
-                                           "throat_height",
-                                           "throat_length",
-                                           "throat_width",
-                                           "conn_ind_in",
-                                           "conn_ind_out",
-                                           "pore_coord_x",
-                                           "pore_coord_y",
-                                           "pore_coord_z",
-                                           "pore_radius",
-                                           "pore_list",
-                                           "pore_conns",
-                                           "conn_number",
-                                           "pore_per_row",
-                                           "pore_left_x",
-                                           "pore_right_x",
-                                           "hydr_cond")))
-
-            .add_property("throat_radius",
-                          &NetworkData::getThroatRadius)
-            .add_property("throat_length",
-                          &NetworkData::getThroatLength)
-            .add_property("pore_list",
-                          &NetworkData::getPoreList)
-
-            .def("print_throat_radius",
-                 &NetworkData::printThroatRadius)
-            .def("print_throat_length",
-                 &NetworkData::printThroatLength)
-            .def("print_pore_list",
-                 &NetworkData::printPoreList);
 //
     p::class_<EquationPNM>("EquationPNM",
                            p::init<std::vector<double>,

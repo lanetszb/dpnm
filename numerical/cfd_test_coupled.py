@@ -9,7 +9,6 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
 from numerical import PropsPNMCpp
-from numerical import NetworkDataCpp
 from numerical import EquationPNM
 from numerical import Aggregator
 
@@ -74,13 +73,6 @@ matrix_volume = props.matrix_volume
 solver_method = props.solver_method
 # =======================================================================
 hydr_cond = network_data_cpp.hydraulic_cond_coeff
-
-# nd_cpp = NetworkDataCpp(throats_list, throats_height, throats_length,
-#                         throats_width, conns_idx_in, conns_idx_out,
-#                         pores_coord_x, pores_coord_y, pores_coord_z,
-#                         pores_radius, pores_length, pores_conns,
-#                         conn_number, pores_per_row, pore_inlet,
-#                         pore_outlet, hydr_cond)
 #
 eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
                      throats_width, conns_idx_in, conns_idx_out, pores_coord_x,

@@ -25,7 +25,7 @@ public:
     void calcVolCylindr(const double &radius, const double &effRadius,
                         const double &thrLength);
 
-    void calcRadiusCurr(const double &radius, const double &effRadius);
+    void calcMatrCoordCurr(const double &radius, const double &effRadius);
 
     void calculateAlpha(const double &dt,
                         const std::vector<double> &vol);
@@ -44,8 +44,6 @@ public:
     const std::vector<double> getVolCartes() const;
 
     const std::vector<double> getRadCurr() const;
-
-    const std::vector<double> getAlpha() const;
 
     // ToDo: const int getGridBlockN() const;
 

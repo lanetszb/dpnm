@@ -28,9 +28,7 @@ print(props_diff, '\n')
 
 # Initialising the required classes
 convective_diff = ConvectiveDiffusion(props_diff_vector)
-
 local_diff = LocalDiffusion(props_diff_vector)
-
 equation_diff = EquationDiffusion(props_diff_vector)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -41,39 +39,31 @@ radius = props_diff.radius
 eff_radius = props_diff.eff_radius
 thr_length = props_diff.length
 grid_block_n = props_diff.grid_block_n
-diffusivity = props_diff.diffusivity
 conc_fracture_wall = props_diff.conc_ini
 
 # Calculating volumes, both cartesian and cylindrical. Only cylindrical
 # calculates radius_curr
-local_diff.calc_vol_cylinder(radius, eff_radius, thr_length)
+# TODO: fix issue with dependence between volumes
+# local_diff.calc_vol_cylinder(radius, eff_radius, thr_length)
 local_diff.calc_vol_cartesian(radius, eff_radius,
                               thr_length, radius)
 
 # List of FVMs, can be either cylindrical or cartesian
-volume_list = local_diff.vol_cylindr
-# volume_list = local_diff.vol_cartes
+# volume_list = local_diff.vol_cylindr
+volume_list = local_diff.vol_cartes
 
 # Calculating omegas, both cartesian and cylindrical.
-convective_diff.calc_omega_cylindr(thr_length)
+# TODO: fix issue with dependence between omegas
+# convective_diff.calc_omega_cylindr(thr_length, radius, eff_radius)
 convective_diff.calc_omega_cartes(radius, thr_length)
 
 # List of omegas, can be either cylindrical or cartesian
-omega_list = convective_diff.omega_cylindr
-# omega_list = convective_diff.omega_cartes
-
-# Calculating alpha and beta coefficient of the models. Doesn't depend on greed
-local_diff.calculate_alpha(time_step, volume_list)
-
-convective_diff.calculate_beta(radius, eff_radius, thr_length,
-                               diffusivity, grid_block_n, omega_list)
+# omega_list = convective_diff.omega_cylindr
+omega_list = convective_diff.omega_cartes
 
 # Runs the solver, boundary cond can be either:
 # 0 (no-flow outer matrix, const C inner) or 1 (Dirichlet, const C both sides).
-equation_diff.cfd_procedure('Dirichlet', conc_fracture_wall, radius,
-                            eff_radius, thr_length,
-                            volume_list, omega_list)
-
+equation_diff.cfd_procedure('dirichlet', volume_list, omega_list)
 # Runs one time step solver used for coupling, boundary conds are mixed
 # equation_diff.cfd_procedure_one_step(conc_wall, radius,
 #                                      eff_radius, thr_length,
@@ -89,6 +79,7 @@ equation_diff.cfd_procedure('Dirichlet', conc_fracture_wall, radius,
 
 # Evoking parameters required for plotting
 conc = equation_diff.getConc()
+local_diff.calc_matr_coord_curr(radius, eff_radius)
 radius_curr = local_diff.radius_curr
 flow_rate = equation_diff.getFlowRate()
 
@@ -121,7 +112,7 @@ grid_block_n_analyt = 299
 dX = L / grid_block_n_analyt
 #
 grid_centers_analyt = []
-for i in range(grid_block_n_analyt+1):
+for i in range(grid_block_n_analyt + 1):
     grid_centers_analyt.append(radius + i * dX)
     # grid_centers_analyt.append(radius + i * dX + dX / 2)
 #
@@ -132,7 +123,7 @@ D = props_diff.diffusivity
 t = props_diff.time
 dt = props_diff.time_step
 #
-for i in range(grid_block_n_analyt+1):
+for i in range(grid_block_n_analyt + 1):
     conc_it = conc_out + (conc_ini - conc_out) * math.erf(
         i * dX / 2 / math.sqrt(D * t))
     conc_analyt.append(conc_it)

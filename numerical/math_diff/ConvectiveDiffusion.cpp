@@ -9,14 +9,14 @@ ConvectiveDiffusion::ConvectiveDiffusion(const std::vector<double> &propsVector)
         omegaCylindric(propsDiffusion.gridBlockN + 1, 0),
         omegaCartesian(propsDiffusion.gridBlockN + 1, 0) {}
 
-void ConvectiveDiffusion::calcOmegaCylindr(const double &length) {
+void ConvectiveDiffusion::calcOmegaCylindr(const double &length,
+                                           const double &radius,
+                                           const double &effRadius) {
 
-    localDiffusion.calcRadiusCurr(propsDiffusion.radius,
-                                  propsDiffusion.effRadius);
+    localDiffusion.calcMatrCoordCurr(radius, effRadius);
 
-    for (int i = 0; i < beta.size(); i++) {
+    for (int i = 0; i < beta.size(); i++)
         omegaCylindric[i] = 2 * M_PI * localDiffusion.radiusCurr[i] * length;
-    }
 }
 
 void ConvectiveDiffusion::calcOmegaCartes(const double &frac_height,
@@ -44,12 +44,12 @@ void ConvectiveDiffusion::calculateBeta(const double &radius,
                                         const int &gridBlockN,
                                         const std::vector<double> &omega) {
 
-    localDiffusion.calcRadiusCurr(radius, effRadius);
-    auto diffusivityList = calc_diffusivityList(beta.size(), diffusivity);
+    auto dRadius = localDiffusion.calcDelRadius(radius, effRadius);
+    auto diffusivityList = calc_diffusivityList(beta.size(),
+                                                diffusivity);
 
-    for (int i = 0; i < beta.size(); i++) {
-        beta[i] = diffusivityList[i] * omega[i] / localDiffusion.dRadius;
-    }
+    for (int i = 0; i < beta.size(); i++)
+        beta[i] = diffusivityList[i] * omega[i] / dRadius;
 }
 
 const std::vector<double> ConvectiveDiffusion::getOmegaCylindr() const {
@@ -58,10 +58,6 @@ const std::vector<double> ConvectiveDiffusion::getOmegaCylindr() const {
 
 const std::vector<double> ConvectiveDiffusion::getOmegaCartes() const {
     return omegaCartesian;
-}
-
-const std::vector<double> ConvectiveDiffusion::getBeta() const {
-    return beta;
 }
 
 

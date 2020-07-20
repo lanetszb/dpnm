@@ -17,14 +17,14 @@ int LocalDiffusion::right(const int &index) {
     return index + 1;
 }
 
-double
-LocalDiffusion::calcDelRadius(const double &radius, const double &effRadius) {
+double LocalDiffusion::calcDelRadius(const double &radius,
+                                     const double &effRadius) {
 
     return (effRadius - radius) / propsDiffusion.gridBlockN;
 }
 
-void
-LocalDiffusion::calcRadiusCurr(const double &radius, const double &effRadius) {
+void LocalDiffusion::calcMatrCoordCurr(const double &radius,
+                                       const double &effRadius) {
 
     dRadius = calcDelRadius(radius, effRadius);
 
@@ -46,7 +46,7 @@ void LocalDiffusion::calcVolCylindr(const double &radius,
                                     const double &effRadius,
                                     const double &thrLength) {
 
-    calcRadiusCurr(radius, effRadius);
+    calcMatrCoordCurr(radius, effRadius);
 
     for (int i = 0; i < alpha.size(); i++)
         volCylindr[i] = (M_PI * thrLength *
@@ -71,10 +71,6 @@ const std::vector<double> LocalDiffusion::getVolCylindr() const {
 
 const std::vector<double> LocalDiffusion::getVolCartes() const {
     return volCartes;
-}
-
-const std::vector<double> LocalDiffusion::getAlpha() const {
-    return alpha;
 }
 
 
