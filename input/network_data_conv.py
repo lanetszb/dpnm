@@ -10,7 +10,7 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
 
-class Network_Data:
+class Network_Data_Conv:
     def __init__(s, config_file):
         s.config = configparser.ConfigParser()
         s.config.read(config_file)
@@ -100,7 +100,7 @@ class Network_Data:
 
 
 if __name__ == '__main__':
-    network_data_cpp = Network_Data(config_file=sys.argv[1])
+    network_data_cpp = Network_Data_Conv(config_file=sys.argv[1])
 
     network_data_cpp.process_throats()
     network_data_cpp.process_pores()

@@ -13,7 +13,7 @@ from numerical import EquationPNM
 from numerical import Aggregator
 
 from input import Props
-from input import Network_Data
+from input import Network_Data_Fpnm
 
 from output import plot_x_y
 from output import plot_x_ymult
@@ -32,34 +32,33 @@ props_pnm_cpp = PropsPNMCpp(props_pnm)
 print(props_pnm_cpp)
 
 # Getting properties of network data
-network_data = Network_Data(config_file=sys.argv[1])
-network_data.process_throats()
-network_data.process_pores()
+network_data_fpnm = Network_Data_Fpnm(config_file=sys.argv[1])
+network_data_fpnm.process_fractures()
+network_data_fpnm.process_pores()
 #
-throats_list = network_data.throat_list
-throats_height = network_data.throat_radius
-throats_height = np.array(throats_height) * 2
-throats_length = network_data.throat_length
-throats_width = network_data.throat_width
+fractures_list = network_data_fpnm.fractures_list
+fractures_widths = network_data_fpnm.fractures_widths
+fractures_heights = network_data_fpnm.fractures_heights
+fractures_lengths = network_data_fpnm.fractures_lengths
 
-conns_idx_in = network_data.conn_ind_in
-conns_idx_out = network_data.conn_ind_out
+fracs_conn_ind_in = network_data_fpnm.fracs_conn_ind_in
+fracs_conn_ind_out = network_data_fpnm.fracs_conn_ind_out
 
-pores_coord_x = network_data.pore_coords_x
-pores_coord_y = network_data.pore_coords_y
-pores_coord_z = network_data.pore_coords_z
+pores_coords_x = network_data_fpnm.pores_coords_x
+pores_coords_y = network_data_fpnm.pores_coords_y
+pores_coords_z = network_data_fpnm.pores_coords_z
 
-pores_radius = network_data.pore_radius
-pores_length = network_data.pore_list
+pores_radii = network_data_fpnm.pores_radii
+pores_list = network_data_fpnm.pores_list
 
-pores_left_x = network_data.pore_left_x
-pores_right_x = network_data.pore_right_x
+pores_left_x = network_data_fpnm.pores_left_x
+pores_right_x = network_data_fpnm.pores_right_x
 
-pores_back_y = network_data.pore_back_y
-pores_front_y = network_data.pore_front_y
+pores_back_y = network_data_fpnm.pores_back_y
+pores_front_y = network_data_fpnm.pores_front_y
 
-pores_top_z = network_data.pore_top_z
-pores_bot_z = network_data.pore_bot_z
+pores_top_z = network_data_fpnm.pores_top_z
+pores_bot_z = network_data_fpnm.pores_bot_z
 
 pore_inlet = pores_bot_z
 pore_outlet = pores_top_z
@@ -68,20 +67,21 @@ langm_coeffs = props.langm_coeff
 matrix_volume = props.matrix_volume
 solver_method = props.solver_method
 # =======================================================================
-hydr_cond = network_data.hydraulic_cond_coeff
+hydr_cond = network_data_fpnm.hydraulic_cond_coeff
 #
-eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
-                     throats_width, conns_idx_in, conns_idx_out, pores_coord_x,
-                     pores_coord_y, pores_coord_z, pores_radius, pores_length,
-                     pore_inlet, pore_outlet, hydr_cond, solver_method)
+eq_pnm = EquationPNM(props_pnm, fractures_list, fractures_heights,
+                     fractures_lengths, fractures_widths, fracs_conn_ind_in,
+                     fracs_conn_ind_out, pores_coords_x, pores_coords_y,
+                     pores_coords_z, pores_radii, pores_list, pore_inlet,
+                     pore_outlet, hydr_cond, solver_method)
 
 # eq_pnm.cfd_proc_pure_pnm_dirichlet()
 
-aggregator = Aggregator(props_pnm, props_diff_vector, throats_list,
-                        throats_height, throats_length, throats_width,
-                        conns_idx_in, conns_idx_out, pores_coord_x,
-                        pores_coord_y, pores_coord_z, pores_radius,
-                        pores_length, pore_inlet, pore_outlet,
+aggregator = Aggregator(props_pnm, props_diff_vector, fractures_list,
+                        fractures_heights, fractures_lengths,
+                        fractures_widths, fracs_conn_ind_in, fracs_conn_ind_out,
+                        pores_coords_x, pores_coords_y, pores_coords_z,
+                        pores_radii, pores_list, pore_inlet, pore_outlet,
                         hydr_cond, langm_coeffs, matrix_volume, solver_method)
 
 aggregator.cfd_procedure_pnm_diff()
