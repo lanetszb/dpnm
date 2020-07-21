@@ -33,19 +33,14 @@ class Network_Data_Cpp:
 
         # Pore data
         s.pores = None
-
         s.pore_coords = None
         s.pore_number = None
         s.pore_list = None
-        s.pore_conns = None
         s.pore_radius = None
 
         s.inlet_pores = None
         s.outlet_pores = None
         # s.boundary_pores = None
-        s.pore_per_row = None
-
-        s.all_conns = None
 
         # boundary pores
 
@@ -93,15 +88,9 @@ class Network_Data_Cpp:
         s.pore_list = np.arange(s.pore_number).tolist()
         s.pore_radius = list(s.pores['pore_diameter'] / 2)
 
-        s.conn_number = s.pores['conn_number']
-        s.conn_number = list(s.conn_number)
-
         # boundary pores
         s.pore_left_x = s.boundary_pores['pore_left_x']
         s.pore_right_x = s.boundary_pores['pore_right_x']
-
-        # s.pore_left_x = s.boundary_pores['pore_front_y']
-        # s.pore_right_x = s.boundary_pores['pore_back_y']
 
         s.pore_front_y = s.boundary_pores['pore_front_y']
         s.pore_back_y = s.boundary_pores['pore_back_y']
@@ -109,36 +98,9 @@ class Network_Data_Cpp:
         s.pore_top_z = s.boundary_pores['pore_top_z']
         s.pore_bot_z = s.boundary_pores['pore_bot_z']
 
-    def process_pore_conns(s):
-
-        s.pore_conns = [[] for i in range(len(s.pore_list))]
-
-        for i in range(len(s.pore_list)):
-            for j in range(len(s.conn_ind)):
-                if i == s.conn_ind[j][0]:
-                    s.pore_conns[i].append(s.conn_ind[j][1])
-                if i == s.conn_ind[j][1]:
-                    s.pore_conns[i].append(s.conn_ind[j][0])
-                if j == s.conn_ind:
-                    break
-
-        s.pore_per_row = s.pore_conns
-
-        s.pore_per_row = [[a] + b for a, b in zip(s.pore_list,
-                                                  s.pore_per_row)]
-
-        s.pore_per_row = np.array(
-            [elem for single_list in s.pore_per_row for elem in
-             single_list])
-
-        s.pore_per_row = [int(i) for i in s.pore_per_row]
-
-        s.pore_conns = [item for sublist in s.pore_conns for item in sublist]
-
 
 if __name__ == '__main__':
     network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
 
     network_data_cpp.process_throats()
     network_data_cpp.process_pores()
-    network_data_cpp.process_pore_conns()

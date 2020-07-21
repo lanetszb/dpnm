@@ -35,7 +35,6 @@ print(props_pnm_cpp)
 network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
 network_data_cpp.process_throats()
 network_data_cpp.process_pores()
-network_data_cpp.process_pore_conns()
 #
 throats_list = network_data_cpp.throat_list
 throats_height = network_data_cpp.throat_radius
@@ -52,9 +51,6 @@ pores_coord_z = network_data_cpp.pore_coords_z
 
 pores_radius = network_data_cpp.pore_radius
 pores_length = network_data_cpp.pore_list
-pores_conns = network_data_cpp.pore_conns
-conn_number = network_data_cpp.conn_number
-pores_per_row = network_data_cpp.pore_per_row
 
 pores_left_x = network_data_cpp.pore_left_x
 pores_right_x = network_data_cpp.pore_right_x
