@@ -6,7 +6,7 @@ import math
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
-from input import Props, Network_Data
+from input import Props, Network_Data_Python
 
 from scipy.sparse import csr_matrix
 
@@ -112,7 +112,7 @@ class Matrix_Portrait:
 if __name__ == '__main__':
     props = Props(config_file=sys.argv[1])
 
-    network_data = Network_Data(config_file=sys.argv[1])
+    network_data = Network_Data_Python(config_file=sys.argv[1])
     network_data.process_throats()
     network_data.process_pores()
     network_data.process_pore_conns()

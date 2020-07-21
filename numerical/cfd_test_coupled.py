@@ -13,7 +13,7 @@ from numerical import EquationPNM
 from numerical import Aggregator
 
 from input import Props
-from input import Network_Data_Cpp
+from input import Network_Data
 
 from output import plot_x_y
 from output import plot_x_ymult
@@ -32,34 +32,34 @@ props_pnm_cpp = PropsPNMCpp(props_pnm)
 print(props_pnm_cpp)
 
 # Getting properties of network data
-network_data_cpp = Network_Data_Cpp(config_file=sys.argv[1])
-network_data_cpp.process_throats()
-network_data_cpp.process_pores()
+network_data = Network_Data(config_file=sys.argv[1])
+network_data.process_throats()
+network_data.process_pores()
 #
-throats_list = network_data_cpp.throat_list
-throats_height = network_data_cpp.throat_radius
+throats_list = network_data.throat_list
+throats_height = network_data.throat_radius
 throats_height = np.array(throats_height) * 2
-throats_length = network_data_cpp.throat_length
-throats_width = network_data_cpp.throat_width
+throats_length = network_data.throat_length
+throats_width = network_data.throat_width
 
-conns_idx_in = network_data_cpp.conn_ind_in
-conns_idx_out = network_data_cpp.conn_ind_out
+conns_idx_in = network_data.conn_ind_in
+conns_idx_out = network_data.conn_ind_out
 
-pores_coord_x = network_data_cpp.pore_coords_x
-pores_coord_y = network_data_cpp.pore_coords_y
-pores_coord_z = network_data_cpp.pore_coords_z
+pores_coord_x = network_data.pore_coords_x
+pores_coord_y = network_data.pore_coords_y
+pores_coord_z = network_data.pore_coords_z
 
-pores_radius = network_data_cpp.pore_radius
-pores_length = network_data_cpp.pore_list
+pores_radius = network_data.pore_radius
+pores_length = network_data.pore_list
 
-pores_left_x = network_data_cpp.pore_left_x
-pores_right_x = network_data_cpp.pore_right_x
+pores_left_x = network_data.pore_left_x
+pores_right_x = network_data.pore_right_x
 
-pores_back_y = network_data_cpp.pore_back_y
-pores_front_y = network_data_cpp.pore_front_y
+pores_back_y = network_data.pore_back_y
+pores_front_y = network_data.pore_front_y
 
-pores_top_z = network_data_cpp.pore_top_z
-pores_bot_z = network_data_cpp.pore_bot_z
+pores_top_z = network_data.pore_top_z
+pores_bot_z = network_data.pore_bot_z
 
 pore_inlet = pores_bot_z
 pore_outlet = pores_top_z
@@ -68,7 +68,7 @@ langm_coeffs = props.langm_coeff
 matrix_volume = props.matrix_volume
 solver_method = props.solver_method
 # =======================================================================
-hydr_cond = network_data_cpp.hydraulic_cond_coeff
+hydr_cond = network_data.hydraulic_cond_coeff
 #
 eq_pnm = EquationPNM(props_pnm, throats_list, throats_height, throats_length,
                      throats_width, conns_idx_in, conns_idx_out, pores_coord_x,
