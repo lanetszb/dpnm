@@ -20,9 +20,6 @@ public :
                          const std::vector<double> &_poreCoordZ,
                          const std::vector<double> &_poreRadius,
                          const std::vector<int> &_poreList,
-                         const std::vector<int> &_pore2poreConns,
-                         const std::vector<int> &_connNumber,
-                         const std::vector<int> &_porePerRow,
                          const std::vector<bool> &_poreLeftX,
                          const std::vector<bool> &_poreRightX,
                          const std::vector<double> &_hydraulicCond);

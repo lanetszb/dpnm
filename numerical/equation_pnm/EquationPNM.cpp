@@ -55,9 +55,6 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                          const std::vector<double> &poreCoordZ,
                          const std::vector<double> &poreRadius,
                          const std::vector<int> &poreList,
-                         const std::vector<int> &poreConns,
-                         const std::vector<int> &connNumber,
-                         const std::vector<int> &porePerRow,
                          const std::vector<bool> &poreLeftX,
                          const std::vector<bool> &poreRightX,
                          const std::vector<double> &hydraulicCond,
@@ -67,8 +64,8 @@ EquationPNM::EquationPNM(const std::vector<double> &propsVector,
                     *(new NetworkData(throatList, throatHeight, throatLength,
                                       throatWidth, connIndIn, connIndOut,
                                       poreCoordX, poreCoordY, poreCoordZ,
-                                      poreRadius, poreList, poreConns,
-                                      connNumber, porePerRow, poreLeftX,
+                                      poreRadius, poreList,
+                                      poreLeftX,
                                       poreRightX,
                                       hydraulicCond)),
                     solverMethod) {}
@@ -250,7 +247,7 @@ void EquationPNM::setInitialCondPurePnm() {
     getGammaByLabel();
 
     for (int i = 0; i < porConnsIsOut.size(); i++)
-        for (int j = 0; j < networkData.connNumber[i]; j++) {
+        for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
             gammaPnm[i].emplace_back(0);
         }
 }
