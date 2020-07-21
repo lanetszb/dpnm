@@ -39,7 +39,7 @@ public :
 
     void calcThroatConns();
 
-    void calcPorConns();
+    void calcPor2ThrConns();
 
     void calcBoundPoresSizes();
 

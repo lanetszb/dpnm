@@ -168,7 +168,6 @@ void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,
     }
 
     matrix.setFromTriplets(triplets.begin(), triplets.end());
-    std::cout << matrix << std::endl;
 
     for (int i = 0; i < dim; i++) {
         freeVector[i] = 0;
@@ -245,7 +244,7 @@ void EquationPNM::setInitialCondPurePnm() {
 
     networkData.calcBoundPoresSizes();
     networkData.calcThroatConns();
-    networkData.calcPorConns();
+    networkData.calcPor2ThrConns();
     // networkData.findBoundaryPores(networkData.poreCoordX);
 
     getGammaByLabel();

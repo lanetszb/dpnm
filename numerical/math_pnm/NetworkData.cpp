@@ -90,30 +90,12 @@ void NetworkData::calcThroatConns() {
     }
 }
 
-void NetworkData::calcPorConns() {
+void NetworkData::calcPor2ThrConns() {
 
-    // Ugly construction, has to be rewritten later, but works well for now
-
-    int pore_iterator = 0;
-    for (int i = 0; i < poreN; i++) {
-        por2thrConns[i].clear();
-        for (int j = 0; j < connNumber[i]; j++) {
-            por2thrConns[i].emplace_back(pore2poreConns[pore_iterator]);
-            pore_iterator++;
-        }
+    for (int i = 0; i < throatConns.size(); i++) {
+        por2thrConns[throatConns[i].first].emplace_back(i);
+        por2thrConns[throatConns[i].second].emplace_back(i);
     }
-
-    for (int i = 0; i < por2thrConns.size(); i++)
-        for (int j = 0; j < por2thrConns[i].size(); j++)
-            for (int k = 0; k < throatConns.size(); k++) {
-                if ((i == throatConns[k].first and
-                     por2thrConns[i][j] == throatConns[k].second) or
-                    (por2thrConns[i][j] == throatConns[k].first and
-                     i == throatConns[k].second)) {
-                    por2thrConns[i][j] = k;
-                    break;
-                }
-            }
 }
 
 void NetworkData::findBoundaryPores(std::vector<double> &poreCoord) {
@@ -132,7 +114,8 @@ void NetworkData::findBoundaryPores(std::vector<double> &poreCoord) {
         boundaryPores.emplace_back(boundaryPoresIn[i]);
 
     boundaryPores.insert(boundaryPores.end(),
-                         boundaryPoresOut.begin(), boundaryPoresOut.end());
+                         boundaryPoresOut.begin(),
+                         boundaryPoresOut.end());
 }
 
 void NetworkData::calcBoundPoresSizes() {

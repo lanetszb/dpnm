@@ -115,8 +115,8 @@ void EquationDiffusion::calcTimeVector() {
     if (lastStep > 0)
         timeSteps.push_back(lastStep * configTimeStep);
     timeStepsVec = timeSteps;
-    for (auto &&timeStep : timeSteps)
-        std::cout << timeStep << std::endl;
+//    for (auto &&timeStep : timeSteps)
+//        std::cout << timeStep << std::endl;
 }
 
 void EquationDiffusion::cfdProcedureOneStep(const std::string &boundCond,

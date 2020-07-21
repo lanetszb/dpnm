@@ -88,7 +88,7 @@ void IniConds::setInitialCondCoupledMod() {
 
     diffusionMath.densityConst = diffusionMath.calcDensConst();
 
-    // equationPNM.calcPorConns();
+    // equationPNM.calcPor2ThrConns();
     networkData.calcThroatConns();
 
     diffusionMath.calcRockVolume();
