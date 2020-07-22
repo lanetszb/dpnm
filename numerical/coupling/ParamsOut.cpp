@@ -27,7 +27,7 @@ void ParamsOut::calcMatrixMassTot() {
     double totalMass;
 
     std::vector<double> matrixMass;
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
         totalMass = 0;
         for (int j = 0; j < gridBlockN; j++) {
             totalMass += iniConds.matrixConc[i][j] *
@@ -43,7 +43,7 @@ void ParamsOut::calcMatrixMassTot() {
 void ParamsOut::calcTotalFlowDiff() {
 
     double diffusFlow;
-    for (int i = 0; i < networkData.throatN; i++)
+    for (int i = 0; i < networkData.fracturesN; i++)
         diffusFlow += diffusionFlow.diffFlowInst[i];
 
     totalFlowDiff.emplace_back(diffusFlow * diffusionMath.densityConst);
@@ -63,7 +63,7 @@ void ParamsOut::calcPressInlet() {
 
     double pressInlet = 0;
     for (int i = 0; i < networkData.poreN; i++) {
-        if (networkData.poreLeftX[i])
+        if (networkData.poreInlet[i])
             pressInlet += equationPNM.pressure[i];
     }
 
@@ -80,7 +80,7 @@ void ParamsOut::calcCoupledFlowParams() {
 
     equationPNM.calcThrFlowRate();
     equationPNM.calcPorFlowRate();
-    equationPNM.calcTotFlow(networkData.poreLeftX);
+    equationPNM.calcTotFlow(networkData.poreInlet);
     totalFlowPoresIn.emplace_back(equationPNM.totFlowRate *
                                   diffusionMath.densityConst);
 

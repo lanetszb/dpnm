@@ -19,16 +19,16 @@ DiffusionFlow::DiffusionFlow(NetworkData &networkData,
         iniConds(iniConds),
 
         gridBlockN(equationDiffusion.propsDiffusion.gridBlockN),
-        diffFlowInst(networkData.throatN, 0),
-        diffFlowInstPlus(networkData.throatN, 0),
-        diffFlowInstMinus(networkData.throatN, 0),
-        flowDerivDiff(networkData.throatN, 0),
+        diffFlowInst(networkData.fracturesN, 0),
+        diffFlowInstPlus(networkData.fracturesN, 0),
+        diffFlowInstMinus(networkData.fracturesN, 0),
+        flowDerivDiff(networkData.fracturesN, 0),
         dP(0) {}
 
 void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
                                  const double &dt) {
 
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
 
         for (int j = 0; j < gridBlockN; j++) {
             equationDiffusion.conc[0][j] = iniConds.matrixConc[i][j];
@@ -37,9 +37,9 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
 
         equationDiffusion.cfdProcedureOneStep("default",
                                               diffusionMath.throatConc[i],
-                                              networkData.throatRadius[i],
+                                              networkData.fracturesHeights[i],
                                               diffusionMath.matrixWidth[i],
-                                              networkData.throatLength[i],
+                                              networkData.fracturesLengths[i],
                                               diffusionMath.matricesVolume[i],
                                               diffusionMath.matricesOmega[i],
                                               dt);
@@ -67,13 +67,13 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
 
 void DiffusionFlow::calcDiffFlowDeriv() {
 
-    for (int i = 0; i < networkData.throatN; i++)
+    for (int i = 0; i < networkData.fracturesN; i++)
         flowDerivDiff[i] = ((diffFlowInstPlus[i] - diffFlowInstMinus[i]) / dP);
 }
 
 void DiffusionFlow::updateConc() {
 
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
 
         for (int j = 0; j < gridBlockN; j++) {
             auto conc_curr = equationDiffusion.conc[equationDiffusion.iCurr][j];

@@ -38,35 +38,35 @@ EquationPNM::EquationPNM(PropsPnm &propsPnm,
         porConnsIsOut(networkData.poreN),
         gammaPnm(networkData.poreN),
         centralCoeff(dim, 0),
-        connCoeff(networkData.throatN, 0),
+        connCoeff(networkData.fracturesN, 0),
         pressure(dim, 0),
-        thrFlowRate(networkData.throatN, 0),
+        thrFlowRate(networkData.fracturesN, 0),
         porFlowRate(dim, 0) {}
 
 EquationPNM::EquationPNM(const std::vector<double> &propsVector,
-                         const std::vector<int> &throatList,
-                         const std::vector<double> &throatHeight,
-                         const std::vector<double> &throatLength,
-                         const std::vector<double> &throatWidth,
-                         const std::vector<double> &connIndIn,
-                         const std::vector<double> &connIndOut,
-                         const std::vector<double> &poreCoordX,
-                         const std::vector<double> &poreCoordY,
+                         const std::vector<int> &fracturesList,
+                         const std::vector<double> &fracturesHeights,
+                         const std::vector<double> &fracturesLengths,
+                         const std::vector<double> &fracturesWidths,
+                         const std::vector<double> &fracsConnIndIn,
+                         const std::vector<double> &fracConnIndOut,
+                         const std::vector<double> &poresCoordsX,
+                         const std::vector<double> &poresCoordsY,
                          const std::vector<double> &poreCoordZ,
-                         const std::vector<double> &poreRadius,
-                         const std::vector<int> &poreList,
-                         const std::vector<bool> &poreLeftX,
-                         const std::vector<bool> &poreRightX,
+                         const std::vector<double> &poresRadii,
+                         const std::vector<int> &poresList,
+                         const std::vector<bool> &poresInlet,
+                         const std::vector<bool> &poresOutlet,
                          const std::vector<double> &hydraulicCond,
                          const std::string &solverMethod) :
 
         EquationPNM(*(new PropsPnm(propsVector)),
-                    *(new NetworkData(throatList, throatHeight, throatLength,
-                                      throatWidth, connIndIn, connIndOut,
-                                      poreCoordX, poreCoordY, poreCoordZ,
-                                      poreRadius, poreList,
-                                      poreLeftX,
-                                      poreRightX,
+                    *(new NetworkData(fracturesList, fracturesHeights, fracturesLengths,
+                                      fracturesWidths, fracsConnIndIn, fracConnIndOut,
+                                      poresCoordsX, poresCoordsY, poreCoordZ,
+                                      poresRadii, poresList,
+                                      poresInlet,
+                                      poresOutlet,
                                       hydraulicCond)),
                     solverMethod) {}
 
@@ -78,18 +78,18 @@ void EquationPNM::calcMatCoeff() {
     for (int i = 0; i < centralCoeff.size(); i++)
         centralCoeff[i] = 0;
 
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
 
         // TODO: include various options for calculating resistances
-        // auto tR = networkData.throatRadius[i];
+        // auto tR = networkData.fracturesHeights[i];
         // auto tH = tR;
-        // auto tW = networkData.throatWidth[i];
-        // auto tL = networkData.throatLength[i];
+        // auto tW = networkData.fracturesWidths[i];
+        // auto tL = networkData.fracturesLengths[i];
         // 
         // auto liqVisc = propsPnm.liqVisc;
         // 
-        // auto rI = networkData.poreRadius[throatConns[i].first];
-        // auto rJ = networkData.poreRadius[throatConns[i].second];
+        // auto rI = networkData.poresRadii[throatConns[i].first];
+        // auto rJ = networkData.poresRadii[throatConns[i].second];
 
         // Fracture conductance (equal to Yu)
         // connCoeff[i] = tH * tH * tW / 12 / liqVisc / tL;
@@ -179,32 +179,32 @@ void EquationPNM::calculateFreeVector(const std::string &boundCond,
 
     if (boundCond == "dirichlet") {
         for (int i = 0; i < networkData.poreN; i++)
-            if (networkData.poreLeftX[i])
+            if (networkData.poreInlet[i])
                 freeVector[i] = pIn;
 
     } else if (boundCond == "mixed") {
         for (int i = 0; i < networkData.poreN; i++)
-            if (networkData.poreLeftX[i])
+            if (networkData.poreInlet[i])
                 freeVector[i] = porFlowRate[i];
     }
 
     for (int i = 0; i < networkData.poreN; i++)
-        if (networkData.poreRightX[i])
+        if (networkData.poreOutlet[i])
             freeVector[i] = pOut;
 }
 
 void EquationPNM::calculateGuessPress(const double &pIn,
                                       const double &pOut) {
 
-    auto min = std::min_element(std::begin(networkData.poreCoordX),
-                                std::end(networkData.poreCoordX));
-    auto max = std::max_element(std::begin(networkData.poreCoordX),
-                                std::end(networkData.poreCoordX));
+    auto min = std::min_element(std::begin(networkData.poresCoordsX),
+                                std::end(networkData.poresCoordsX));
+    auto max = std::max_element(std::begin(networkData.poresCoordsX),
+                                std::end(networkData.poresCoordsX));
 
     for (int i = 0; i < dim; i++)
         pressure[i] = propsPnm.pressOut +
-                      ((*max - networkData.poreCoordX[i]) / (*max - *min)) *
-                      (pIn - pOut);
+                ((*max - networkData.poresCoordsX[i]) / (*max - *min)) *
+                (pIn - pOut);
 }
 
 void EquationPNM::calculateGuessVector() {
@@ -242,7 +242,7 @@ void EquationPNM::setInitialCondPurePnm() {
     networkData.calcBoundPoresSizes();
     networkData.calcThroatConns();
     networkData.calcPor2ThrConns();
-    // networkData.findBoundaryPores(networkData.poreCoordX);
+    // networkData.findBoundaryPores(networkData.poresCoordsX);
 
     getGammaByLabel();
 
@@ -261,7 +261,7 @@ void EquationPNM::cfdProcedure(const std::string &boundCond,
 
     // getGammaByPressure();
 
-    std::vector<double> diffCoeff(networkData.throatN, 0);
+    std::vector<double> diffCoeff(networkData.fracturesN, 0);
 
     calculateMatrix(connCoeff,
                     centralCoeff,
@@ -281,8 +281,8 @@ void EquationPNM::cfdProcedure(const std::string &boundCond,
     calcThrFlowRate();
     calcPorFlowRate();
 
-    calcInletFlow(networkData.poreLeftX);
-    calcTotFlow(networkData.poreLeftX);
+    calcInletFlow(networkData.poreInlet);
+    calcTotFlow(networkData.poreInlet);
 
 //    calculateFreeVector(pIn, pOut);
 }
@@ -290,10 +290,10 @@ void EquationPNM::cfdProcedure(const std::string &boundCond,
 void EquationPNM::cfdProcPurePnmDirichlet() {
 
     setInitialCondPurePnm();
-    std::vector<bool> allBoundaryPores(networkData.poreLeftX.size(), 0);
+    std::vector<bool> allBoundaryPores(networkData.poreInlet.size(), 0);
 
     for (int i = 0; i < allBoundaryPores.size(); i++)
-        if (networkData.poreLeftX[i] or networkData.poreRightX[i])
+        if (networkData.poreInlet[i] or networkData.poreOutlet[i])
             allBoundaryPores[i] = true;
 
     cfdProcedure("dirichlet", allBoundaryPores, pIn, pOut);
@@ -301,7 +301,7 @@ void EquationPNM::cfdProcPurePnmDirichlet() {
 
 void EquationPNM::calcThrFlowRate() {
 
-    for (int i = 0; i < networkData.throatN; i++)
+    for (int i = 0; i < networkData.fracturesN; i++)
         thrFlowRate[i] =
                 connCoeff[i] * abs((pressure[networkData.throatConns[i].first] -
                                     pressure[networkData.throatConns[i].second]));
@@ -317,11 +317,9 @@ void EquationPNM::getGammaByLabel() {
     for (int i = 0; i < porConnsIsOut.size(); i++)
         for (int j = 0; j < networkData.por2thrConns[i].size(); j++) {
 
-            if (networkData.throatConns[networkData.por2thrConns[i][j]].first ==
-                i)
-                porConnsIsOut[i][j] = true;
-            else
-                porConnsIsOut[i][j] = false;
+            porConnsIsOut[i][j] =
+                    networkData.throatConns[networkData.por2thrConns[i][j]].first ==
+                    i;
         }
 }
 

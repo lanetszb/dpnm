@@ -13,7 +13,7 @@ MatrixSolver::MatrixSolver(NetworkData &networkData, EquationPNM &equationPNM,
         diffusionMath(diffusionMath),
         diffusionFlow(diffusionFlow),
 
-        connCoeffDiff(networkData.throatN, 0),
+        connCoeffDiff(networkData.fracturesN, 0),
         centralCoeffDiff(networkData.poreN, 0) {}
 
 void MatrixSolver::calcMatCoeffDiff() {
@@ -83,7 +83,7 @@ void MatrixSolver::calcCoupledFreeVector() {
 
     for (int i = 0; i < networkData.poreN; i++)
         // TODO: understand plus or minus sign
-        if (!networkData.poreRightX[i])
+        if (!networkData.poreOutlet[i])
             equationPNM.freeVector[i] += porFlowDiff[i];
     // equationPNM.freeVector[i] += porFlowDiff[i] + porFlowDiffDer[i];
     // equationPNM.freeVector[i] += -1 * (porFlowDiff[i] - porFlowDiffDer[i]);
@@ -96,7 +96,7 @@ void MatrixSolver::solveCoupledMatrix() {
 
     equationPNM.calculateMatrix(equationPNM.connCoeff,
                                 equationPNM.centralCoeff,
-                                networkData.poreRightX,
+                                networkData.poreOutlet,
                                 equationPNM.gammaPnm,
                                 connCoeffDiff);
 

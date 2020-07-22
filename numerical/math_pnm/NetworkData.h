@@ -9,28 +9,22 @@ class NetworkData {
 
 public :
 
-    explicit NetworkData(const std::vector<int> &_throatList,
-                         const std::vector<double> &_throatHeight,
-                         const std::vector<double> &_throatLength,
-                         const std::vector<double> &_throatWidth,
-                         const std::vector<double> &_connIndIn,
-                         const std::vector<double> &_connIndOut,
-                         const std::vector<double> &_poreCoordX,
-                         const std::vector<double> &_poreCoordY,
-                         const std::vector<double> &_poreCoordZ,
-                         const std::vector<double> &_poreRadius,
-                         const std::vector<int> &_poreList,
-                         const std::vector<bool> &_poreLeftX,
-                         const std::vector<bool> &_poreRightX,
+    explicit NetworkData(const std::vector<int> &_fracturesList,
+                         const std::vector<double> &_fracturesHeights,
+                         const std::vector<double> &_fracturesLengths,
+                         const std::vector<double> &_fracturesWidths,
+                         const std::vector<double> &_fracsConnIndIn,
+                         const std::vector<double> &_fracsConnIndOut,
+                         const std::vector<double> &_poresCoordsX,
+                         const std::vector<double> &_poresCoordsY,
+                         const std::vector<double> &_poresCoordsZ,
+                         const std::vector<double> &_poresRadii,
+                         const std::vector<int> &_poresList,
+                         const std::vector<bool> &_poresInlet,
+                         const std::vector<bool> &_poresOutlet,
                          const std::vector<double> &_hydraulicCond);
 
     virtual ~NetworkData() {}
-
-    void printThroatRadius();
-
-    void printThroatLength();
-
-    void printPoreList();
 
     void findBoundaryPores(std::vector<double> &poreCoord);
 
@@ -40,37 +34,27 @@ public :
 
     void calcBoundPoresSizes();
 
-    std::vector<double> getThroatRadius() const;
+    std::vector<int> fracturesList;
+    std::vector<double> fracturesHeights;
+    std::vector<double> fracturesLengths;
+    std::vector<double> fracturesWidths;
+    int fracturesN;
 
-    std::vector<double> getThroatLength() const;
-
-    std::vector<int> getPoreList() const;
-
-    std::vector<double> throatRadius;
-    std::vector<double> throatLength;
-    std::vector<double> throatWidth;
-    std::vector<int> throatList;
-    int throatN;
-
-    std::vector<double> connIndIn;
-    std::vector<double> connIndOut;
+    std::vector<double> fracsConnIndIn;
+    std::vector<double> fracsConnIndOut;
 
 
-    std::vector<double> poreCoordX;
-    std::vector<double> poreCoordY;
-    std::vector<double> poreCoordZ;
+    std::vector<double> poresCoordsX;
+    std::vector<double> poresCoordsY;
+    std::vector<double> poresCoordsZ;
 
-    std::vector<double> poreRadius;
+    std::vector<double> poresRadii;
 
-    std::vector<int> poreList;
+    std::vector<int> poresList;
     int poreN;
 
-    std::vector<int> pore2poreConns;
-    std::vector<int> connNumber;
-    std::vector<int> porPerRow;
-
-    std::vector<bool> poreLeftX;
-    std::vector<bool> poreRightX;
+    std::vector<bool> poreInlet;
+    std::vector<bool> poreOutlet;
 
     std::vector<int> boundaryPores;
     std::vector<int> boundaryPoresIn;

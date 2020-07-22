@@ -15,16 +15,16 @@ DiffusionMath::DiffusionMath(PropsPnm &propsPnm, NetworkData &networkData,
         equationDiffusion(equationDiffusion),
         langmuirCoeff(langmuirCoeff),
         matrixVolume(matrixVolume * 0.1),
-        effRadius(networkData.throatN, 0),
+        effRadius(networkData.fracturesN, 0),
         gridBlockN(equationDiffusion.propsDiffusion.gridBlockN),
         // TODO: don't forget to remove 0.1 castyl
-        matrixWidth(networkData.throatN, 0),
-        throatAvPress(networkData.throatN, 0),
-        throatConc(networkData.throatN, 0),
+        matrixWidth(networkData.fracturesN, 0),
+        throatAvPress(networkData.fracturesN, 0),
+        throatConc(networkData.fracturesN, 0),
         conc_ini(equationDiffusion.propsDiffusion.concIni),
-        matricesOmega(networkData.throatN,
+        matricesOmega(networkData.fracturesN,
                       std::vector<double>(gridBlockN, 0)),
-        matricesVolume(networkData.throatN,
+        matricesVolume(networkData.fracturesN,
                        std::vector<double>(gridBlockN, 0)) {}
 
 double DiffusionMath::calcSideLength(std::vector<double> &poreCoord) {
@@ -50,9 +50,9 @@ void DiffusionMath::calcRockVolume() {
     // ToDo hint: <= 0.0...01
     if (matrixVolume <= 0.00000001) {
 
-        auto lengthX = calcSideLength(networkData.poreCoordX);
-        auto lengthY = calcSideLength(networkData.poreCoordY);
-        auto lengthZ = calcSideLength(networkData.poreCoordZ);
+        auto lengthX = calcSideLength(networkData.poresCoordsX);
+        auto lengthY = calcSideLength(networkData.poresCoordsY);
+        auto lengthZ = calcSideLength(networkData.poresCoordsZ);
 
         matrixVolume = lengthX * lengthY * lengthZ;
     }
@@ -61,7 +61,7 @@ void DiffusionMath::calcRockVolume() {
 void DiffusionMath::calcEffRadius() {
 
     // TODO: connect effRadii to fracture area
-    auto throatN = networkData.throatN;
+    auto throatN = networkData.fracturesN;
 
     for (int i = 0; i < effRadius.size(); i++)
         effRadius[i] = matrixVolume / throatN;
@@ -69,15 +69,15 @@ void DiffusionMath::calcEffRadius() {
 
 void DiffusionMath::calcMatrixWidth() {
 
-    auto throatN = networkData.throatN;
+    auto throatN = networkData.fracturesN;
 
     calcEffRadius();
 
     for (int i = 0; i < throatN; i++) {
 
-        auto fracHeight = networkData.throatRadius[i];
-        auto fracLength = networkData.throatLength[i];
-        auto fracWidth = networkData.throatWidth[i];
+        auto fracHeight = networkData.fracturesHeights[i];
+        auto fracLength = networkData.fracturesLengths[i];
+        auto fracWidth = networkData.fracturesWidths[i];
 
         matrixWidth[i] = effRadius[i] / fracLength / fracHeight + fracWidth;
     }
@@ -94,7 +94,7 @@ double DiffusionMath::calcLangmConc(double pressure) {
 
 void DiffusionMath::calcThroatAvPress() {
 
-    for (int i = 0; i < networkData.throatN; i++)
+    for (int i = 0; i < networkData.fracturesN; i++)
         throatAvPress[i] =
                 (equationPNM.pressure[networkData.throatConns[i].first]
                  + equationPNM.pressure[networkData.throatConns[i].second]) / 2;
@@ -102,16 +102,16 @@ void DiffusionMath::calcThroatAvPress() {
 
 void DiffusionMath::calcThroatConc(const double &dP) {
 
-    for (int i = 0; i < networkData.throatN; i++)
+    for (int i = 0; i < networkData.fracturesN; i++)
         throatConc[i] = calcLangmConc(throatAvPress[i] + dP);
 }
 
 void DiffusionMath::calcMatricesOmega() {
 
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
 
-        auto fracHeight = networkData.throatRadius[i];
-        auto fracLength = networkData.throatLength[i];
+        auto fracHeight = networkData.fracturesHeights[i];
+        auto fracLength = networkData.fracturesLengths[i];
 
         equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
                                                               fracLength);
@@ -125,11 +125,11 @@ void DiffusionMath::calcMatricesOmega() {
 
 void DiffusionMath::calcMatricesVolume() {
 
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
 
-        auto fracHeight = networkData.throatRadius[i];
-        auto fracLength = networkData.throatLength[i];
-        auto fracWidth = networkData.throatWidth[i];
+        auto fracHeight = networkData.fracturesHeights[i];
+        auto fracLength = networkData.fracturesLengths[i];
+        auto fracWidth = networkData.fracturesWidths[i];
 
 
         equationDiffusion.localDiffusion.calcVolCartesian(fracHeight,

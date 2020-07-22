@@ -6,80 +6,53 @@
 #include <EquationPNM.h>
 #include <NetworkData.h>
 
-NetworkData::NetworkData(const std::vector<int> &_throatList,
-                         const std::vector<double> &_throatHeight,
-                         const std::vector<double> &_throatLength,
-                         const std::vector<double> &_throatWidth,
-                         const std::vector<double> &_connIndIn,
-                         const std::vector<double> &_connIndOut,
-                         const std::vector<double> &_poreCoordX,
-                         const std::vector<double> &_poreCoordY,
-                         const std::vector<double> &_poreCoordZ,
-                         const std::vector<double> &_poreRadius,
-                         const std::vector<int> &_poreList,
-                         const std::vector<bool> &_poreLeftX,
-                         const std::vector<bool> &_poreRightX,
+NetworkData::NetworkData(const std::vector<int> &_fracturesList,
+                         const std::vector<double> &_fracturesHeights,
+                         const std::vector<double> &_fracturesLengths,
+                         const std::vector<double> &_fracturesWidths,
+                         const std::vector<double> &_fracsConnIndIn,
+                         const std::vector<double> &_fracsConnIndOut,
+                         const std::vector<double> &_poresCoordsX,
+                         const std::vector<double> &_poresCoordsY,
+                         const std::vector<double> &_poresCoordsZ,
+                         const std::vector<double> &_poresRadii,
+                         const std::vector<int> &_poresList,
+                         const std::vector<bool> &_poresInlet,
+                         const std::vector<bool> &_poresOutlet,
                          const std::vector<double> &_hydraulicCond) :
 
-        throatList(_throatList),
-        throatRadius(_throatHeight),
-        throatLength(_throatLength),
-        throatWidth(_throatWidth),
-        connIndIn(_connIndIn),
-        connIndOut(_connIndOut),
-        throatN(throatList.size()),
-        throatConns(throatN, std::make_pair(-1, -1)),
+        fracturesList(_fracturesList),
+        fracturesHeights(_fracturesHeights),
+        fracturesLengths(_fracturesLengths),
+        fracturesWidths(_fracturesWidths),
+        fracsConnIndIn(_fracsConnIndIn),
+        fracsConnIndOut(_fracsConnIndOut),
+        fracturesN(fracturesList.size()),
+        throatConns(fracturesN, std::make_pair(-1, -1)),
 
-        poreCoordX(_poreCoordX),
-        poreCoordY(_poreCoordY),
-        poreCoordZ(_poreCoordZ),
+        poresCoordsX(_poresCoordsX),
+        poresCoordsY(_poresCoordsY),
+        poresCoordsZ(_poresCoordsZ),
 
-        poreRadius(_poreRadius),
-        poreList(_poreList),
-        poreN(poreList.size()),
+        poresRadii(_poresRadii),
+        poresList(_poresList),
+        poreN(poresList.size()),
         por2thrConns(poreN),
 
-        poreLeftX(_poreLeftX),
-        poreRightX(_poreRightX),
+        poreInlet(_poresInlet),
+        poreOutlet(_poresOutlet),
         boundPoresLeftSize(0),
         boundPoresRightSize(0),
         boundPoresSize(0),
 
         hydraulicCond(_hydraulicCond) {}
 
-std::vector<double> NetworkData::getThroatRadius() const {
-    return throatRadius;
-}
-
-void NetworkData::printThroatRadius() {
-    for (auto &element : throatRadius)
-        std::cout << element << std::endl;
-}
-
-std::vector<double> NetworkData::getThroatLength() const {
-    return throatLength;
-}
-
-void NetworkData::printThroatLength() {
-    for (auto &element : throatLength)
-        std::cout << element << std::endl;
-}
-
-std::vector<int> NetworkData::getPoreList() const {
-    return poreList;
-}
-
-void NetworkData::printPoreList() {
-    for (auto &element : poreList)
-        std::cout << element << std::endl;
-}
-
 
 void NetworkData::calcThroatConns() {
 
-    for (int i = 0; i < throatN; i++) {
-        throatConns[i].first = connIndIn[i];
-        throatConns[i].second = connIndOut[i];
+    for (int i = 0; i < fracturesN; i++) {
+        throatConns[i].first = fracsConnIndIn[i];
+        throatConns[i].second = fracsConnIndOut[i];
     }
 }
 
@@ -114,13 +87,13 @@ void NetworkData::findBoundaryPores(std::vector<double> &poreCoord) {
 void NetworkData::calcBoundPoresSizes() {
 
     for (int i = 0; i < poreN; i++)
-        if (poreLeftX[i])
+        if (poreInlet[i])
             boundPoresLeftSize += 1;
 
     std::cout << boundPoresLeftSize << std::endl;
 
     for (int i = 0; i < poreN; i++)
-        if (poreRightX[i])
+        if (poreOutlet[i])
             boundPoresRightSize += 1;
 
     boundPoresSize = boundPoresLeftSize + boundPoresRightSize;

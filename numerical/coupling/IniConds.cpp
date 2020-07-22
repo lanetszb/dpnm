@@ -13,7 +13,7 @@ IniConds::IniConds(NetworkData &networkData, EquationPNM &equationPNM,
         diffusionMath(diffusionMath),
 
         gridBlockN(equationDiffusion.propsDiffusion.gridBlockN),
-        matrixConc(networkData.throatN,
+        matrixConc(networkData.fracturesN,
                    std::vector<double>(gridBlockN, 0)) {}
 
 std::vector<std::vector<int>> IniConds::getGamma() {
@@ -23,26 +23,26 @@ std::vector<std::vector<int>> IniConds::getGamma() {
 
     for (int i = 0; i < networkData.poreN; i++) {
         boundPoresInputForGamma.emplace_back(
-                !equationPNM.networkData.poreRightX[i]);
+                !equationPNM.networkData.poreOutlet[i]);
     }
 
     std::vector<bool> poreLeftXSaved;
     for (int i = 0; i < networkData.poreN; i++)
-        poreLeftXSaved.push_back(networkData.poreLeftX[i]);
+        poreLeftXSaved.push_back(networkData.poreInlet[i]);
 
     for (int i = 0; i < networkData.poreN; i++)
-        networkData.poreLeftX[i] = boundPoresInputForGamma[i];
+        networkData.poreInlet[i] = boundPoresInputForGamma[i];
 
     for (int i = 0; i < networkData.poreN; i++)
         equationPNM.porFlowRate[i] = 1.e-12;
 
     equationPNM.cfdProcedure("mixed",
-                             networkData.poreRightX,
+                             networkData.poreOutlet,
                              equationPNM.pIn,
                              equationPNM.pOut);
 
     for (int i = 0; i < networkData.poreN; i++)
-        networkData.poreLeftX[i] = poreLeftXSaved[i];
+        networkData.poreInlet[i] = poreLeftXSaved[i];
 
     std::vector<std::vector<int>> poreConnsIsOutByPressureSaved(
             networkData.poreN);
@@ -61,8 +61,8 @@ void IniConds::getInletFlow() {
     std::vector<bool> boundPoresInput;
 
     for (int i = 0; i < networkData.poreN; i++)
-        boundPoresInput.emplace_back(networkData.poreLeftX[i] or
-                                     networkData.poreRightX[i]);
+        boundPoresInput.emplace_back(networkData.poreInlet[i] or
+                                     networkData.poreOutlet[i]);
 
     equationPNM.cfdProcedure("dirichlet",
                              boundPoresInput,
@@ -72,7 +72,7 @@ void IniConds::getInletFlow() {
     // calculate PN no diffusion with mixed Dirichlet-Newman
 
     equationPNM.cfdProcedure("mixed",
-                             networkData.poreRightX,
+                             networkData.poreOutlet,
                              equationPNM.pIn,
                              equationPNM.pOut);
 
@@ -101,7 +101,7 @@ void IniConds::setInitialCondCoupledMod() {
 
     equationDiffusion.calcConcIni(diffusionMath.conc_ini);
 
-    for (int i = 0; i < networkData.throatN; i++) {
+    for (int i = 0; i < networkData.fracturesN; i++) {
         for (int j = 0; j < gridBlockN; j++) {
             matrixConc[i][j] = diffusionMath.conc_ini;
         }

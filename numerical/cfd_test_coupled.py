@@ -60,8 +60,8 @@ pores_front_y = network_data_fpnm.pores_front_y
 pores_top_z = network_data_fpnm.pores_top_z
 pores_bot_z = network_data_fpnm.pores_bot_z
 
-pore_inlet = pores_bot_z
-pore_outlet = pores_top_z
+pores_inlet = pores_bot_z
+pores_outlet = pores_top_z
 
 langm_coeffs = props.langm_coeff
 matrix_volume = props.matrix_volume
@@ -72,8 +72,8 @@ hydr_cond = network_data_fpnm.hydraulic_cond_coeff
 eq_pnm = EquationPNM(props_pnm, fractures_list, fractures_heights,
                      fractures_lengths, fractures_widths, fracs_conn_ind_in,
                      fracs_conn_ind_out, pores_coords_x, pores_coords_y,
-                     pores_coords_z, pores_radii, pores_list, pore_inlet,
-                     pore_outlet, hydr_cond, solver_method)
+                     pores_coords_z, pores_radii, pores_list, pores_inlet,
+                     pores_outlet, hydr_cond, solver_method)
 
 # eq_pnm.cfd_proc_pure_pnm_dirichlet()
 
@@ -81,7 +81,7 @@ aggregator = Aggregator(props_pnm, props_diff_vector, fractures_list,
                         fractures_heights, fractures_lengths,
                         fractures_widths, fracs_conn_ind_in, fracs_conn_ind_out,
                         pores_coords_x, pores_coords_y, pores_coords_z,
-                        pores_radii, pores_list, pore_inlet, pore_outlet,
+                        pores_radii, pores_list, pores_inlet, pores_outlet,
                         hydr_cond, langm_coeffs, matrix_volume, solver_method)
 
 aggregator.cfd_procedure_pnm_diff()
