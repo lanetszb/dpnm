@@ -43,7 +43,6 @@ conc_fracture_wall = props_diff.conc_ini
 
 # Calculating volumes, both cartesian and cylindrical. Only cylindrical
 # calculates radius_curr
-# TODO: fix issue with dependence between volumes
 # local_diff.calc_vol_cylinder(radius, eff_radius, thr_length)
 local_diff.calc_vol_cartesian(radius, eff_radius,
                               thr_length, radius)
@@ -53,7 +52,6 @@ local_diff.calc_vol_cartesian(radius, eff_radius,
 volume_list = local_diff.vol_cartes
 
 # Calculating omegas, both cartesian and cylindrical.
-# TODO: fix issue with dependence between omegas
 # convective_diff.calc_omega_cylindr(thr_length, radius, eff_radius)
 convective_diff.calc_omega_cartes(radius, thr_length)
 

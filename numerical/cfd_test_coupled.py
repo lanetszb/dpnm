@@ -90,7 +90,6 @@ pore_press_av = aggregator.get_pressure_av()
 
 # =============================================================================
 # Figure 1 (Avg Pore Pressure and Avg Concentration)
-# TODO: fix the issue with time step
 # time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
 time = np.cumsum(aggregator.get_time_steps_vec())
 time = np.insert(time, 0, 0)
