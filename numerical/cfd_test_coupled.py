@@ -121,8 +121,7 @@ fig, axs = plt.subplots(2, sharex='all',
 #
 # # Inflow params (numsticks = 5)
 plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
-             '$P, Pa$', colors, 2, 'solid', [6.12 * 10e-8, 6.44 * 10e-8],
-             [0.7 + 3e5, 1.7 + 3e5])
+             '$P, Pa$', colors, 2, 'solid', [], [])
 #
 # # =============================================================================
 # # Figure 2 (Total Flow Rate)
@@ -145,11 +144,10 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
             '$Q_{release}$': flow_rate_diff}
 # Inflow params (numsticks = 5)
 plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
-             '$Q, kg/sec$', colors, 2, 'solid', [0 * 10e-8, 2.4 * 10e-8],
-             [0. * 10e-11, 3.6 * 10e-11])
+             '$Q, kg/sec$', colors, 2, 'solid', [], [])
 
-plt.savefig('../output/flow_params_release.eps', format="eps",
-            bbox_inches='tight')
+# plt.savefig('../output/test_refacroting.png', format="png",
+#             bbox_inches='tight')
 '''
 # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)

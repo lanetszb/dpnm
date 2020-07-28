@@ -14,7 +14,7 @@ IniConds::IniConds(NetworkData &networkData, EquationPNM &equationPNM,
 
         gridBlockN(equationDiffusion.propsDiffusion.gridBlockN),
         matrixConc(networkData.fracturesN,
-                   std::vector<double>(gridBlockN, 0)) {}
+                   std::vector<double>(gridBlockN, diffusionMath.conc_ini)) {}
 
 std::vector<std::vector<int>> IniConds::getGamma() {
 
@@ -30,8 +30,7 @@ std::vector<std::vector<int>> IniConds::getGamma() {
     for (int i = 0; i < networkData.poreN; i++)
         poreLeftXSaved.push_back(networkData.poreInlet[i]);
 
-    for (int i = 0; i < networkData.poreN; i++)
-        networkData.poreInlet[i] = boundPoresInputForGamma[i];
+    networkData.poreInlet = boundPoresInputForGamma;
 
     for (int i = 0; i < networkData.poreN; i++)
         equationPNM.porFlowRate[i] = 1.e-12;
@@ -41,9 +40,7 @@ std::vector<std::vector<int>> IniConds::getGamma() {
                              equationPNM.pIn,
                              equationPNM.pOut);
 
-    for (int i = 0; i < networkData.poreN; i++)
-        networkData.poreInlet[i] = poreLeftXSaved[i];
-
+    networkData.poreInlet = poreLeftXSaved;
     std::vector<std::vector<int>> poreConnsIsOutByPressureSaved(
             networkData.poreN);
 
@@ -100,10 +97,4 @@ void IniConds::setInitialCondCoupledMod() {
     //                                equationPNM.propsPnm.pressOut);
 
     equationDiffusion.calcConcIni(diffusionMath.conc_ini);
-
-    for (int i = 0; i < networkData.fracturesN; i++) {
-        for (int j = 0; j < gridBlockN; j++) {
-            matrixConc[i][j] = diffusionMath.conc_ini;
-        }
-    }
 }

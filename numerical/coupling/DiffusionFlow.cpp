@@ -31,10 +31,9 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
 
     for (int i = 0; i < networkData.fracturesN; i++) {
 
-        for (int j = 0; j < gridBlockN; j++) {
-            equationDiffusion.conc[0][j] = iniConds.matrixConc[i][j];
-            equationDiffusion.conc[1][j] = iniConds.matrixConc[i][j];
-        }
+        equationDiffusion.conc[0] = iniConds.matrixConc[i];
+        equationDiffusion.conc[1] = iniConds.matrixConc[i];
+
 
         equationDiffusion.cfdProcedureOneStep("default",
                                               diffusionMath.throatConc[i],
@@ -59,12 +58,8 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
 
         diffFlowVector[i] = flowSum / diffusionMath.densityConst;
 
-        for (int j = 0; j < gridBlockN; j++) {
-            auto conc_curr = equationDiffusion.conc[equationDiffusion.iCurr][j];
-            auto conc_prev = equationDiffusion.conc[equationDiffusion.iPrev][j];
-            iniConds.matrixConc[i][j] = conc_prev;
-            concCurr[i][j] = conc_curr;
-        }
+        iniConds.matrixConc[i] = equationDiffusion.conc[equationDiffusion.iCurr];
+        concCurr[i] = equationDiffusion.conc[equationDiffusion.iPrev];
     }
 }
 

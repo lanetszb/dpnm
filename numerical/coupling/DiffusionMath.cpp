@@ -116,10 +116,7 @@ void DiffusionMath::calcMatricesOmega() {
         equationDiffusion.convectiveDiffusion.calcOmegaCartes(fracHeight,
                                                               fracLength);
 
-        for (int j = 0; j < gridBlockN; j++) {
-            auto omega = equationDiffusion.convectiveDiffusion.omegaCartesian[j];
-            matricesOmega[i][j] = omega;
-        }
+        matricesOmega[i] = equationDiffusion.convectiveDiffusion.omegaCartesian;
     }
 }
 
@@ -137,9 +134,7 @@ void DiffusionMath::calcMatricesVolume() {
                                                           fracLength,
                                                           fracWidth);
 
-        for (int j = 0; j < gridBlockN; j++) {
-            auto volume = equationDiffusion.localDiffusion.volCartes[j];
-            matricesVolume[i][j] = volume;
-        }
+        matricesVolume[i] = equationDiffusion.localDiffusion.volCartes;
+
     }
 }
