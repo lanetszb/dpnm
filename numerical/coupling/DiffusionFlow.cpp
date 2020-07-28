@@ -23,6 +23,7 @@ DiffusionFlow::DiffusionFlow(NetworkData &networkData,
         diffFlowInstPlus(networkData.fracturesN, 0),
         diffFlowInstMinus(networkData.fracturesN, 0),
         flowDerivDiff(networkData.fracturesN, 0),
+        concCurr(networkData.fracturesN, std::vector<double>(gridBlockN, 0)),
         dP(0) {}
 
 void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
@@ -59,8 +60,10 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
         diffFlowVector[i] = flowSum / diffusionMath.densityConst;
 
         for (int j = 0; j < gridBlockN; j++) {
+            auto conc_curr = equationDiffusion.conc[equationDiffusion.iCurr][j];
             auto conc_prev = equationDiffusion.conc[equationDiffusion.iPrev][j];
             iniConds.matrixConc[i][j] = conc_prev;
+            concCurr[i][j] = conc_curr;
         }
     }
 }
@@ -72,14 +75,7 @@ void DiffusionFlow::calcDiffFlowDeriv() {
 }
 
 void DiffusionFlow::updateConc() {
-
-    for (int i = 0; i < networkData.fracturesN; i++) {
-
-        for (int j = 0; j < gridBlockN; j++) {
-            auto conc_curr = equationDiffusion.conc[equationDiffusion.iCurr][j];
-            iniConds.matrixConc[i][j] = conc_curr;
-        }
-    }
+    iniConds.matrixConc = concCurr;
 }
 
 void DiffusionFlow::calcDiffPart(const double &dt) {

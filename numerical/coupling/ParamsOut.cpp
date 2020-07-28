@@ -27,15 +27,18 @@ void ParamsOut::calcMatrixMassTot() {
     double totalMass;
 
     std::vector<double> matrixMass;
+    matrixMass.clear();
     for (int i = 0; i < networkData.fracturesN; i++) {
         totalMass = 0;
         for (int j = 0; j < gridBlockN; j++) {
             totalMass += iniConds.matrixConc[i][j] *
-                         equationDiffusion.localDiffusion.volCartes[j];
+                         diffusionMath.matricesVolume[i][j];
+            std::cout << iniConds.matrixConc[i][j] << ' ';
         }
+        std::cout << std::endl;
         matrixMass.emplace_back(totalMass);
     }
-
+    std::cout << std::endl;
     matrixMassTotal.emplace_back(
             accumulate(matrixMass.begin(), matrixMass.end(), 0.0));
 }
@@ -43,11 +46,11 @@ void ParamsOut::calcMatrixMassTot() {
 void ParamsOut::calcTotalFlowDiff() {
 
     double diffusFlow;
-    for (int i = 0; i < networkData.fracturesN; i++)
+    diffusFlow = 0;
+    for (int i = 0; i < networkData.fracturesN; i++) {
         diffusFlow += diffusionFlow.diffFlowInst[i];
-
+    }
     totalFlowDiff.emplace_back(diffusFlow * diffusionMath.densityConst);
-
 }
 
 void ParamsOut::calcPressureAv() {
@@ -66,7 +69,6 @@ void ParamsOut::calcPressInlet() {
         if (networkData.poreInlet[i])
             pressInlet += equationPNM.pressure[i];
     }
-
     pressIn.emplace_back(pressInlet / networkData.boundPoresLeftSize);
 }
 

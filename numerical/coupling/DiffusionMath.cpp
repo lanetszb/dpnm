@@ -48,7 +48,7 @@ double DiffusionMath::calcDensConst() {
 
 void DiffusionMath::calcRockVolume() {
     // ToDo hint: <= 0.0...01
-    if (matrixVolume <= 0.00000001) {
+    if (matrixVolume < 0) {
 
         auto lengthX = calcSideLength(networkData.poresCoordsX);
         auto lengthY = calcSideLength(networkData.poresCoordsY);

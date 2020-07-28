@@ -50,6 +50,8 @@ public:
     int &gridBlockN;
     std::vector<double> flowDerivDiff;
 
+    std::vector<std::vector<double>> concCurr;
+
 };
 
 #endif //PNFLOW_DIFFUSIONFLOW_H
