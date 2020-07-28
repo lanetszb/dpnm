@@ -20,6 +20,7 @@ from output import plot_x_ymult
 from matplotlib import rc
 
 rc('text', usetex=True)
+plt.rcParams["font.family"] = "Times New Roman"
 
 # Reading properties in config file
 props = Props(config_file=sys.argv[1])
@@ -110,13 +111,18 @@ fig_width = 4.5
 y_scale = 1.3
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
 #
-fig, axs = plt.subplots(2, sharex='all', sharey='col',
+# fig, axs = plt.subplots(2, sharex='all', sharey='col',
+#                         figsize=(fig_width, fig_width * y_scale),
+#                         tight_layout=True)
+
+fig, axs = plt.subplots(2, sharex='all',
                         figsize=(fig_width, fig_width * y_scale),
                         tight_layout=True)
 #
 # # Inflow params (numsticks = 5)
 plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
-             '$P, Pa$', colors, 2, 'solid', [], [])
+             '$P, Pa$', colors, 2, 'solid', [6.12 * 10e-8, 6.44 * 10e-8],
+             [0.7 + 3e5, 1.7 + 3e5])
 #
 # # =============================================================================
 # # Figure 2 (Total Flow Rate)
@@ -139,10 +145,11 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
             '$Q_{release}$': flow_rate_diff}
 # Inflow params (numsticks = 5)
 plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
-             '$Q, kg/sec$', colors, 2, 'solid', [], [])
+             '$Q, kg/sec$', colors, 2, 'solid', [0 * 10e-8, 2.4 * 10e-8],
+             [0. * 10e-11, 3.6 * 10e-11])
 
-# plt.savefig('../output/flow_params_inflow.eps', format="eps",
-#             bbox_inches='tight')
+plt.savefig('../output/flow_params_release.eps', format="eps",
+            bbox_inches='tight')
 '''
 # =============================================================================
 # # Figure 3 (Langmuir isotherm and density)

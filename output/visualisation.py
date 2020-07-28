@@ -206,3 +206,26 @@ plt.savefig('../output/release_vary_diff.eps', format="eps",
             bbox_inches='tight')
 
 plt.show()
+
+# pressure_in = 300001
+# pressure_out = 300000.2
+# diffusivity = 6.e-9
+
+# gas_inflow
+# conc_ini = 0.77
+# plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
+#              '$P, Pa$', colors, 2, 'solid', [4.48 * 10e-8, 4.76 * 10e-8],
+#              [0.21 + 3e5, 1.01 + 3e5])
+# plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
+#              '$Q, kg/sec$', colors, 2, 'solid', [-0.4 * 10e-8, 2.0 * 10e-8],
+#              [-1.6 * 10e-11, 2.4 * 10e-11])
+
+# gas_release
+# conc_ini = 1.1
+# plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
+#              '$P, Pa$', colors, 2, 'solid', [6.12 * 10e-8, 6.44 * 10e-8],
+#              [0.7 + 3e5, 1.7 + 3e5])
+
+# plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
+#              '$Q, kg/sec$', colors, 2, 'solid', [0 * 10e-8, 2.4 * 10e-8],
+#              [0. * 10e-11, 3.6 * 10e-11])

@@ -33,12 +33,9 @@ void ParamsOut::calcMatrixMassTot() {
         for (int j = 0; j < gridBlockN; j++) {
             totalMass += iniConds.matrixConc[i][j] *
                          diffusionMath.matricesVolume[i][j];
-            std::cout << iniConds.matrixConc[i][j] << ' ';
         }
-        std::cout << std::endl;
         matrixMass.emplace_back(totalMass);
     }
-    std::cout << std::endl;
     matrixMassTotal.emplace_back(
             accumulate(matrixMass.begin(), matrixMass.end(), 0.0));
 }
