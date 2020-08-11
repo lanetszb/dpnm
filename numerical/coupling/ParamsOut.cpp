@@ -27,7 +27,7 @@ void ParamsOut::calcMatrixMassTot() {
     double totalMass;
 
     std::vector<double> matrixMass;
-    matrixMass.clear();
+
     for (int i = 0; i < networkData.fracturesN; i++) {
         totalMass = 0;
         for (int j = 0; j < gridBlockN; j++) {
@@ -42,8 +42,7 @@ void ParamsOut::calcMatrixMassTot() {
 
 void ParamsOut::calcTotalFlowDiff() {
 
-    double diffusFlow;
-    diffusFlow = 0;
+    double diffusFlow = 0;
     for (int i = 0; i < networkData.fracturesN; i++) {
         diffusFlow += diffusionFlow.diffFlowInst[i];
     }
