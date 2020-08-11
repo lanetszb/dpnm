@@ -58,8 +58,8 @@ void DiffusionFlow::calcDiffFlow(std::vector<double> &diffFlowVector,
 
         diffFlowVector[i] = flowSum / diffusionMath.densityConst;
 
-        iniConds.matrixConc[i] = equationDiffusion.conc[equationDiffusion.iCurr];
-        concCurr[i] = equationDiffusion.conc[equationDiffusion.iPrev];
+        iniConds.matrixConc[i] = equationDiffusion.conc[equationDiffusion.iPrev];
+        concCurr[i] = equationDiffusion.conc[equationDiffusion.iCurr];
     }
 }
 
