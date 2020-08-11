@@ -12,8 +12,8 @@ public:
 
     virtual ~PropsPnm() {}
     
-    friend std::ostream &
-    operator<<(std::ostream &stream, const PropsPnm &propsPNM);
+    friend std::ostream & operator<<(std::ostream &stream,
+        const PropsPnm &propsPNM);
 
     double getAGasDens() const;
 
@@ -50,7 +50,7 @@ public:
     std::vector<double> getPropsVector() const;
 
 private:
-
+    // ToDo make it map and use it properly
     std::vector<double> propsVector;
 public:
 
