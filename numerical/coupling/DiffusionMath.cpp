@@ -3,13 +3,15 @@
 #include <iomanip>
 
 
-DiffusionMath::DiffusionMath(PropsPnm &propsPnm, NetworkData &networkData,
-                             EquationPNM &equationPNM,
-                             EquationDiffusion &equationDiffusion,
-                             const std::vector<double> &langmuirCoeff,
-                             const double &matrixVolume) :
+DiffusionMath::DiffusionMath(
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        NetworkData &networkData,
+        EquationPNM &equationPNM,
+        EquationDiffusion &equationDiffusion,
+        const std::vector<double> &langmuirCoeff,
+        const double &matrixVolume) :
 
-        propsPnm(propsPnm),
+        _paramsPnm(paramsPnm),
         networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
@@ -39,7 +41,10 @@ double DiffusionMath::calcSideLength(std::vector<double> &poreCoord) {
 
 double DiffusionMath::calcDensConst() {
 
-    auto pressureAv = (propsPnm.pressIn + propsPnm.pressOut) / 2;
+    auto &pressIn = std::get<double>(_paramsPnm["pressIn"]);
+    auto &pressOut = std::get<double>(_paramsPnm["pressOut"]);
+
+    auto pressureAv = (pressIn + pressOut) / 2;
 
     // TODO: use functional dependence
     return 1.986;

@@ -1,12 +1,15 @@
 #include <IniConds.h>
 #include "NetworkData.h"
 
-IniConds::IniConds(NetworkData &networkData, EquationPNM &equationPNM,
-                   EquationDiffusion &equationDiffusion,
-                   DiffusionMath &diffusionMath,
-                   const std::vector<double> &langmuirCoeff,
-                   const double &matrixVolume) :
+IniConds::IniConds(
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        NetworkData &networkData, EquationPNM &equationPNM,
+        EquationDiffusion &equationDiffusion,
+        DiffusionMath &diffusionMath,
+        const std::vector<double> &langmuirCoeff,
+        const double &matrixVolume) :
 
+        _paramsPnm(paramsPnm),
         networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
@@ -35,10 +38,13 @@ std::vector<std::vector<int>> IniConds::getGamma() {
     for (int i = 0; i < networkData.poreN; i++)
         equationPNM.porFlowRate[i] = 1.e-12;
 
+    auto &pressIn = std::get<double>(_paramsPnm["pressIn"]);
+    auto &pressOut = std::get<double>(_paramsPnm["pressOut"]);
+
     equationPNM.cfdProcedure("mixed",
                              networkData.poreOutlet,
-                             equationPNM.pIn,
-                             equationPNM.pOut);
+                             pressIn,
+                             pressOut);
 
     networkData.poreInlet = poreLeftXSaved;
     std::vector<std::vector<int>> poreConnsIsOutByPressureSaved(
@@ -61,17 +67,20 @@ void IniConds::getInletFlow() {
         boundPoresInput.emplace_back(networkData.poreInlet[i] or
                                      networkData.poreOutlet[i]);
 
+    auto &pressIn = std::get<double>(_paramsPnm["pressIn"]);
+    auto &pressOut = std::get<double>(_paramsPnm["pressOut"]);
+
     equationPNM.cfdProcedure("dirichlet",
                              boundPoresInput,
-                             equationPNM.pIn,
-                             equationPNM.pOut);
+                             pressIn,
+                             pressOut);
 
     // calculate PN no diffusion with mixed Dirichlet-Newman
 
     equationPNM.cfdProcedure("mixed",
                              networkData.poreOutlet,
-                             equationPNM.pIn,
-                             equationPNM.pOut);
+                             pressIn,
+                             pressOut);
 
 }
 

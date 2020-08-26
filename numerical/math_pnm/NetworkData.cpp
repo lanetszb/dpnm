@@ -1,51 +1,46 @@
-#include <PropsPnm.h>
-#include <Eigen/Sparse>
-#include <cmath>
 #include <string>
 #include <vector>
-#include <EquationPNM.h>
+#include <map>
 #include <NetworkData.h>
 
-NetworkData::NetworkData(const std::vector<int> &_fracturesList,
-                         const std::vector<double> &_fracturesHeights,
-                         const std::vector<double> &_fracturesLengths,
-                         const std::vector<double> &_fracturesWidths,
-                         const std::vector<double> &_fracsConnIndIn,
-                         const std::vector<double> &_fracsConnIndOut,
-                         const std::vector<double> &_poresCoordsX,
-                         const std::vector<double> &_poresCoordsY,
-                         const std::vector<double> &_poresCoordsZ,
-                         const std::vector<double> &_poresRadii,
-                         const std::vector<int> &_poresList,
-                         const std::vector<bool> &_poresInlet,
-                         const std::vector<bool> &_poresOutlet,
-                         const std::vector<double> &_hydraulicCond) :
+NetworkData::NetworkData(
+        const std::map<std::string, std::variant<std::vector<bool>,
+                std::vector<int>, std::vector<double>>> &paramsNetwork) :
 
-        fracturesList(_fracturesList),
-        fracturesHeights(_fracturesHeights),
-        fracturesLengths(_fracturesLengths),
-        fracturesWidths(_fracturesWidths),
-        fracsConnIndIn(_fracsConnIndIn),
-        fracsConnIndOut(_fracsConnIndOut),
+
+        _paramsNetwork(paramsNetwork),
+        fracturesList(
+                std::get<std::vector<int>>(_paramsNetwork["fracList"])),
+        fracturesHeights(
+                std::get<std::vector<double>>(_paramsNetwork["fracHeights"])),
+        fracturesLengths(
+                std::get<std::vector<double>>(_paramsNetwork["fracLengths"])),
+        fracturesWidths(
+                std::get<std::vector<double>>(_paramsNetwork["fracWidths"])),
+        fracsConnIndIn(
+                std::get<std::vector<int>>(_paramsNetwork["fracConnIndIn"])),
+        fracsConnIndOut(std::get<std::vector<int>>(
+                _paramsNetwork["fracConnIndOut"])),
         fracturesN(fracturesList.size()),
         throatConns(fracturesN, std::make_pair(-1, -1)),
-
-        poresCoordsX(_poresCoordsX),
-        poresCoordsY(_poresCoordsY),
-        poresCoordsZ(_poresCoordsZ),
-
-        poresRadii(_poresRadii),
-        poresList(_poresList),
+        poresCoordsX(
+                std::get<std::vector<double>>(_paramsNetwork["poresCoordsX"])),
+        poresCoordsY(
+                std::get<std::vector<double>>(_paramsNetwork["poresCoordsY"])),
+        poresCoordsZ(
+                std::get<std::vector<double>>(_paramsNetwork["poresCoordsZ"])),
+        poresRadii(std::get<std::vector<double>>(_paramsNetwork["poresRadii"])),
+        poresList(std::get<std::vector<int>>(_paramsNetwork["poreList"])),
         poreN(poresList.size()),
         por2thrConns(poreN),
-
-        poreInlet(_poresInlet),
-        poreOutlet(_poresOutlet),
+        poreInlet(std::get<std::vector<bool>>(_paramsNetwork["poreInlet"])),
+        poreOutlet(std::get<std::vector<bool>>(_paramsNetwork["poreOutlet"])),
         boundPoresLeftSize(0),
         boundPoresRightSize(0),
         boundPoresSize(0),
 
-        hydraulicCond(_hydraulicCond) {}
+        hydraulicCond(std::get<std::vector<double>>(
+                _paramsNetwork["hydraulicCond"])) {}
 
 
 void NetworkData::calcThroatConns() {

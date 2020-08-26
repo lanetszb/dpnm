@@ -1,12 +1,15 @@
 #include <MatrixSolver.h>
 
-MatrixSolver::MatrixSolver(NetworkData &networkData, EquationPNM &equationPNM,
-                           EquationDiffusion &equationDiffusion,
-                           DiffusionMath &diffusionMath,
-                           DiffusionFlow &diffusionFlow,
-                           const std::vector<double> &langmuirCoeff,
-                           const double &matrixVolume) :
+MatrixSolver::MatrixSolver(
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        NetworkData &networkData, EquationPNM &equationPNM,
+        EquationDiffusion &equationDiffusion,
+        DiffusionMath &diffusionMath,
+        DiffusionFlow &diffusionFlow,
+        const std::vector<double> &langmuirCoeff,
+        const double &matrixVolume) :
 
+        _paramsPnm(paramsPnm),
         networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
@@ -77,9 +80,12 @@ void MatrixSolver::calcCoupledFreeVector() {
         // porFlowDiffDer[i] = coeffSum;
     }
 
+    auto &pressIn = std::get<double>(_paramsPnm["pressIn"]);
+    auto &pressOut = std::get<double>(_paramsPnm["pressOut"]);
+
     equationPNM.calculateFreeVector("mixed",
-                                    equationPNM.pIn,
-                                    equationPNM.pOut);
+                                    pressIn,
+                                    pressOut);
 
     for (int i = 0; i < networkData.poreN; i++)
         // TODO: understand plus or minus sign

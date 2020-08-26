@@ -1,8 +1,8 @@
 #include <LocalDiffusion.h>
 #include <cmath>
 
-LocalDiffusion::LocalDiffusion(const std::vector<double> &propsVector) :
-        propsDiffusion(propsVector),
+LocalDiffusion::LocalDiffusion(PropsDiffusion &propsDiffusion) :
+        propsDiffusion(propsDiffusion),
         dRadius(0),
         alpha(propsDiffusion.gridBlockN, 0),
         radiusCurr(propsDiffusion.gridBlockN + 1, 0),
@@ -59,18 +59,6 @@ void LocalDiffusion::calculateAlpha(const double &dt,
 
     for (int i = 0; i < alpha.size(); i++)
         alpha[i] = vol[i] / dt;
-}
-
-const std::vector<double> LocalDiffusion::getRadCurr() const {
-    return radiusCurr;
-}
-
-const std::vector<double> LocalDiffusion::getVolCylindr() const {
-    return volCylindr;
-}
-
-const std::vector<double> LocalDiffusion::getVolCartes() const {
-    return volCartes;
 }
 
 

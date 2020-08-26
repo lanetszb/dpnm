@@ -13,13 +13,15 @@ class DiffusionFlow {
 
 public:
 
-    DiffusionFlow(NetworkData &networkData,
-                  EquationPNM &equationPNM,
-                  EquationDiffusion &equationDiffusion,
-                  DiffusionMath &diffusionMath,
-                  IniConds &iniConds,
-                  const std::vector<double> &langmuirCoeff,
-                  const double &matrixVolume);
+    DiffusionFlow(
+            const std::map<std::string, std::variant<int, double>> &paramsPnm,
+            NetworkData &networkData,
+            EquationPNM &equationPNM,
+            EquationDiffusion &equationDiffusion,
+            DiffusionMath &diffusionMath,
+            IniConds &iniConds,
+            const std::vector<double> &langmuirCoeff,
+            const double &matrixVolume);
 
     virtual  ~DiffusionFlow() = default;
 
@@ -42,6 +44,8 @@ public:
     // std::vector<double> throatConc;
     // std::vector<std::vector<double>> matrixConc;
 
+
+    std::map<std::string, std::variant<int, double>> _paramsPnm;
     std::vector<double> diffFlowInst;
     std::vector<double> diffFlowInstPlus;
     std::vector<double> diffFlowInstMinus;

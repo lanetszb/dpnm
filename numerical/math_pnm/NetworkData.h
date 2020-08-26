@@ -3,26 +3,16 @@
 
 #include <vector>
 #include <iostream>
+#include <map>
+#include <variant>
 
 
 class NetworkData {
 
 public :
 
-    explicit NetworkData(const std::vector<int> &_fracturesList,
-                         const std::vector<double> &_fracturesHeights,
-                         const std::vector<double> &_fracturesLengths,
-                         const std::vector<double> &_fracturesWidths,
-                         const std::vector<double> &_fracsConnIndIn,
-                         const std::vector<double> &_fracsConnIndOut,
-                         const std::vector<double> &_poresCoordsX,
-                         const std::vector<double> &_poresCoordsY,
-                         const std::vector<double> &_poresCoordsZ,
-                         const std::vector<double> &_poresRadii,
-                         const std::vector<int> &_poresList,
-                         const std::vector<bool> &_poresInlet,
-                         const std::vector<bool> &_poresOutlet,
-                         const std::vector<double> &_hydraulicCond);
+    explicit NetworkData(const std::map<std::string, std::variant<std::vector<bool>,
+            std::vector<int>, std::vector<double>>> &_paramsNetwork);
 
     virtual ~NetworkData() {}
 
@@ -34,14 +24,17 @@ public :
 
     void calcBoundPoresSizes();
 
+    std::map<std::string, std::variant<std::vector<bool>, std::vector<int>,
+            std::vector<double>>> _paramsNetwork;
+
     std::vector<int> fracturesList;
     std::vector<double> fracturesHeights;
     std::vector<double> fracturesLengths;
     std::vector<double> fracturesWidths;
     int fracturesN;
 
-    std::vector<double> fracsConnIndIn;
-    std::vector<double> fracsConnIndOut;
+    std::vector<int> fracsConnIndIn;
+    std::vector<int> fracsConnIndOut;
 
 
     std::vector<double> poresCoordsX;

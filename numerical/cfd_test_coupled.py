@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 current_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(current_path, '../'))
 
-from numerical import PropsPNMCpp
+# from numerical import PropsPNMCpp
 from numerical import EquationPNM
 from numerical import Aggregator
 
@@ -27,10 +27,28 @@ props = Props(config_file=sys.argv[1])
 # Getting diffusion properties
 props_diff_vector = props.get_diff_props_array()
 
+time = props_diff_vector[0]
+time_step = props_diff_vector[1]
+thr_length = props_diff_vector[2]
+radius = props_diff_vector[3]
+eff_radius = props_diff_vector[4]
+grid_block_n = int(props_diff_vector[5])
+conc_fracture_wall = props_diff_vector[6]
+diffusivity = props_diff_vector[7]
+it_accuracy = props_diff_vector[8]
+
+params_diffusion = {'time': float(time),
+                    'time_step': float(time_step),
+                    'grid_block_n': int(grid_block_n),
+                    'length': float(thr_length),
+                    'radius': float(radius),
+                    'eff_radius': float(eff_radius),
+                    'conc_ini': float(conc_fracture_wall),
+                    'diffusivity': float(diffusivity),
+                    'it_accuracy': float(it_accuracy)}
+
 # Getting pn properties
 props_pnm = props.get_props_array()
-props_pnm_cpp = PropsPNMCpp(props_pnm)
-print(props_pnm_cpp)
 
 # Getting properties of network data
 network_data_fpnm = Network_Data_Fpnm(config_file=sys.argv[1])
@@ -61,42 +79,60 @@ pores_front_y = network_data_fpnm.pores_front_y
 pores_top_z = network_data_fpnm.pores_top_z
 pores_bot_z = network_data_fpnm.pores_bot_z
 
-pores_inlet = pores_bot_z
-pores_outlet = pores_top_z
+pores_inlet = pores_bot_z.to_list()
+pores_outlet = pores_top_z.to_list()
 
-langm_coeffs = props.langm_coeff
-matrix_volume = props.matrix_volume
-solver_method = props.solver_method
+langm_coeffs = np.array(props.langm_coeff, dtype=float)
+matrix_volume = float(props.matrix_volume)
+solver_method = str(props.solver_method)
 # =======================================================================
 hydr_cond = network_data_fpnm.hydraulic_cond_coeff
+
+paramsPnm = {'aGasDens': float(props_pnm[0]), 'bGasDens': float(props_pnm[1]),
+             'gasVisc': float(props_pnm[2]), 'liqDens': float(props_pnm[3]),
+             'liqVisc': float(props_pnm[4]), 'pressIn': float(props_pnm[5]),
+             'pressOut': float(props_pnm[6]), 'itAccuracy': float(props_pnm[7])}
+
+params_network = {'fracList': fractures_list, 'fracHeights': fractures_heights,
+                  'fracLengths': fractures_lengths,
+                  'fracWidths': fractures_widths,
+                  'fracConnIndIn': fracs_conn_ind_in,
+                  'fracConnIndOut': fracs_conn_ind_out,
+                  'poresCoordsX': pores_coords_x,
+                  'poresCoordsY': pores_coords_y,
+                  'poresCoordsZ': pores_coords_z, 'poresRadii': pores_radii,
+                  'poreList': pores_list, 'poreInlet': pores_inlet,
+                  'poreOutlet': pores_outlet,
+                  'hydraulicCond': hydr_cond}
 #
-eq_pnm = EquationPNM(props_pnm, fractures_list, fractures_heights,
-                     fractures_lengths, fractures_widths, fracs_conn_ind_in,
-                     fracs_conn_ind_out, pores_coords_x, pores_coords_y,
-                     pores_coords_z, pores_radii, pores_list, pores_inlet,
-                     pores_outlet, hydr_cond, solver_method)
+eq_pnm = EquationPNM(paramsPnm, params_network, solver_method)
 
-# eq_pnm.cfd_proc_pure_pnm_dirichlet()
+eq_pnm.cfd_pnm_dirichlet()
 
-aggregator = Aggregator(props_pnm, props_diff_vector, fractures_list,
-                        fractures_heights, fractures_lengths,
-                        fractures_widths, fracs_conn_ind_in, fracs_conn_ind_out,
-                        pores_coords_x, pores_coords_y, pores_coords_z,
-                        pores_radii, pores_list, pores_inlet, pores_outlet,
-                        hydr_cond, langm_coeffs, matrix_volume, solver_method)
-
+aggregator = Aggregator(matrix_volume, solver_method, langm_coeffs,
+                        params_diffusion, paramsPnm, params_network)
+# #
 aggregator.cfd_procedure_pnm_diff()
 
-pore_press_av = aggregator.get_pressure_av()
-
-# =============================================================================
-# Figure 1 (Avg Pore Pressure and Avg Concentration)
+# aggregator = Aggregator(props_pnm, props_diff_vector, fractures_list,
+#                         fractures_heights, fractures_lengths,
+#                         fractures_widths, fracs_conn_ind_in, fracs_conn_ind_out,
+#                         pores_coords_x, pores_coords_y, pores_coords_z,
+#                         pores_radii, pores_list, pores_inlet, pores_outlet,
+#                         hydr_cond, langm_coeffs, matrix_volume, solver_method)
+#
+# aggregator.cfd_procedure_pnm_diff()
+#
+# pore_press_av = aggregator.get_pressure_av()
+#
+# # =============================================================================
+# # Figure 1 (Avg Pore Pressure and Avg Concentration)
 # time = np.linspace(0, props.time, num=int(props.time / props.time_step + 1))
-time = np.cumsum(aggregator.get_time_steps_vec())
+time = np.cumsum(aggregator.get_time_steps_vec)
 time = np.insert(time, 0, 0)
-pore_press_av = aggregator.get_pressure_av()
-matrix_mass_total = aggregator.get_matrix_mass_total()
-inlet_pressure = aggregator.get_inlet_pressure()
+pore_press_av = aggregator.get_pressure_av
+matrix_mass_total = aggregator.get_matrix_mass_total
+inlet_pressure = aggregator.get_inlet_pressure
 #
 matrix_mass_total = matrix_mass_total[:-1]
 matrix_mass_total = np.insert(matrix_mass_total, 0, np.nan)
@@ -122,12 +158,12 @@ fig, axs = plt.subplots(2, sharex='all',
 # # Inflow params (numsticks = 5)
 plot_x_ymult(axs[0], time, y_values, 1, 'time, sec', 'mass, $kg$',
              '$P, Pa$', colors, 2, 'solid', [], [])
-#
-# # =============================================================================
-# # Figure 2 (Total Flow Rate)
-#
-flow_rate_in = aggregator.get_flow_pores_in()
-flow_rate_diff = aggregator.get_flow_diff()
+# #
+# # # =============================================================================
+# # # Figure 2 (Total Flow Rate)
+# #
+flow_rate_in = np.array(aggregator.get_flow_pores_in)
+flow_rate_diff = np.array(aggregator.get_flow_diff)
 flow_rate_out = flow_rate_diff + flow_rate_in
 flow_rate_out_cum = np.cumsum(flow_rate_out * props.time_step)
 flow_rate_diff_cum = np.cumsum(flow_rate_diff * props.time_step)
@@ -145,7 +181,7 @@ y_values = {'$N_{out}$': flow_rate_out_cum,
 # Inflow params (numsticks = 5)
 plot_x_ymult(axs[1], time, y_values, 2, 'time, sec', 'mass, $kg$',
              '$Q, kg/sec$', colors, 2, 'solid', [], [])
-
+#
 # plt.savefig('../output/test_refacroting.png', format="png",
 #             bbox_inches='tight')
 '''

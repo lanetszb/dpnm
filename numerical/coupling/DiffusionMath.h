@@ -5,23 +5,22 @@
 
 #include <EquationDiffusion.h>
 #include <EquationPNM.h>
-#include <PropsPnm.h>
 #include <NetworkData.h>
 
 class DiffusionMath {
 
 public:
-    // TODO: think how to be with the diffusive part of the model
-    DiffusionMath(PropsPnm &propsPnm,
-                  NetworkData &networkData,
-                  EquationPNM &equationPNM,
-                  EquationDiffusion &equationDiffusion,
-                  const std::vector<double> &langmuirCoeff,
-                  const double &matrixVolume);
+
+    DiffusionMath(
+            const std::map<std::string, std::variant<int, double>> &paramsPnm,
+            NetworkData &networkData,
+            EquationPNM &equationPNM,
+            EquationDiffusion &equationDiffusion,
+            const std::vector<double> &langmuirCoeff,
+            const double &matrixVolume);
 
     virtual  ~DiffusionMath() = default;
 
-    PropsPnm &propsPnm;
     NetworkData &networkData;
     EquationPNM &equationPNM;
     EquationDiffusion &equationDiffusion;
@@ -45,6 +44,8 @@ public:
     void calcThroatConc(const double &dP);
 
     void calcThroatAvPress();
+
+    std::map<std::string, std::variant<int, double>> _paramsPnm;
 
     double matrixVolume;
     double langmConc;

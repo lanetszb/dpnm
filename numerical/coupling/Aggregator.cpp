@@ -2,58 +2,46 @@
 #include <cmath>
 
 
-Aggregator::Aggregator(PropsPnm &propsPnm, NetworkData &networkData,
-                       const std::vector<double> &propsDiffusion,
-                       const std::vector<double> &langmuirCoeff,
-                       const double &matrixVolume,
-                       const std::string &solverMethod) :
+Aggregator::Aggregator(
+        const double &matrixVolume,
+        const std::string &solverMethod,
+        const std::vector<double> &langmuirCoeff,
+        const std::map<std::string, std::variant<int, double>> &params,
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        const std::map<std::string, std::variant<std::vector<bool>,
+                std::vector<int>, std::vector<double>>> &paramsNetwork) :
 
-        propsPnm(propsPnm),
-        networkData(networkData),
 
-        equationPNM(propsPnm, networkData, solverMethod),
+        networkData(paramsNetwork),
+        propsDiffusion(params),
+        equationPNM(paramsPnm, networkData, solverMethod),
         equationDiffusion(propsDiffusion),
-        diffusionMath(propsPnm, networkData, equationPNM,
+        diffusionMath(paramsPnm, networkData, equationPNM,
                       equationDiffusion, langmuirCoeff, matrixVolume),
-        iniConds(networkData, equationPNM, equationDiffusion,
+        iniConds(paramsPnm, networkData, equationPNM, equationDiffusion,
                  diffusionMath, langmuirCoeff, matrixVolume),
-        diffusionFlow(networkData, equationPNM, equationDiffusion,
-                      diffusionMath, iniConds, langmuirCoeff, matrixVolume),
-        matrixSolver(networkData, equationPNM, equationDiffusion,
-                     diffusionMath,
-                     diffusionFlow, langmuirCoeff, matrixVolume),
+        diffusionFlow(paramsPnm, networkData, equationPNM,
+                      equationDiffusion, diffusionMath, iniConds,
+                      langmuirCoeff, matrixVolume),
+        matrixSolver(paramsPnm, networkData, equationPNM,
+                     equationDiffusion, diffusionMath, diffusionFlow,
+                     langmuirCoeff, matrixVolume),
         paramsOut(networkData, equationPNM, equationDiffusion,
-                  diffusionMath,
-                  iniConds, diffusionFlow, matrixSolver, langmuirCoeff,
-                  matrixVolume) {}
+                  diffusionMath, iniConds, diffusionFlow,
+                  matrixSolver, langmuirCoeff, matrixVolume) {}
 
-Aggregator::Aggregator(const std::vector<double> &propsVector,
-                       const std::vector<double> &propsDiffusion,
-                       const std::vector<int> &fracturesList,
-                       const std::vector<double> &fracturesHeights,
-                       const std::vector<double> &fracturesLengths,
-                       const std::vector<double> &fracturesWidths,
-                       const std::vector<double> &fracsConnIndIn,
-                       const std::vector<double> &fracsConnIndOut,
-                       const std::vector<double> &poresCoordsX,
-                       const std::vector<double> &poresCoordsY,
-                       const std::vector<double> &poresCoordsZ,
-                       const std::vector<double> &poresRadii,
-                       const std::vector<int> &poresList,
-                       const std::vector<bool> &poresInlet,
-                       const std::vector<bool> &poresOutlet,
-                       const std::vector<double> &hydraulicCond,
-                       const std::vector<double> &langmuirCoeffs,
-                       const double &matrixVolume,
-                       const std::string &solverMethod) :
-        Aggregator(*(new PropsPnm(propsVector)),
-                   *(new NetworkData(fracturesList, fracturesHeights,
-                                     fracturesLengths, fracturesWidths,
-                                     fracsConnIndIn, fracsConnIndOut,
-                                     poresCoordsX, poresCoordsY, poresCoordsZ,
-                                     poresRadii, poresList, poresInlet,
-                                     poresOutlet, hydraulicCond)),
-                   propsDiffusion, langmuirCoeffs, matrixVolume, solverMethod) {}
+//Aggregator::Aggregator(
+//        const std::map<std::string, std::variant<std::vector<bool>,
+//                std::vector<int>, std::vector<double>>> &paramsNetwork,
+//        const std::map<std::string, std::variant<int, double>> &params,
+//        const std::vector<double> &langmuirCoeff,
+//        const double &matrixVolume,
+//        const std::string &solverMethod) :
+//
+//        Aggregator(*(new NetworkData(paramsNetwork)),
+//                   *(new PropsDiffusion(params)),
+//                   langmuirCoeff, matrixVolume,
+//                   solverMethod) {}
 
 void Aggregator::calcCoupledFlow(const double &dt) {
 
@@ -71,6 +59,7 @@ void Aggregator::cfdProcedurePnmDiff() {
 
     for (int i = 0; i <= equationDiffusion.timeStepsVec.size() - 1; i++) {
         calcCoupledFlow(equationDiffusion.timeStepsVec[i]);
+        std::cout << "MassTotal: " << paramsOut.matrixMassTotal[i] << std::endl;
     }
 }
 

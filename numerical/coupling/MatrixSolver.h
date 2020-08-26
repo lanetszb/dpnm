@@ -12,11 +12,13 @@ class MatrixSolver {
 
 public:
 
-    MatrixSolver(NetworkData &networkData, EquationPNM &equationPNM,
-                 EquationDiffusion &equationDiffusion,
-                 DiffusionMath &diffusionMath, DiffusionFlow &diffusionFlow,
-                 const std::vector<double> &langmuirCoeff,
-                 const double &matrixVolume);
+    MatrixSolver(
+            const std::map<std::string, std::variant<int, double>> &paramsPnm,
+            NetworkData &networkData, EquationPNM &equationPNM,
+            EquationDiffusion &equationDiffusion,
+            DiffusionMath &diffusionMath, DiffusionFlow &diffusionFlow,
+            const std::vector<double> &langmuirCoeff,
+            const double &matrixVolume);
 
     virtual  ~MatrixSolver() = default;
 
@@ -34,6 +36,7 @@ public:
 
     void solveCoupledMatrix();
 
+    std::map<std::string, std::variant<int, double>> _paramsPnm;
     std::vector<double> connCoeffDiff;
     std::vector<double> centralCoeffDiff;
 

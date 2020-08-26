@@ -20,7 +20,10 @@ class EquationDiffusion {
 
 public:
 
-    explicit EquationDiffusion(const std::vector<double> &propsVector);
+    explicit EquationDiffusion(PropsDiffusion &propsDiffusion);
+
+    explicit EquationDiffusion(
+            const std::map<std::string, std::variant<int, double>> &params);
 
     virtual ~EquationDiffusion() = default;
 
@@ -54,18 +57,14 @@ public:
 
     void calcFlowRate();
 
+    void cfdCartesian(const std::string &boundCond);
+
     int &dim;
 
     std::vector<std::vector<double>> conc;
     std::vector<double> timeStepsVec;
 
-    const std::vector<double> getConc() const;
-
-    const double getFlowRate() const;
-
-    const std::vector<double> getRadCurr() const;
-
-    PropsDiffusion propsDiffusion;
+    PropsDiffusion &propsDiffusion;
     LocalDiffusion localDiffusion;
     ConvectiveDiffusion convectiveDiffusion;
 

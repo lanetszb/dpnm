@@ -5,8 +5,6 @@
 #include <cmath>
 
 #include <Eigen/Sparse>
-
-#include <PropsPnm.h>
 #include <NetworkData.h>
 
 
@@ -19,18 +17,17 @@ typedef Eigen::LeastSquaresConjugateGradient<Eigen::SparseMatrix<double>>
         LeastSqCG;
 typedef Eigen::SparseLU<Eigen::SparseMatrix<double>> SparseLU;
 
-EquationPNM::EquationPNM(PropsPnm &propsPnm,
-                         NetworkData &networkData,
-                         const std::string &solverMethod) :
+EquationPNM::EquationPNM(
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        NetworkData &networkData,
+        const std::string &solverMethod) :
 
-        propsPnm(propsPnm),
+        _paramsPnm(paramsPnm),
         networkData(networkData),
         solverMethod(solverMethod),
 
         dim(networkData.poreN),
         // TODO: think about the expression below
-        pIn(propsPnm.pressIn),
-        pOut(propsPnm.pressOut),
         matrix(dim, dim),
         freeVector(dim),
         guessVector(dim),
@@ -43,31 +40,14 @@ EquationPNM::EquationPNM(PropsPnm &propsPnm,
         thrFlowRate(networkData.fracturesN, 0),
         porFlowRate(dim, 0) {}
 
-EquationPNM::EquationPNM(const std::vector<double> &propsVector,
-                         const std::vector<int> &fracturesList,
-                         const std::vector<double> &fracturesHeights,
-                         const std::vector<double> &fracturesLengths,
-                         const std::vector<double> &fracturesWidths,
-                         const std::vector<double> &fracsConnIndIn,
-                         const std::vector<double> &fracConnIndOut,
-                         const std::vector<double> &poresCoordsX,
-                         const std::vector<double> &poresCoordsY,
-                         const std::vector<double> &poreCoordZ,
-                         const std::vector<double> &poresRadii,
-                         const std::vector<int> &poresList,
-                         const std::vector<bool> &poresInlet,
-                         const std::vector<bool> &poresOutlet,
-                         const std::vector<double> &hydraulicCond,
-                         const std::string &solverMethod) :
+EquationPNM::EquationPNM(
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        const std::map<std::string, std::variant<std::vector<bool>,
+                std::vector<int>, std::vector<double>>> &paramsNetwork,
+        const std::string &solverMethod) :
 
-        EquationPNM(*(new PropsPnm(propsVector)),
-                    *(new NetworkData(fracturesList, fracturesHeights, fracturesLengths,
-                                      fracturesWidths, fracsConnIndIn, fracConnIndOut,
-                                      poresCoordsX, poresCoordsY, poreCoordZ,
-                                      poresRadii, poresList,
-                                      poresInlet,
-                                      poresOutlet,
-                                      hydraulicCond)),
+        EquationPNM(paramsPnm,
+                    *(new NetworkData(paramsNetwork)),
                     solverMethod) {}
 
 
@@ -202,9 +182,9 @@ void EquationPNM::calculateGuessPress(const double &pIn,
                                 std::end(networkData.poresCoordsX));
 
     for (int i = 0; i < dim; i++)
-        pressure[i] = propsPnm.pressOut +
-                ((*max - networkData.poresCoordsX[i]) / (*max - *min)) *
-                (pIn - pOut);
+        pressure[i] =
+                pOut + ((*max - networkData.poresCoordsX[i]) / (*max - *min)) *
+                       (pIn - pOut);
 }
 
 void EquationPNM::calculateGuessVector() {
@@ -214,22 +194,25 @@ void EquationPNM::calculateGuessVector() {
 
 void EquationPNM::calculatePress(const std::string &solverMethod) {
 
-    if (solverMethod == "biCGSTAB") {
+    auto &itAccuracy = std::get<double>(_paramsPnm["itAccuracy"]);
+    std::cout << "itAccuracy: "<< itAccuracy << std::endl;
 
-        BiCGSTAB biCGSTAB;
-        biCGSTAB.compute(matrix);
-        biCGSTAB.setTolerance(propsPnm.itAccuracy);
-        variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
-
-    } else if (solverMethod == "sparseLU") {
+    if (solverMethod == "sparseLU") {
         SparseLU sparseLU;
         sparseLU.compute(matrix);
         variable = sparseLU.solve(freeVector);
 
+    } else if (solverMethod == "biCGSTAB") {
+
+        BiCGSTAB biCGSTAB;
+        biCGSTAB.compute(matrix);
+        biCGSTAB.setTolerance(itAccuracy);
+        variable = biCGSTAB.solveWithGuess(freeVector, guessVector);
+
     } else if (solverMethod == "leastSqCG") {
         LeastSqCG leastSqCG;
         leastSqCG.compute(matrix);
-        leastSqCG.setTolerance(propsPnm.itAccuracy);
+        leastSqCG.setTolerance(itAccuracy);
         variable = leastSqCG.solveWithGuess(freeVector, guessVector);
     }
 
@@ -296,15 +279,19 @@ void EquationPNM::cfdProcPurePnmDirichlet() {
         if (networkData.poreInlet[i] or networkData.poreOutlet[i])
             allBoundaryPores[i] = true;
 
-    cfdProcedure("dirichlet", allBoundaryPores, pIn, pOut);
+    cfdProcedure("dirichlet",
+                 allBoundaryPores,
+                 std::get<double>(_paramsPnm["pressIn"]),
+                 std::get<double>(_paramsPnm["pressOut"]));
 }
 
 void EquationPNM::calcThrFlowRate() {
 
     for (int i = 0; i < networkData.fracturesN; i++)
         thrFlowRate[i] =
-                connCoeff[i] * abs((pressure[networkData.throatConns[i].first] -
-                                    pressure[networkData.throatConns[i].second]));
+                connCoeff[i] *
+                abs((pressure[networkData.throatConns[i].first] -
+                     pressure[networkData.throatConns[i].second]));
 }
 
 void EquationPNM::getGammaByLabel() {
@@ -374,14 +361,6 @@ void EquationPNM::calcTotFlow(const std::vector<bool> &boundPores) {
     for (int i = 0; i < boundPores.size(); i++)
         if (boundPores[i])
             totFlowRate += porFlowRate[i];
-}
-
-const std::vector<double> EquationPNM::getPressure() const {
-    return pressure;
-}
-
-double EquationPNM::getTotFlowRate() const {
-    return totFlowRate;
 }
 
 //void EquationPNM::calculateMatrix(const std::vector<double> &connCoeff,

@@ -1,10 +1,11 @@
 #include <ConvectiveDiffusion.h>
 #include <cmath>
 
-ConvectiveDiffusion::ConvectiveDiffusion(const std::vector<double> &propsVector)
+ConvectiveDiffusion::ConvectiveDiffusion(PropsDiffusion &propsDiffusion,
+                                         LocalDiffusion &localDiffusion)
         :
-        propsDiffusion(propsVector),
-        localDiffusion(propsVector),
+        propsDiffusion(propsDiffusion),
+        localDiffusion(localDiffusion),
         beta(propsDiffusion.gridBlockN + 1, 0),
         omegaCylindric(propsDiffusion.gridBlockN + 1, 0),
         omegaCartesian(propsDiffusion.gridBlockN + 1, 0) {}
@@ -50,14 +51,6 @@ void ConvectiveDiffusion::calculateBeta(const double &radius,
 
     for (int i = 0; i < beta.size(); i++)
         beta[i] = diffusivityList[i] * omega[i] / dRadius;
-}
-
-const std::vector<double> ConvectiveDiffusion::getOmegaCylindr() const {
-    return omegaCylindric;
-}
-
-const std::vector<double> ConvectiveDiffusion::getOmegaCartes() const {
-    return omegaCartesian;
 }
 
 

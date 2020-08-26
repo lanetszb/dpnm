@@ -21,10 +21,12 @@ def plot_x_y(x_values, y_values, x_name, y_name, graph_name, line_type,
     #          max(x_values) + 0.1 * max(x_values))
     # plt.ylim(min(y_values), max(y_values) + 0.1 * max(y_values))
 
-    # plt.xlim(1.25e-5, 2.5e-5)
-    plt.ylim(min(y_values), max(y_values) + 0.05 * max(y_values))
+    # plt.ylim(min(y_values), max(y_values) + 0.05 * max(y_values))
 
+    plt.ticklabel_format(axis="x", style="plain")
+    ax = plt.gca()
     plt.plot(x_values, y_values, line_type, **kwargs)
+    ax.yaxis.set_major_locator(plt.LinearLocator(numticks=6))
 
     # plt.show()
 

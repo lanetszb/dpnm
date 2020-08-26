@@ -4,14 +4,17 @@
 #include <iomanip>
 
 
-DiffusionFlow::DiffusionFlow(NetworkData &networkData,
-                             EquationPNM &equationPNM,
-                             EquationDiffusion &equationDiffusion,
-                             DiffusionMath &diffusionMath,
-                             IniConds &iniConds,
-                             const std::vector<double> &langmuirCoeff,
-                             const double &matrixVolume) :
+DiffusionFlow::DiffusionFlow(
+        const std::map<std::string, std::variant<int, double>> &paramsPnm,
+        NetworkData &networkData,
+        EquationPNM &equationPNM,
+        EquationDiffusion &equationDiffusion,
+        DiffusionMath &diffusionMath,
+        IniConds &iniConds,
+        const std::vector<double> &langmuirCoeff,
+        const double &matrixVolume) :
 
+        _paramsPnm(paramsPnm),
         networkData(networkData),
         equationPNM(equationPNM),
         equationDiffusion(equationDiffusion),
@@ -82,7 +85,10 @@ void DiffusionFlow::calcDiffPart(const double &dt) {
     diffusionMath.calcThroatConc(dP);
     calcDiffFlow(diffFlowInst, dt);
 
-    dP = (equationPNM.pIn - equationPNM.pOut) / 10.e+5;
+    auto &pressIn = std::get<double>(_paramsPnm["pressIn"]);
+    auto &pressOut = std::get<double>(_paramsPnm["pressOut"]);
+
+    dP = (pressIn - pressOut) / 10.e+5;
     diffusionMath.calcThroatConc(dP / 2);
     calcDiffFlow(diffFlowInstPlus, dt);
 

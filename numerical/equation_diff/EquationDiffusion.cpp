@@ -1,9 +1,9 @@
 #include <EquationDiffusion.h>
 
-EquationDiffusion::EquationDiffusion(const std::vector<double> &propsVector) :
-        propsDiffusion(propsVector),
-        localDiffusion(propsVector),
-        convectiveDiffusion(propsVector),
+EquationDiffusion::EquationDiffusion(PropsDiffusion &propsDiffusion) :
+        propsDiffusion(propsDiffusion),
+        localDiffusion(propsDiffusion),
+        convectiveDiffusion(propsDiffusion, localDiffusion),
         dim(propsDiffusion.gridBlockN),
         conc(std::vector<std::vector<double>>()),
         time(propsDiffusion.time),
@@ -32,6 +32,10 @@ EquationDiffusion::EquationDiffusion(const std::vector<double> &propsVector) :
     }
 
 }
+
+EquationDiffusion::EquationDiffusion(
+        const std::map<std::string, std::variant<int, double>> &params) :
+        EquationDiffusion(*(new PropsDiffusion(params))) {}
 
 void EquationDiffusion::calculateMatrix() {
 
@@ -166,12 +170,21 @@ void EquationDiffusion::cfdProcedure(const std::string &boundCond,
     }
 }
 
-const std::vector<double> EquationDiffusion::getConc() const {
-    return conc[iCurr];
-}
+void EquationDiffusion::cfdCartesian(const std::string &boundCond) {
 
-const double EquationDiffusion::getFlowRate() const {
-    return flowRate;
+    localDiffusion.calcVolCartesian(propsDiffusion.radius,
+                                    propsDiffusion.effRadius,
+                                    propsDiffusion.length,
+                                    propsDiffusion.radius);
+
+    convectiveDiffusion.calcOmegaCartes(propsDiffusion.radius,
+                                        propsDiffusion.length);
+    if (boundCond == "dirichlet")
+        cfdProcedure("dirichlet", localDiffusion.volCartes,
+                     convectiveDiffusion.omegaCartesian);
+    else
+        cfdProcedure("newman", localDiffusion.volCartes,
+                     convectiveDiffusion.omegaCartesian);
 }
 
 

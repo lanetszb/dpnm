@@ -7,7 +7,7 @@ class LocalDiffusion {
 
 public:
 
-    explicit LocalDiffusion(const std::vector<double> &propsVector);
+    explicit LocalDiffusion(PropsDiffusion &propsDiffusion);
 
     virtual ~LocalDiffusion() = default;
 
@@ -30,7 +30,7 @@ public:
     void calculateAlpha(const double &dt,
                         const std::vector<double> &vol);
 
-    PropsDiffusion propsDiffusion;
+    PropsDiffusion &propsDiffusion;
 
     double dRadius;
 
@@ -39,11 +39,7 @@ public:
     std::vector<double> volCartes;
     std::vector<double> alpha;
 
-    const std::vector<double> getVolCylindr() const;
 
-    const std::vector<double> getVolCartes() const;
-
-    const std::vector<double> getRadCurr() const;
 
     // ToDo: const int getGridBlockN() const;
 

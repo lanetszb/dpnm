@@ -3,10 +3,10 @@
 
 #include <vector>
 #include <string>
+#include <variant>
+#include <map>
 
 #include <Eigen/Sparse>
-
-#include <PropsPnm.h>
 #include <NetworkData.h>
 
 typedef Eigen::SparseMatrix<double, Eigen::RowMajor> Matrix;
@@ -16,26 +16,16 @@ class EquationPNM {
 
 public:
 
-    explicit EquationPNM(PropsPnm &propsPnm,
-                         NetworkData &networkData,
-                         const std::string &solverMethod);
+    explicit EquationPNM(
+            const std::map<std::string, std::variant<int, double>> &paramsPnm,
+            NetworkData &networkData,
+            const std::string &solverMethod);
 
-    explicit EquationPNM(const std::vector<double> &propsVector,
-                         const std::vector<int> &fracturesList,
-                         const std::vector<double> &fracturesHeights,
-                         const std::vector<double> &fracturesLengths,
-                         const std::vector<double> &fracturesWidths,
-                         const std::vector<double> &fracsConnIndIn,
-                         const std::vector<double> &fracConnIndOut,
-                         const std::vector<double> &poresCoordsX,
-                         const std::vector<double> &poresCoordsY,
-                         const std::vector<double> &poreCoordZ,
-                         const std::vector<double> &poresRadii,
-                         const std::vector<int> &poresList,
-                         const std::vector<bool> &poresInlet,
-                         const std::vector<bool> &poresOutlet,
-                         const std::vector<double> &hydraulicCond,
-                         const std::string &solverMethod);
+    explicit EquationPNM(
+            const std::map<std::string, std::variant<int, double>> &paramsPnm,
+            const std::map<std::string, std::variant<std::vector<bool>,
+                    std::vector<int>, std::vector<double>>> &paramsNetwork,
+            const std::string &solverMethod);
 
     virtual ~EquationPNM() = default;
 
@@ -79,12 +69,10 @@ public:
 
     void calcTotFlow(const std::vector<bool> &boundPores);
 
-    PropsPnm &propsPnm;
+    std::map<std::string, std::variant<int, double>> _paramsPnm;
     NetworkData &networkData;
 
-    int &dim;
-    double &pIn;
-    double &pOut;
+    int dim;
 
     Matrix matrix;
 
@@ -106,14 +94,7 @@ public:
 
     std::string solverMethod;
 
-
-    // manual construction, has to be automatised later
-
     std::vector<double> inletFlow;
-
-    const std::vector<double> getPressure() const;
-
-    double getTotFlowRate() const;
 
 };
 

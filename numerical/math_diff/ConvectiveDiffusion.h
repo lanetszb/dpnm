@@ -8,7 +8,8 @@ class ConvectiveDiffusion {
 
 public:
 
-    explicit ConvectiveDiffusion(const std::vector<double> &propsVector);
+    explicit ConvectiveDiffusion(PropsDiffusion &propsDiffusion,
+                                 LocalDiffusion &localDiffusion);
 
     virtual ~ConvectiveDiffusion() = default;
 
@@ -38,11 +39,6 @@ public:
     std::vector<double> omegaCartesian;
 
     std::vector<double> beta;
-
-    const std::vector<double> getOmegaCylindr() const;
-
-    const std::vector<double> getOmegaCartes() const;
-
 };
 
 #endif

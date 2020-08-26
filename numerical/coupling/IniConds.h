@@ -12,11 +12,15 @@ class IniConds {
 
 public:
 
-    explicit IniConds(NetworkData &networkData, EquationPNM &equationPNM,
-                      EquationDiffusion &equationDiffusion,
-                      DiffusionMath &diffusionMath,
-                      const std::vector<double> &langmuirCoeff,
-                      const double &matrixVolume);
+    explicit IniConds(
+            const std::map<std::string, std::variant<int, double>> &paramsPnm,
+            NetworkData &networkData,
+            EquationPNM &equationPNM,
+            EquationDiffusion
+            &equationDiffusion,
+            DiffusionMath &diffusionMath,
+            const std::vector<double> &langmuirCoeff,
+            const double &matrixVolume);
 
     virtual  ~IniConds() = default;
 
@@ -27,6 +31,7 @@ public:
 
     int &gridBlockN;
 
+    std::map<std::string, std::variant<int, double>> _paramsPnm;
     std::vector<std::vector<double>> matrixConc;
 
     std::vector<std::vector<int>> getGamma();
