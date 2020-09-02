@@ -6,20 +6,22 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
-\usepackage[usenames, dvipsnames]{color}
-\definecolor{fontColor}{RGB}{169, 183, 198}
-\definecolor{pageColor}{RGB}{43, 43, 43}
+% \usepackage[usenames, dvipsnames]{color}
+% \definecolor{fontColor}{RGB}{169, 183, 198}
+% \definecolor{pageColor}{RGB}{43, 43, 43}
 
 \usepackage{mathtools}
 
-\makeatletter
-\let\mytagform@=\tagform@
-\def\tagform@#1{\maketag@@@{\color{fontColor}(#1)}}
-\makeatother
+% \makeatletter
+% \let\mytagform@=\tagform@
+% \def\tagform@#1{\maketag@@@{\color{fontColor}(#1)}}
+% \makeatother
 
 %\renewcommand\theequation{{\color{fontColor}\arabic{equation_diff}}}
 
-
+\linespread{1.3} % полуторный интервал
+\renewcommand{\rmdefault}{ptm} % Times New Roman
+\frenchspacing
 
 \usepackage{graphicx}
 \graphicspath{{images/}}
@@ -28,7 +30,8 @@
 \usepackage{cite}
 \usepackage{enumerate}
 \usepackage{float}
-\usepackage[pdftex,unicode,colorlinks = true,linkcolor = white]{hyperref}
+% \usepackage[pdftex,unicode,colorlinks = true,linkcolor = white]{hyperref}
+\usepackage[pdftex,unicode,colorlinks = true,linkcolor = black]{hyperref}
 \usepackage{indentfirst}
 \usepackage{placeins}
 \bibliographystyle{unsrt}
@@ -38,6 +41,9 @@
 \usepackage{multirow}
 \usepackage{multicol}
 
+\usepackage{tikz}
+\usetikzlibrary{arrows,decorations.pathmorphing,
+	backgrounds,positioning,fit,petri}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -83,8 +89,8 @@
 
 \begin{document}
 
-    \pagecolor{pageColor}
-    \color{fontColor}
+%    \pagecolor{pageColor}
+%    \color{fontColor}
     %\maketitle
     %\newpage
     %\tableofcontents{\thispagestyle{empty}}
@@ -93,22 +99,31 @@
     \section*{One phase pore network model}
 
     \begin{eqnarray}
-        \begin{gathered}
-            \sum^{N_{i}}_{j=1, \; i\neq j} Q_{ij} = 0,
-        \end{gathered}
+    \label{one_phase} 
+    \begin{gathered}
+    \sum^{N_{i}}_{j=1, \; i\neq j} G_{ij} = 0,
+    \end{gathered}
     \end{eqnarray}
     %
     \begin{eqnarray}
-        \begin{gathered}
-            P^{n}_{i}\Big|_{inlet} = P^{n}_{in}, \;
-            P^{n}_{i}\Big|_{outlet} = P^{n}_{out},
-        \end{gathered}
+    \begin{gathered}
+    \label{press_bound}
+    P_{m} = P^{in}   : m \in inlet, \;\;
+    P_{m} = P^{out}   :m \in outlet,
+    \end{gathered}
     \end{eqnarray}
     %
     \begin{eqnarray}
-        \begin{gathered}
-            Q_{ij} = \alpha_{ij} \frac{P_{i} - P_{j}}{R^*_{ij}},
-        \end{gathered}
+    \begin{gathered}
+    \label{eq:mass_flux_simple_pnm}
+    G_{ij} = \bar{\rho}_{ij} \frac{P_{i} - P_{j}}{R_{ij}},
+    \end{gathered}
+    \end{eqnarray}
+    %
+     \begin{eqnarray}
+    \begin{gathered}
+    \bar{\rho}_{ij} = \frac{\rho_{i}+\rho_{j}}{2},
+    \end{gathered}
     \end{eqnarray}
     %
     \begin{eqnarray}
@@ -120,167 +135,245 @@
         \end{gathered}
     \end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            R^*_{ij} = R_{i} + R_{ij} + R_{j},
-        \end{gathered}
-    \end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            R_{n} =\frac{4 \mu}{\pi r_{n}^{3}}, \; R_{ij} =\frac{8 \mu L_{ij}}{\pi r_{ij}^{4}},
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\begin{gathered}
+R_{ij} =\begin{cases}
+\frac{8 \mu L_{ij}}{\pi r_{ij}^{4}}: &\text{cylindrical},\\
+\frac{12 \mu L_{ij}}{\epsilon_{ij}^{3} \omega_{ij}}: &\text{plates},
+\end{cases}
+\end{gathered}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            G_{in/out} = \sum_{i}^{in/out} \sum^{N_{i}}_{j=1, \; i\neq j} Q_{ij} \bar{\rho}_{ij},
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\begin{gathered}
+G_{in/out} = \sum_{i}^{in/out} \sum^{N_{i}}_{j=1, \; i\neq j} G_{ij}.
+\end{gathered}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            \bar{\rho}_{ij} = \frac{\rho_{i}+\rho_{j}}{2},
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\begin{gathered}
+Q_{in/out} = \frac{G_{in/out}}{\rho_{in/out}}.
+\end{gathered}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            Q_{in/out} = \frac{G_{in/out}}{\rho_{in/out}},
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\begin{gathered}
+k = a \frac{Q_{in/out}}{A} \frac{\mu L}{P_{in} - P_{out}},
+\end{gathered}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            k = \beta \frac{Q_{in/out}}{A} \frac{\mu L}{P_{in} - P_{out}},
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\begin{gathered}
+a =\begin{cases}
+\frac{\rho_{in/out}}{\bar{\rho}}: &\text{pseudo compressible},\\
+\frac{2P_{in/out}}{P_{in} + P_{out}}: &\text{ideal gas},
+\end{cases}
+\end{gathered}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            \beta =\begin{cases}
-                       \frac{\rho_{in/out}}{\bar{\rho}}: &\text{pseudo compressible},\\
-                       \frac{2P_{in/out}}{P_{in} + P_{out}}: &\text{ideal gas},
-            \end{cases}
-        \end{gathered}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \begin{gathered}
-            \bar{\rho}=\frac{1}{P_{in}-P_{out}} \int\limits^{P_{in}}_{P_{out}}\rho \; dP.
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\begin{gathered}
+\bar{\rho}=\frac{1}{P_{in}-P_{out}} \int\limits^{P_{in}}_{P_{out}}\rho \; dP.
+\end{gathered}
+\end{eqnarray}
 
     \section*{FVM Diffusion transient flow}
 
-    \begin{eqnarray}
-        \label{eq:conductivity_integral}
-        \int \limits_{V} \frac{\partial C}{\partial t} d V - \oint \limits_{\Omega} D \vec{\nabla}C \; d\vec{\Omega} = 0,
-    \end{eqnarray}
+   \begin{eqnarray}
+   \label{eq:conductivity_integral}
+   \int \limits_{V} \frac{\partial C}{\partial t} d V - \oint \limits_{S} D \vec{\nabla}C d\vec{\Omega} = 0,
+   \end{eqnarray}
     \vspace{-0.5cm}
+\begin{eqnarray}
+\label{eq:conductivity_bound_integral}
+C\left(t\right) \Big|_{cleat} = \hat{C} \left(t\right), \;
+\vec{\nabla} C \Big|_{outer} = 0,
+\end{eqnarray}
+    %
     \begin{eqnarray}
-        \label{eq:conductivity_bound}
-        C\left(t\right) \Big|_{cleat} = C_c \left(t\right), \;
-        \vec{\nabla} C \Big|_{outer} = 0,
+    \label{eq:langmuir}
+    \hat{C} = \frac{C_L\bar{P}}{P_L + \bar{P}}.
     \end{eqnarray}
     %
     \begin{eqnarray}
-        \label{eq:conductivity_num}
-        \alpha_i \Delta^{t}_i - \beta_{i-}\Delta^{n+1}_{i-} - \beta_{i+}\Delta^{n+1}_{i+}= 0,
+    \label{eq:conductivity_num}
+    \alpha_i \Delta^{t}_i - \beta_{i-}\Delta^{n+1}_{i-} - \beta_{i+}\Delta^{n+1}_{i+}= 0,
+    \end{eqnarray}
+    \begin{eqnarray}
+    \label{eq:conductivity_bound_num}
+    C_1^n = \hat{C}^n, \; \Delta_{M+}^n = 0,
     \end{eqnarray}
     %
-    \begin{eqnarray}
-        \label{eq:conductivity_bound_num}
-        C_1^n = C_C^n, \; \Delta_{N+}^n = 0,
-    \end{eqnarray}
+\begin{eqnarray}
+\label{eq:alpha_beta}
+\alpha_i = \frac{\Delta V_i}{\Delta t}, \;
+\beta_{i\pm} = \frac{\overline{D}_{i\pm} \Delta \Omega_{i\pm}}{\Delta L_{i\pm}},
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \label{eq:alpha_beta}
-        \alpha_i = \frac{\Delta V_i}{\Delta t}, \;
-        \beta_{i\pm} = \frac{\overline{D}_{i\pm} \Delta \Omega_{i\pm}}{\Delta L_{i\pm}},
-    \end{eqnarray}
+\begin{eqnarray}
+\Delta S_{i\pm} =\begin{cases}
+h^2: & \text{cartesian},\\
+2 \pi h \tilde{r}_{i\pm}: & \text{cylindrical},\\
+4 \pi \tilde{r}^2_{i\pm}: & \text{spherical},
+\end{cases}
+\end{eqnarray}
+%
+\begin{eqnarray}
+V=\begin{cases}
+h^2 \left(\tilde{r}_{M+} - \tilde{r}_{1-}\right): & \text{cartesian},\\
+\pi h \left(\tilde{r}_{M+}^2 - \tilde{r}_{1-}^2\right): & \text{cylindrical},\\
+\frac{4}{3} \pi \left(\tilde{r}_{M+}^3-\tilde{r}_{1-}^3\right): & \text{spherical}.
+\end{cases}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \Delta \Omega_{i\pm} =\begin{cases}
-                                  h^2: & \text{cartesian},\\
-                                  2 \pi h r_{i\pm}: & \text{cylindrical},\\
-                                  4 \pi r^2_{i\pm}: & \text{spherical},
-        \end{cases}
-    \end{eqnarray}
-
-    \begin{eqnarray}
-        \label{eq:delta_num}
-        \Delta_{i\pm}^n = C_{i\pm1}^n - C_{i}^n, \;
-        \Delta_i^{t} = C_i^{n+1} - C_i^{n},
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \label{eq:Consumption_conductivity_integral}
-        \tilde{Q}^{n+1} = - \beta_{i+}\Delta^{n+1}_{i+}\Big|_{inlet}.
-    \end{eqnarray}
-
+\begin{eqnarray}
+\label{eq:delta_num}
+\Delta_{i\pm}^n = C_{i\pm1}^n - C_{i}^n, \;
+\Delta_i^{t} = C_i^{n+1} - C_i^{n},
+\end{eqnarray}
+%
+\begin{eqnarray}
+\label{eq:Consumption_conductivity_integral}
+\tilde{G}^{n+1} = -\sum_i^M \alpha_i \Delta_i^{t}.
+\end{eqnarray}
+\newpage
     \section*{PN and Diffusion coupled}
 
-    \begin{eqnarray}
-        \begin{gathered}
-            \sum^{N_{i}}_{j=1, \; i\neq j} Q^{n+1}_{ij} = 0,
-        \end{gathered}
-    \end{eqnarray}
+   \begin{eqnarray}
+   \label{eq:main_coupled_sle}
+   \begin{gathered}
+   \sum^{N_{i}}_{j=1, \; i\neq j} G^{n+1}_{ij} = 0,
+   \end{gathered}
+   \end{eqnarray}
+   %
+   \begin{eqnarray}
+   \label{eq:mass_flux_coupled}
+   \begin{gathered}
+   G^{n+1}_{ij} = \bar{\rho}_{ij}^n \frac{P^{n+1}_{i} - P^{n+1}_{j}}{R_{ij}} - \gamma^n_{ij} \tilde{G}^{n+1}_{ij},
+   \end{gathered}
+   \end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            Q^{n+1}_{ij}\Big|_{inlet} = Q^{n+1}_{in}+\gamma^n_{ij} \tilde{Q}^{n+1}_{ij}, \;
-            P^{n}_{i}\Big|_{outlet} = P^{n}_{out},
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\label{eq:gamma}
+\gamma^n_{ij} =\begin{cases}
+1: & G_{ij} < 0,\\
+0: & G_{ij} \geqslant 0,
+\end{cases}
+\end{eqnarray}
     %
-    \begin{eqnarray}
-        \begin{gathered}
-            Q^{n+1}_{ij} = \alpha^n_{ij} \frac{P^{n+1}_{i} - P^{n+1}_{j}}{R^*_{ij}} - \gamma^n_{ij} \tilde{Q}^{n+1}_{ij},
-        \end{gathered}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \begin{gathered}
-            \alpha^n_{ij} =\begin{cases}
-                               1: &\text{pseudo compressible},\\
-                               \frac{P^n_i + P^n_j}{2P^n_i}: &\text{ideal gas},
-            \end{cases}
-        \end{gathered}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \gamma^n_{ij} =\begin{cases}
-                           1: & P^{n}_{i} < P^{n}_{j},\\
-                           \frac{1}{2} : & P^{n}_{i} = P^{n}_{j},\\
-                           0: & P^{n}_{i} > P^{n}_{j},
-        \end{cases}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \begin{gathered}
-            \tilde{Q}_{ij}^{n+1} = \tilde{Q}_{ij}'^n \cdot \left(\bar{P}_{ij}^{n+1}-\bar{P}_{ij}^n\right)+\tilde{Q}_{ij}^n,
-        \end{gathered}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \begin{gathered}
-            \tilde{Q}_{ij}^{n} = \tilde{Q}_{ij}\left(\bar{P}_{ij}^n\right),
-        \end{gathered}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \begin{gathered}
-            \tilde{Q}_{ij}'^n = \frac{\tilde{Q}_{ij}\left(\bar{P}_{ij}^n+ \frac{1}{2}\Delta P\right)-
-            \tilde{Q}_{ij}\left(\bar{P}_{ij}^n-\frac{1}{2}\Delta P\right)}{{\Delta P}},
-        \end{gathered}
-    \end{eqnarray}
-    %
-    \begin{eqnarray}
-        \begin{gathered}
-            \bar{P}^{n}_{ij} = \frac{P^n_i+P^n_j}{2}.
-        \end{gathered}
-    \end{eqnarray}
+\begin{eqnarray}
+\label{eq:bc_gamma}
+\begin{gathered}
+\sum^{N_{i}}_{j=1, \; i\neq j} G_{ij} = \hat{G} : i, j \notin outlet,\;\;
+P_{m} = P^{out}   : m \in outlet,
+\end{gathered}
+\end{eqnarray}
+%
+\begin{eqnarray}
+\label{eq:bc_coupled}
+\begin{gathered}
+\sum^{N_{i}}_{j=1, \; i\neq j} G^{n+1}_{ij} = G^{in}_{i} : i \in inlet,\;\;
+P^{n+1}_{m} = P^{out}   : m \in outlet,
+\end{gathered}
+\end{eqnarray}
+%
+\begin{eqnarray}
+\begin{gathered}
+\tilde{G}_{ij}^{n+1} = \tilde{G}_{ij}'^n \cdot \left(\bar{P}_{ij}^{n+1}-\bar{P}_{ij}^n\right)+\tilde{G}_{ij}^n,
+\end{gathered}
+\end{eqnarray}
+%
+\begin{eqnarray}
+\begin{gathered}
+\tilde{G}_{ij}'^n = \frac{\tilde{G}_{ij}\left(\bar{P}_{ij}^n+ \frac{1}{2}\Delta P\right)-
+	\tilde{G}_{ij}\left(\bar{P}_{ij}^n-\frac{1}{2}\Delta P\right)}{{\Delta P}},
+\end{gathered}
+\end{eqnarray}
+%
+\begin{eqnarray}
+\begin{gathered}
+\bar{P}^{n}_{ij} = \frac{P^n_i+P^n_j}{2}.
+\end{gathered}
+\end{eqnarray}
+%
+\begin{eqnarray}
+\begin{gathered}
+\tilde{G}_{ij}^{n+1} = \tilde{G}_{ij}^n.
+\end{gathered}
+\end{eqnarray}
 
+ \section*{Two phase pore network model}
+ 
+ \subsection*{Description} \label{s1}
+ \begin{enumerate}
+ 	\item Solve for one-phase PN using Eqs. \ref{one_phase} and \ref{press_bound} and obtain the pressure distribution in each pore.
+ 	\item Knowing pressure in pores and throats, apply <<if statements>> (see Fig.~\ref{fig:workflow}) to get the displacement profile. Every iteration the phase (e.g., non-wetting) might proceed only to adjacent throats and pores.
+ 	\item Check for trapped throats every iteration. Remove the trapped throats from the calculation every iteration and recalculate the pressure distribution using one-phase PN. The trapped throats can be untrapped at further iterations.
+ 	\item Recalculate the state of each throat obeying “First In, Last Out” (FILO) logic. To preserve the mass-conservation law and to correctly treat the numerical time step, throats' states can be quasi-multiphase using FILO logic.
+ \end{enumerate}
+ 
+    \begin{eqnarray}
+ 	\begin{gathered}
+ 		\bar{\rho}_{ij} = \frac{\bar{\rho}_i+\bar{\rho}_{j}}{2},
+ 	\end{gathered}
+ \end{eqnarray}
+ %
+   \begin{eqnarray}
+ \begin{gathered}
+ \bar{\rho}_{k} = S^w \rho_k^w+ S^g \rho_k^g,
+ \end{gathered}
+ \end{eqnarray}
+ %
+ \begin{eqnarray}
+ \begin{gathered}
+ \bar{\mu}_{ij} = \frac{\bar{\mu}_{i}+\bar{\mu}_{j}}{2},
+ \end{gathered}
+ \end{eqnarray}
+ %
+ \begin{eqnarray}
+ \begin{gathered}
+ \bar{\mu}_{k} = S^w \mu_k^w+ S^g \mu_k^g,
+ \end{gathered}
+ \end{eqnarray}
+
+
+\begin{eqnarray}
+\label{capill}
+\begin{gathered}
+F_{ij}^{c} = P_{ij}^c \epsilon_{ij}h_{ij},
+\end{gathered}
+\end{eqnarray}
+where $F^{c}$ is a capillary force acting in a particular throat, $P^{c}$ is a capillary pressure exerted by film interface, $h$ is a fracture height.
+
+\begin{eqnarray}
+\label{capill}
+\begin{gathered}
+P_{ij}^{c} = \frac{2\sigma cos(\theta)}{R_{ij}},
+\end{gathered}
+\end{eqnarray}
+where $\sigma$ is an interfacial tension, and $\theta$ is a contact angle.
+
+\begin{eqnarray}
+\label{drainage}
+\begin{gathered}
+F_{ij}^{f} = \frac{P_i - P_j}{L_{ij}} V_{ij}.
+\end{gathered}
+\end{eqnarray}
+where index~$f=im, dr$, $F_f$ is the force provided by fluid flow, $V$ is a throat volume.
+
+%\begin{figure}
+%\include{two_phase_pnm.txt}	
+%\end{figure}
+
+\begin{figure}[ht!]
+	
+	\vspace{2 cm}
+	\centering
+	\input{two_phase_pnm.txt}
+	
+	\caption{Algorithmic Workflow}
+	\label{fig:workflow}
+\end{figure}
 
 \end{document}

@@ -1,0 +1,147 @@
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.88pt,y=0.88,yscale=-1,xscale=1]
+%uncomment if require: \path (0,528); %set diagram left start at 0, and has height of 528
+
+%Shape: Rectangle [id:dp8920539630226335] 
+\draw   (76,62) -- (259.5,62) -- (259.5,102) -- (76,102) -- cycle ;
+%Shape: Arc [id:dp4990277204463366] 
+\draw  [draw opacity=0] (174.83,101.44) .. controls (172.56,101.81) and (170.19,102) .. (167.75,102) .. controls (151.18,102) and (137.75,93.05) .. (137.75,82) .. controls (137.75,70.95) and (151.18,62) .. (167.75,62) .. controls (170.19,62) and (172.56,62.19) .. (174.83,62.56) -- (167.75,82) -- cycle ; \draw   (174.83,101.44) .. controls (172.56,101.81) and (170.19,102) .. (167.75,102) .. controls (151.18,102) and (137.75,93.05) .. (137.75,82) .. controls (137.75,70.95) and (151.18,62) .. (167.75,62) .. controls (170.19,62) and (172.56,62.19) .. (174.83,62.56) ;
+%Shape: Rectangle [id:dp8176585646517655] 
+\draw   (259.72,188.96) -- (76.23,191.04) -- (75.78,151.04) -- (259.27,148.96) -- cycle ;
+%Straight Lines [id:da9489236220199195] 
+\draw    (88,120) -- (239.5,118.03) ;
+\draw [shift={(241.5,118)}, rotate = 539.25] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da9274492208956436] 
+\draw    (237.5,209) -- (99.86,209.56) ;
+\draw [shift={(97.86,209.57)}, rotate = 359.77] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-4.9) .. controls (6.95,-2.3) and (3.31,-0.67) .. (0,0) .. controls (3.31,0.67) and (6.95,2.3) .. (10.93,4.9)   ;
+%Straight Lines [id:da8717049083734982] 
+\draw  [dash pattern={on 4.5pt off 4.5pt}]  (75.86,38.57) -- (76,191.04) ;
+%Straight Lines [id:da6313916405872372] 
+\draw  [dash pattern={on 4.5pt off 4.5pt}]  (259.35,36.49) -- (259.72,188.96) ;
+%Straight Lines [id:da8239279400751789] 
+\draw  [dash pattern={on 4.5pt off 4.5pt}]  (156,54) -- (155.86,107.57) ;
+%Straight Lines [id:da17611876844083252] 
+\draw    (156,72) -- (196.86,71.59) ;
+\draw [shift={(198.86,71.57)}, rotate = 539.4300000000001] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5746259643812691] 
+\draw    (156,87) -- (183.86,87.53) ;
+\draw [shift={(185.86,87.57)}, rotate = 181.1] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Shape: Arc [id:dp61090920742806] 
+\draw  [draw opacity=0] (174.83,189.44) .. controls (172.56,189.81) and (170.19,190) .. (167.75,190) .. controls (151.18,190) and (137.75,181.05) .. (137.75,170) .. controls (137.75,158.95) and (151.18,150) .. (167.75,150) .. controls (170.19,150) and (172.56,150.19) .. (174.83,150.56) -- (167.75,170) -- cycle ; \draw   (174.83,189.44) .. controls (172.56,189.81) and (170.19,190) .. (167.75,190) .. controls (151.18,190) and (137.75,181.05) .. (137.75,170) .. controls (137.75,158.95) and (151.18,150) .. (167.75,150) .. controls (170.19,150) and (172.56,150.19) .. (174.83,150.56) ;
+%Straight Lines [id:da5254861934164674] 
+\draw  [dash pattern={on 4.5pt off 4.5pt}]  (157,142) -- (156.86,195.57) ;
+%Straight Lines [id:da4810644837021465] 
+\draw    (158,163) -- (151.86,163.08) -- (114.86,163.55) ;
+\draw [shift={(112.86,163.57)}, rotate = 359.27] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5833773357189069] 
+\draw    (157,176) -- (189.86,175.6) ;
+\draw [shift={(191.86,175.57)}, rotate = 539.3] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Flowchart: Connector [id:dp7136336883184158] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (120.86,276.29) .. controls (120.86,272.03) and (124.25,268.57) .. (128.43,268.57) .. controls (132.61,268.57) and (136,272.03) .. (136,276.29) .. controls (136,280.55) and (132.61,284) .. (128.43,284) .. controls (124.25,284) and (120.86,280.55) .. (120.86,276.29) -- cycle ;
+%Shape: Circle [id:dp23511090047299565] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (72.43,276.29) .. controls (72.43,271.16) and (76.59,267) .. (81.71,267) .. controls (86.84,267) and (91,271.16) .. (91,276.29) .. controls (91,281.41) and (86.84,285.57) .. (81.71,285.57) .. controls (76.59,285.57) and (72.43,281.41) .. (72.43,276.29) -- cycle ;
+%Flowchart: Connector [id:dp2419161363163378] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (166.86,276.29) .. controls (166.86,272.03) and (170.25,268.57) .. (174.43,268.57) .. controls (178.61,268.57) and (182,272.03) .. (182,276.29) .. controls (182,280.55) and (178.61,284) .. (174.43,284) .. controls (170.25,284) and (166.86,280.55) .. (166.86,276.29) -- cycle ;
+%Flowchart: Connector [id:dp23353079416929634] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (73.86,311.29) .. controls (73.86,307.03) and (77.25,303.57) .. (81.43,303.57) .. controls (85.61,303.57) and (89,307.03) .. (89,311.29) .. controls (89,315.55) and (85.61,319) .. (81.43,319) .. controls (77.25,319) and (73.86,315.55) .. (73.86,311.29) -- cycle ;
+%Flowchart: Connector [id:dp2994084254972674] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (166.86,343.29) .. controls (166.86,339.03) and (170.25,335.57) .. (174.43,335.57) .. controls (178.61,335.57) and (182,339.03) .. (182,343.29) .. controls (182,347.55) and (178.61,351) .. (174.43,351) .. controls (170.25,351) and (166.86,347.55) .. (166.86,343.29) -- cycle ;
+%Flowchart: Connector [id:dp6196307680297402] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (166.86,310.29) .. controls (166.86,306.03) and (170.25,302.57) .. (174.43,302.57) .. controls (178.61,302.57) and (182,306.03) .. (182,310.29) .. controls (182,314.55) and (178.61,318) .. (174.43,318) .. controls (170.25,318) and (166.86,314.55) .. (166.86,310.29) -- cycle ;
+%Flowchart: Connector [id:dp15803513218042886] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (121.86,310.29) .. controls (121.86,306.03) and (125.25,302.57) .. (129.43,302.57) .. controls (133.61,302.57) and (137,306.03) .. (137,310.29) .. controls (137,314.55) and (133.61,318) .. (129.43,318) .. controls (125.25,318) and (121.86,314.55) .. (121.86,310.29) -- cycle ;
+%Flowchart: Connector [id:dp2879441939825379] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (73.86,343.29) .. controls (73.86,339.03) and (77.25,335.57) .. (81.43,335.57) .. controls (85.61,335.57) and (89,339.03) .. (89,343.29) .. controls (89,347.55) and (85.61,351) .. (81.43,351) .. controls (77.25,351) and (73.86,347.55) .. (73.86,343.29) -- cycle ;
+%Flowchart: Connector [id:dp48329734251461] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (121.86,343.29) .. controls (121.86,339.03) and (125.25,335.57) .. (129.43,335.57) .. controls (133.61,335.57) and (137,339.03) .. (137,343.29) .. controls (137,347.55) and (133.61,351) .. (129.43,351) .. controls (125.25,351) and (121.86,347.55) .. (121.86,343.29) -- cycle ;
+%Straight Lines [id:da09113304268638722] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ][line width=4.5]    (81.71,285.57) -- (81.43,303.57) ;
+%Straight Lines [id:da1216825650408776] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (81.43,319) -- (81.43,335.57) ;
+%Straight Lines [id:da7198779383753579] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (128.43,284) -- (129.43,302.57) ;
+%Straight Lines [id:da08937131380884256] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ][line width=4.5]    (129.71,317.57) -- (129.43,335.57) ;
+%Straight Lines [id:da24672019753443852] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ][line width=4.5]    (174.43,284) -- (174.43,302.57) ;
+%Straight Lines [id:da6506477078242053] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (174.71,317.57) -- (174.43,335.57) ;
+%Straight Lines [id:da1771544243489107] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (89,311.29) -- (121.86,310.29) ;
+%Straight Lines [id:da0692770743088128] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (137,310.29) -- (166.86,310.29) ;
+%Straight Lines [id:da009410903134886128] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ][line width=4.5]    (89,343.29) -- (121.86,343.29) ;
+%Shape: Rectangle [id:dp22410978776382184] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (214,259) -- (242.86,259) -- (242.86,275.57) -- (214,275.57) -- cycle ;
+%Shape: Rectangle [id:dp2494870240061664] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (214,230) -- (242.86,230) -- (242.86,246.57) -- (214,246.57) -- cycle ;
+%Flowchart: Connector [id:dp46891708534228715] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (120.86,403.29) .. controls (120.86,399.03) and (124.25,395.57) .. (128.43,395.57) .. controls (132.61,395.57) and (136,399.03) .. (136,403.29) .. controls (136,407.55) and (132.61,411) .. (128.43,411) .. controls (124.25,411) and (120.86,407.55) .. (120.86,403.29) -- cycle ;
+%Shape: Circle [id:dp6176902580706162] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (72.43,403.29) .. controls (72.43,398.16) and (76.59,394) .. (81.71,394) .. controls (86.84,394) and (91,398.16) .. (91,403.29) .. controls (91,408.41) and (86.84,412.57) .. (81.71,412.57) .. controls (76.59,412.57) and (72.43,408.41) .. (72.43,403.29) -- cycle ;
+%Flowchart: Connector [id:dp9037562114317625] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (166.86,403.29) .. controls (166.86,399.03) and (170.25,395.57) .. (174.43,395.57) .. controls (178.61,395.57) and (182,399.03) .. (182,403.29) .. controls (182,407.55) and (178.61,411) .. (174.43,411) .. controls (170.25,411) and (166.86,407.55) .. (166.86,403.29) -- cycle ;
+%Flowchart: Connector [id:dp7204094123489206] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (73.86,438.29) .. controls (73.86,434.03) and (77.25,430.57) .. (81.43,430.57) .. controls (85.61,430.57) and (89,434.03) .. (89,438.29) .. controls (89,442.55) and (85.61,446) .. (81.43,446) .. controls (77.25,446) and (73.86,442.55) .. (73.86,438.29) -- cycle ;
+%Flowchart: Connector [id:dp39277463207397345] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (166.86,470.29) .. controls (166.86,466.03) and (170.25,462.57) .. (174.43,462.57) .. controls (178.61,462.57) and (182,466.03) .. (182,470.29) .. controls (182,474.55) and (178.61,478) .. (174.43,478) .. controls (170.25,478) and (166.86,474.55) .. (166.86,470.29) -- cycle ;
+%Flowchart: Connector [id:dp6745002448283259] 
+\draw  [fill={rgb, 255:red, 74; green, 144; blue, 226 }  ,fill opacity=1 ] (166.86,437.29) .. controls (166.86,433.03) and (170.25,429.57) .. (174.43,429.57) .. controls (178.61,429.57) and (182,433.03) .. (182,437.29) .. controls (182,441.55) and (178.61,445) .. (174.43,445) .. controls (170.25,445) and (166.86,441.55) .. (166.86,437.29) -- cycle ;
+%Flowchart: Connector [id:dp039709492657001855] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (121.86,437.29) .. controls (121.86,433.03) and (125.25,429.57) .. (129.43,429.57) .. controls (133.61,429.57) and (137,433.03) .. (137,437.29) .. controls (137,441.55) and (133.61,445) .. (129.43,445) .. controls (125.25,445) and (121.86,441.55) .. (121.86,437.29) -- cycle ;
+%Flowchart: Connector [id:dp5027557816343806] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (73.86,470.29) .. controls (73.86,466.03) and (77.25,462.57) .. (81.43,462.57) .. controls (85.61,462.57) and (89,466.03) .. (89,470.29) .. controls (89,474.55) and (85.61,478) .. (81.43,478) .. controls (77.25,478) and (73.86,474.55) .. (73.86,470.29) -- cycle ;
+%Flowchart: Connector [id:dp8285868267531881] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ] (121.86,470.29) .. controls (121.86,466.03) and (125.25,462.57) .. (129.43,462.57) .. controls (133.61,462.57) and (137,466.03) .. (137,470.29) .. controls (137,474.55) and (133.61,478) .. (129.43,478) .. controls (125.25,478) and (121.86,474.55) .. (121.86,470.29) -- cycle ;
+%Straight Lines [id:da7175962631373369] 
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ,fill opacity=1 ][line width=4.5]    (81.71,412.57) -- (81.43,430.57) ;
+%Straight Lines [id:da5354731504881693] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (81.43,446) -- (81.43,462.57) ;
+%Straight Lines [id:da6253834164809318] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (128.43,411) -- (129.43,429.57) ;
+%Straight Lines [id:da807861056498718] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ][line width=4.5]    (129.71,444.57) -- (129.43,462.57) ;
+%Straight Lines [id:da6078852869991888] 
+\draw [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,draw opacity=1 ][fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ][line width=4.5]    (174.43,411) -- (174.43,429.57) ;
+%Straight Lines [id:da5857435764694752] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (174.71,444.57) -- (174.43,462.57) ;
+%Straight Lines [id:da4714261234655669] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (89,438.29) -- (121.86,437.29) ;
+%Straight Lines [id:da6375099095112532] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][line width=4.5]    (137,437.29) -- (166.86,437.29) ;
+%Straight Lines [id:da4381912970572407] 
+\draw [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,draw opacity=1 ][fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=1 ][line width=4.5]    (89,470.29) -- (121.86,470.29) ;
+
+% Text Node
+\draw (37,80) node   [align=left] {$P_1 > P_2$};
+% Text Node
+\draw (38,171) node   [align=left] {$P_1 < P_2$};
+% Text Node
+\draw (76,28) node   [align=left] {1};
+% Text Node
+\draw (258,27) node   [align=left] {2};
+% Text Node
+\draw (215,74) node  [font=\footnotesize] [align=left] {$\vec{F}^{im}$};
+% Text Node
+\draw (200,91) node  [font=\footnotesize] [align=left] {$\vec{F}^{c}$};
+% Text Node
+\draw (204,175) node  [font=\footnotesize] [align=left] {$\vec{F}^{c}$};
+% Text Node
+\draw (98,170) node  [font=\footnotesize] [align=left] {$\vec{F}^{dr}$};
+% Text Node
+\draw (280,238) node  [font=\footnotesize] [align=left] {non-wet};
+% Text Node
+\draw (277,266) node  [font=\footnotesize] [align=left] {wet};
+% Text Node
+\draw (113,243) node   [align=left] {1st iteration};
+% Text Node
+\draw (116,376) node   [align=left] {2nd iteration};
+% Text Node
+\draw (59,294) node  [font=\scriptsize] [align=left] {$\vec{F}^{dr}$ > $\vec{F}^{c}$};
+% Text Node
+\draw (106,294) node  [font=\scriptsize] [align=left] {$\vec{F}^{dr}$ < $\vec{F}^{c}$};
+% Text Node
+\draw (153,294) node  [font=\scriptsize] [align=left] {$\vec{F}^{dr}$ > $\vec{F}^{c}$};
+\end{tikzpicture}
