@@ -59,7 +59,6 @@ void Aggregator::cfdProcedurePnmDiff() {
 
     for (int i = 0; i <= equationDiffusion.timeStepsVec.size() - 1; i++) {
         calcCoupledFlow(equationDiffusion.timeStepsVec[i]);
-        std::cout << "MassTotal: " << paramsOut.matrixMassTotal[i] << std::endl;
     }
 }
 

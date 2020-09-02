@@ -47,7 +47,7 @@ double DiffusionMath::calcDensConst() {
     auto pressureAv = (pressIn + pressOut) / 2;
 
     // TODO: use functional dependence
-    return 1.986;
+    return 19.12;
     // return propsPnm.aGasDens * pressureAv + propsPnm.bGasDens;
 }
 

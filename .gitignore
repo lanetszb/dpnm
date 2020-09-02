@@ -12,4 +12,6 @@ __pycache__
 .idea/
 .DS_Store
 cmake-build-debug/
+gnuplot-lua-tikz-common.tex
+gnuplot-lua-tikz.sty
 
