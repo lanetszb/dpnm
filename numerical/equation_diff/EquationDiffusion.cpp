@@ -76,7 +76,6 @@ void EquationDiffusion::forceDirichletBound(const double &conc_in) {
     it.valueRef() = localDiffusion.alpha[dim - 1];
 
     freeVector[dim - 1] = localDiffusion.alpha[dim - 1] * 5 * conc_in;
-
 }
 
 void EquationDiffusion::calculateFreeVector(const double &conc_in) {
