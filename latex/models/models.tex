@@ -303,7 +303,7 @@ P^{n+1}_{m} = P^{out}   : m \in outlet,
 \end{gathered}
 \end{eqnarray}
 
- \section*{Two phase pore network model}
+ \section*{Two phase pore network model (pure PNM)}
  
  \subsection*{Description} \label{s1}
  \begin{enumerate}
@@ -337,7 +337,6 @@ P^{n+1}_{m} = P^{out}   : m \in outlet,
  \end{gathered}
  \end{eqnarray}
 
-
 \begin{eqnarray}
 \label{capill}
 \begin{gathered}
@@ -365,7 +364,7 @@ where index~$f=im, dr$, $F_f$ is the force provided by fluid flow, $V$ is a thro
 %\begin{figure}
 %\include{two_phase_pnm.txt}	
 %\end{figure}
-
+\newpage
 \begin{figure}[ht!]
 	
 	\vspace{2 cm}
@@ -375,5 +374,50 @@ where index~$f=im, dr$, $F_f$ is the force provided by fluid flow, $V$ is a thro
 	\caption{Algorithmic Workflow}
 	\label{fig:workflow}
 \end{figure}
+
+\newpage
+ \section*{Two phase pore network model (coupling of  PNM and DFS)}
+ 
+ Here we modify Eq. \ref{eq:mass_flux_simple_pnm} to account for the capillary forces during multi-phase flow. 
+ \begin{eqnarray}
+ \begin{gathered}
+ \label{eq:mass_flux_simple_pnm}
+ G_{ij} = \bar{\rho}_{ij} \frac{P_{i} - P_{j} + \Delta P_{ij}}{R_{ij}},
+ \end{gathered}
+ \end{eqnarray}
+  where the capillary pressure term inside the triangular fracture can be expressed as follows
+  
+  The continuity equation for a phase flowing through a system o fracture can be expressed as follows
+  \begin{eqnarray}
+  \label{eq:two_phase_integral}
+  \int \limits_{V} \frac{\partial S}{\partial t} d V - \oint \limits_{\Omega} S \vec{v} d\vec{\Omega} = 0,
+  \end{eqnarray}
+  
+  Other equations are written for one random throat, the index $ij$ is omitted for simplicity.
+ 
+  \begin{eqnarray}
+  \begin{gathered}
+  \label{eq:capillary_pressure_fractures}
+  P^{c} = 2 \gamma cos \theta \left[\frac{1}{h} + \frac{1}{w}\right], \; \Delta P = \Delta P \left(\bar{\nabla} S, P^c\right),
+  \end{gathered}
+  \end{eqnarray}
+  
+  \begin{eqnarray}
+  \begin{gathered}
+  \bar{\nabla} S = \int_{0}^{L} \nabla S dL \simeq L \sum_{k=1}^{M} \nabla S_{k},
+  \end{gathered}
+  \end{eqnarray}
+
+  \begin{eqnarray}
+  \begin{gathered}
+  \bar{\rho} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \rho_k^w+ \left(1-S\right) \rho_k^g\right),
+  \end{gathered}
+  \end{eqnarray}
+  
+  \begin{eqnarray}
+  \begin{gathered}
+  \bar{\mu} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \mu_k^w+ \left(1-S\right) \mu_k^g\right),
+  \end{gathered}
+  \end{eqnarray}
 
 \end{document}
