@@ -6,16 +6,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
-% \usepackage[usenames, dvipsnames]{color}
-% \definecolor{fontColor}{RGB}{169, 183, 198}
-% \definecolor{pageColor}{RGB}{43, 43, 43}
+ \usepackage[usenames, dvipsnames]{color}
+\definecolor{fontColor}{RGB}{169, 183, 198}
+\definecolor{pageColor}{RGB}{43, 43, 43}
 
 \usepackage{mathtools}
 
-% \makeatletter
-% \let\mytagform@=\tagform@
-% \def\tagform@#1{\maketag@@@{\color{fontColor}(#1)}}
-% \makeatother
+\makeatletter
+\let\mytagform@=\tagform@
+\def\tagform@#1{\maketag@@@{\color{fontColor}(#1)}}
+\makeatother
 
 %\renewcommand\theequation{{\color{fontColor}\arabic{equation_diff}}}
 
@@ -30,8 +30,8 @@
 \usepackage{cite}
 \usepackage{enumerate}
 \usepackage{float}
-% \usepackage[pdftex,unicode,colorlinks = true,linkcolor = white]{hyperref}
-\usepackage[pdftex,unicode,colorlinks = true,linkcolor = black]{hyperref}
+\usepackage[pdftex,unicode,colorlinks = true,linkcolor = white]{hyperref}
+% \usepackage[pdftex,unicode,colorlinks = true,linkcolor = black]{hyperref}
 \usepackage{indentfirst}
 \usepackage{placeins}
 \bibliographystyle{unsrt}
@@ -89,14 +89,14 @@
 
 \begin{document}
 
-%    \pagecolor{pageColor}
-%    \color{fontColor}
-    %\maketitle
-    %\newpage
-    %\tableofcontents{\thispagestyle{empty}}
-    %\newpage
+    \pagecolor{pageColor}
+    \color{fontColor}
+    % \maketitle
+    % \newpage
+    % \tableofcontents{\thispagestyle{empty}}
+    % \newpage
 
-    \section*{One phase pore network model}
+    \section*{Single-phase pore network model}
 
     \begin{eqnarray}
     \label{one_phase} 
@@ -303,121 +303,66 @@ P^{n+1}_{m} = P^{out}   : m \in outlet,
 \end{gathered}
 \end{eqnarray}
 
- \section*{Two phase pore network model (pure PNM)}
+\newpage
+ \section*{Two-phase pore network model (coupling of  PNM and DFS)}
  
  \subsection*{Description} \label{s1}
  \begin{enumerate}
- 	\item Solve for one-phase PN using Eqs. \ref{one_phase} and \ref{press_bound} and obtain the pressure distribution in each pore.
- 	\item Knowing pressure in pores and throats, apply <<if statements>> (see Fig.~\ref{fig:workflow}) to get the displacement profile. Every iteration the phase (e.g., non-wetting) might proceed only to adjacent throats and pores.
- 	\item Check for trapped throats every iteration. Remove the trapped throats from the calculation every iteration and recalculate the pressure distribution using one-phase PN. The trapped throats can be untrapped at further iterations.
- 	\item Recalculate the state of each throat obeying “First In, Last Out” (FILO) logic. To preserve the mass-conservation law and to correctly treat the numerical time step, throats' states can be quasi-multiphase using FILO logic.
+ 	\item Set initial and boundary conditions in terms of saturation in the model. Having that, use Eqs. (\ref{eq:twophase_av_saturation_grad}) and (\ref{eq:twophase_dens_visc}) to calculate average saturation gradient, density and viscosity inside each of the throats. 
+ 	\item Calculate the capillary pressure ($P^c$). Estimate the corresponding pressure drop ($\Delta P$) inside the fractures which has a functional dependence on $P^c$ and saturation gradient ($\bar{\nabla} S$).
+ 	\item Calculate the average velocity inside the throats by solving Eq. (\ref{eq:twophase_mass_flux}).
+ 	\item Solve Eqs. (\ref{eq:twophase_integral_w}) and (\ref{eq:twophase_integral_g}) for a corresponding time step to obtain a new saturation profile.
  \end{enumerate}
  
-    \begin{eqnarray}
- 	\begin{gathered}
- 		\bar{\rho}_{ij} = \frac{\bar{\rho}_i+\bar{\rho}_{j}}{2},
- 	\end{gathered}
- \end{eqnarray}
- %
-   \begin{eqnarray}
- \begin{gathered}
- \bar{\rho}_{k} = S^w \rho_k^w+ S^g \rho_k^g,
- \end{gathered}
- \end{eqnarray}
- %
+ The proposed model represents the modified volume of fluid (VOF) approach used in conjunction with PNM to predict the two-phase flow in fractured media.  
+ Here we modify Eq. (\ref{eq:mass_flux_simple_pnm}) to account for the pressure drio due to capillary forces during two-phase flow. 
  \begin{eqnarray}
  \begin{gathered}
- \bar{\mu}_{ij} = \frac{\bar{\mu}_{i}+\bar{\mu}_{j}}{2},
- \end{gathered}
- \end{eqnarray}
- %
- \begin{eqnarray}
- \begin{gathered}
- \bar{\mu}_{k} = S^w \mu_k^w+ S^g \mu_k^g,
- \end{gathered}
- \end{eqnarray}
-
-\begin{eqnarray}
-\label{capill}
-\begin{gathered}
-F_{ij}^{c} = P_{ij}^c \epsilon_{ij}h_{ij},
-\end{gathered}
-\end{eqnarray}
-where $F^{c}$ is a capillary force acting in a particular throat, $P^{c}$ is a capillary pressure exerted by film interface, $h$ is a fracture height.
-
-\begin{eqnarray}
-\label{capill}
-\begin{gathered}
-P_{ij}^{c} = \frac{2\sigma cos(\theta)}{R_{ij}},
-\end{gathered}
-\end{eqnarray}
-where $\sigma$ is an interfacial tension, and $\theta$ is a contact angle.
-
-\begin{eqnarray}
-\label{drainage}
-\begin{gathered}
-F_{ij}^{f} = \frac{P_i - P_j}{L_{ij}} V_{ij}.
-\end{gathered}
-\end{eqnarray}
-where index~$f=im, dr$, $F_f$ is the force provided by fluid flow, $V$ is a throat volume.
-
-%\begin{figure}
-%\include{two_phase_pnm.txt}	
-%\end{figure}
-\newpage
-\begin{figure}[ht!]
-	
-	\vspace{2 cm}
-	\centering
-	\input{two_phase_pnm.txt}
-	
-	\caption{Algorithmic Workflow}
-	\label{fig:workflow}
-\end{figure}
-
-\newpage
- \section*{Two phase pore network model (coupling of  PNM and DFS)}
- 
- Here we modify Eq. \ref{eq:mass_flux_simple_pnm} to account for the capillary forces during multi-phase flow. 
- \begin{eqnarray}
- \begin{gathered}
- \label{eq:mass_flux_simple_pnm}
+ \label{eq:twophase_mass_flux}
  G_{ij} = \bar{\rho}_{ij} \frac{P_{i} - P_{j} + \Delta P_{ij}}{R_{ij}},
  \end{gathered}
  \end{eqnarray}
-  where the capillary pressure term inside the triangular fracture can be expressed as follows
+  where $\Delta P$ represents the additional pressure gradient due to the capillary between two fluids inside the cuboid fracture.
   
-  The continuity equation for a phase flowing through a system o fracture can be expressed as follows
+  The continuity equations for phases flowing through a system of fractures can be expressed as follows
   \begin{eqnarray}
-  \label{eq:two_phase_integral}
-  \int \limits_{V} \frac{\partial S}{\partial t} d V - \oint \limits_{\Omega} S \vec{v} d\vec{\Omega} = 0,
+  \label{eq:twophase_integral_w}
+  \int \limits_{V} \frac{\partial S^w}{\partial t} d V - \oint \limits_{\Omega} S^w \vec{v} d\vec{\Omega} = 0,
   \end{eqnarray}
   
-  Other equations are written for one random throat, the index $ij$ is omitted for simplicity.
+  \begin{eqnarray}
+  \label{eq:twophase_integral_g}
+  \int \limits_{V} \frac{\partial \left(1-S^w\right)}{\partial t} d V - \oint \limits_{\Omega} \left(1-S^w\right) \vec{v} d\vec{\Omega} = 0,
+  \end{eqnarray}
+  where  $S$ is water saturation, $w$~--~water, $\vec{v}$~--~is an average velocity of two phases inside the throat. 
+  
+  Other equations are written for an arbitrary fracture. Thus, the coupled index $ij$, representing an arbitrary fracture, is omitted for simplicity.
  
+ The capillary pressure ($P^c$)  and the corresponding pressure drop ($\Delta P$) inside the fracture can be calculated using the following equations
   \begin{eqnarray}
   \begin{gathered}
-  \label{eq:capillary_pressure_fractures}
+  \label{eq:twophase_capillary_pressure_fractures}
   P^{c} = 2 \gamma cos \theta \left[\frac{1}{h} + \frac{1}{w}\right], \; \Delta P = \Delta P \left(\bar{\nabla} S, P^c\right),
   \end{gathered}
   \end{eqnarray}
-  
+  where $\gamma$~--~interfacial tension, $\theta$~--~contact angle, $h$ is a fracture height and $w$ is a fracture width.
   \begin{eqnarray}
+  \label{eq:twophase_av_saturation_grad}
   \begin{gathered}
   \bar{\nabla} S = \int_{0}^{L} \nabla S dL \simeq L \sum_{k=1}^{M} \nabla S_{k},
   \end{gathered}
   \end{eqnarray}
-
+ where $\bar{\nabla} S$ is a phase saturation gradient inside the fracture, $L$~--~fracture length, $k$~--~grid block index.
+ 
+ 
+Average density and viscosity inside the fracture can be calculated as follows:
   \begin{eqnarray}
+  \label{eq:twophase_dens_visc}
   \begin{gathered}
-  \bar{\rho} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \rho_k^w+ \left(1-S\right) \rho_k^g\right),
+  \bar{\rho} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \rho_k^w+ \left(1-S\right) \rho_k^g\right), \\
+  \bar{\mu} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \mu_k^w+ \left(1-S\right) \mu_k^g\right).
   \end{gathered}
   \end{eqnarray}
-  
-  \begin{eqnarray}
-  \begin{gathered}
-  \bar{\mu} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \mu_k^w+ \left(1-S\right) \mu_k^g\right),
-  \end{gathered}
-  \end{eqnarray}
+  where $M$ is a total number of grid blocks, $g$~--~gas. 
 
 \end{document}
