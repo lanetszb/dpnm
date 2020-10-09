@@ -3,6 +3,7 @@
 *.eps
 *.aux
 *.log
+*.toc
 *.nlo
 *.out
 *.pdf
