@@ -308,23 +308,33 @@ P^{n+1}_{m} = P^{out}   : m \in outlet,
  
  \subsection*{Description} \label{s1}
  \begin{enumerate}
- 	\item Set initial and boundary conditions in terms of saturation in the model. Having that, use Eqs. (\ref{eq:twophase_av_saturation_grad}) and (\ref{eq:twophase_dens_visc}) to calculate average saturation gradient, density and viscosity inside each of the throats. 
+ 	\item Set initial and boundary conditions, in terms of saturation, to the model. Having that, use Eqs. (\ref{eq:twophase_av_saturation_grad}) and (\ref{eq:twophase_dens_visc}) to calculate average saturation gradient, density and viscosity inside each of the throats. 
  	\item Calculate the capillary pressure ($P^c$). Estimate the corresponding pressure drop ($\Delta P$) inside the fractures which has a functional dependence on $P^c$ and saturation gradient ($\bar{\nabla} S$).
  	\item Calculate the average velocity inside the throats by solving Eq. (\ref{eq:twophase_mass_flux}).
  	\item Solve Eqs. (\ref{eq:twophase_integral_w}) and (\ref{eq:twophase_integral_g}) for a corresponding time step to obtain a new saturation profile.
  \end{enumerate}
  
  The proposed model represents the modified volume of fluid (VOF) approach used in conjunction with PNM to predict the two-phase flow in fractured media.  
- Here we modify Eq. (\ref{eq:mass_flux_simple_pnm}) to account for the pressure drio due to capillary forces during two-phase flow. 
+ Here we modify Eq. (\ref{eq:mass_flux_simple_pnm}) to account for the pressure drop due to capillary forces during two-phase flow. 
  \begin{eqnarray}
  \begin{gathered}
  \label{eq:twophase_mass_flux}
  G_{ij} = \bar{\rho}_{ij} \frac{P_{i} - P_{j} + \Delta P_{ij}}{R_{ij}},
  \end{gathered}
  \end{eqnarray}
-  where $\Delta P$ represents the additional pressure gradient due to the capillary between two fluids inside the cuboid fracture.
+  where $\Delta P$ represents the additional pressure gradient due to capillary between two fluids inside the cuboid fracture.
   
-  The continuity equations for phases flowing through a system of fractures can be expressed as follows
+  Other equations are written for an arbitrary fracture. Thus, the coupled index $ij$, representing an arbitrary fracture, is omitted for simplicity.
+  
+  \begin{eqnarray}
+  \begin{gathered}
+  \label{eq:twophase_mass_hydr_conductance}
+  R = \frac{12 \bar{\mu} L}{h^{3} \omega},
+  \end{gathered}
+  \end{eqnarray}
+  where $h$~--~fracture height, and $\omega$~--~fracture width.
+  
+  The continuity equations for phases flowing through a system of fractures can be expressed as follows:
   \begin{eqnarray}
   \label{eq:twophase_integral_w}
   \int \limits_{V} \frac{\partial S^w}{\partial t} d V - \oint \limits_{\Omega} S^w \vec{v} d\vec{\Omega} = 0,
@@ -332,27 +342,25 @@ P^{n+1}_{m} = P^{out}   : m \in outlet,
   
   \begin{eqnarray}
   \label{eq:twophase_integral_g}
-  \int \limits_{V} \frac{\partial \left(1-S^w\right)}{\partial t} d V - \oint \limits_{\Omega} \left(1-S^w\right) \vec{v} d\vec{\Omega} = 0,
+ S^g = 1 - S^w,
   \end{eqnarray}
-  where  $S$ is water saturation, $w$~--~water, $\vec{v}$~--~is an average velocity of two phases inside the throat. 
-  
-  Other equations are written for an arbitrary fracture. Thus, the coupled index $ij$, representing an arbitrary fracture, is omitted for simplicity.
+  where  $S$ is saturation, $w$~--~water, $g$~--~gas, $\vec{v}$~--~is a velocity of fluid mixture inside the throat. 
  
- The capillary pressure ($P^c$)  and the corresponding pressure drop ($\Delta P$) inside the fracture can be calculated using the following equations
+ The capillary pressure ($P^c$)  and the corresponding pressure drop ($\Delta P$) inside the fracture can be calculated using the following equations:
   \begin{eqnarray}
   \begin{gathered}
   \label{eq:twophase_capillary_pressure_fractures}
-  P^{c} = 2 \gamma cos \theta \left[\frac{1}{h} + \frac{1}{w}\right], \; \Delta P = \Delta P \left(\bar{\nabla} S, P^c\right),
+  P^{c} = 2 \gamma cos \theta \left[\frac{1}{h} + \frac{1}{w}\right], \; \Delta P = \Delta P \left(\tilde{\nabla} S, P^c\right),
   \end{gathered}
   \end{eqnarray}
   where $\gamma$~--~interfacial tension, $\theta$~--~contact angle, $h$ is a fracture height and $w$ is a fracture width.
   \begin{eqnarray}
   \label{eq:twophase_av_saturation_grad}
   \begin{gathered}
-  \bar{\nabla} S = \int_{0}^{L} \nabla S dL \simeq L \sum_{k=1}^{M} \nabla S_{k},
+  \tilde{\nabla} S = \int_{0}^{L} \nabla S dL \simeq\sum_{k=1}^{M} \nabla S_{k} \Delta L_{k},
   \end{gathered}
   \end{eqnarray}
- where $\bar{\nabla} S$ is a phase saturation gradient inside the fracture, $L$~--~fracture length, $k$~--~grid block index.
+ where $\tilde{\nabla} S$ is a phase saturation gradient inside the fracture, $M$ is a total number of grid blocks, $\Delta L$~--~grid block length, $k$~--~grid block index.
  
  
 Average density and viscosity inside the fracture can be calculated as follows:
@@ -363,6 +371,5 @@ Average density and viscosity inside the fracture can be calculated as follows:
   \bar{\mu} = \frac{1}{M}\left(\sum_{k=1}^M S_{k} \mu_k^w+ \left(1-S\right) \mu_k^g\right).
   \end{gathered}
   \end{eqnarray}
-  where $M$ is a total number of grid blocks, $g$~--~gas. 
 
 \end{document}
